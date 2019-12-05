@@ -1,0 +1,80 @@
+import 'package:flutter/material.dart';
+import 'package:planet_social/models/planet_model.dart';
+import 'package:planet_social/planet/post_list.dart';
+
+class PlanetDetail extends StatefulWidget {
+  @override
+  Planet plant = Planet();
+
+  State<StatefulWidget> createState() => _PlanetDetailState();
+}
+
+class _PlanetDetailState extends State<PlanetDetail> {
+  _header() => Container(
+        width: double.infinity,
+        height: 60,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+            color: Color.fromARGB(255, 255, 130, 130)),
+        child: Row(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(left: 10, right: 15),
+              child: ClipOval(
+                  child: Image.network(
+                widget.plant.owner.avatar,
+                height: 40,
+                width: 40,
+              )),
+            ),
+            Text(widget.plant.owner.nickName,
+                style: TextStyle(color: Colors.white, fontSize: 14)),
+            Expanded(
+              child: Text(
+                widget.plant.fans.toString(),
+                style: TextStyle(color: Colors.white, fontSize: 14),
+                textAlign: TextAlign.right,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(right: 10),
+              child: Image.asset(
+                "assets/箭头2.png",
+                width: 30,
+                height: 30,
+              ),
+            )
+          ],
+        ),
+      );
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          // leading: GestureDetector(
+          //   child: SizedBox(child:Image.asset("assets/返回图标.png",),width: 30,height: 30,),
+          //   onTap: (){
+          //     print("back........");
+          //   },
+          // ),
+          title: Text(widget.plant.name,
+              style: TextStyle(color: Colors.black, fontSize: 17)),
+          actions: <Widget>[
+            GestureDetector(
+              child: Image.asset("assets/消息推送.png", height: 30, width: 30),
+              onTap: () {
+                print("msg........");
+              },
+            )
+          ],
+        ),
+        body: Padding(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[_header(), PostList()],
+          ),
+        ));
+  }
+}
