@@ -48,17 +48,19 @@ class _PostContentState extends State<PostContent> {
               }
             },
             separatorBuilder: (_, index) {
-              if (index == 1) {
+              if (index == 0) {
                 return Container(
+                  padding: EdgeInsets.only(left: 10),
+                  alignment: Alignment.centerLeft,
                   height: 47,
                   child: Text(
                     "评论",
-                    style: TextStyle(color: Colors.black54, fontSize: 12),
+                    style: TextStyle(color: Colors.black, fontSize: 14,fontWeight: FontWeight.bold),
                   ),
                 );
               } else {
                 return Container(
-                  height: 1,
+                  color: Colors.white,
                 );
               }
             },

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:planet_social/models/post_model.dart';
+import 'package:planet_social/route.dart';
 
 class PostDetail extends StatefulWidget {
   const PostDetail({Key key, this.post}) : super(key: key);
@@ -80,7 +81,12 @@ class _PostDetailState extends State<PostDetail> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GestureDetector(
+      onTap: (){
+        PSRoute.push(context, "post_content", widget.post);
+      },
+      child: Container(
+        color: Colors.white,
       padding: EdgeInsets.only(left: 15,right: 15,top: 20),
       child: Column(
         children: <Widget>[
@@ -94,6 +100,7 @@ class _PostDetailState extends State<PostDetail> {
           _footer(),
         ],
       ),
+    ),
     );
   }
 }
