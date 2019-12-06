@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:planet_social/models/planet_model.dart';
 import 'package:planet_social/planet/post_list.dart';
+import 'package:planet_social/route.dart';
 
 class PlanetDetail extends StatefulWidget {
+  const PlanetDetail({Key key, this.plant}) : super(key: key);
+  final Planet plant;
   @override
-  Planet plant = Planet();
-
   State<StatefulWidget> createState() => _PlanetDetailState();
 }
 
 class _PlanetDetailState extends State<PlanetDetail> {
-  _header() => Container(
+  _header() => GestureDetector(
+    onTap: (){
+      PSRoute.push(context, "user_detail", null);
+    },
+    child: Container(
         width: double.infinity,
         height: 60,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(5)),
-            color: Color.fromARGB(255, 255, 130, 130)),
+            color: Color(0xffFF8367)),
         child: Row(
           children: <Widget>[
             Padding(
@@ -46,28 +51,47 @@ class _PlanetDetailState extends State<PlanetDetail> {
             )
           ],
         ),
-      );
+      ),
+  );
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          // leading: GestureDetector(
-          //   child: SizedBox(child:Image.asset("assets/返回图标.png",),width: 30,height: 30,),
-          //   onTap: (){
-          //     print("back........");
-          //   },
-          // ),
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+            child: Padding(
+              child: Image.asset(
+                "assets/返回图标.png",
+              ),
+              padding: EdgeInsets.all(11),
+            ),
+          ),
           title: Text(widget.plant.name,
               style: TextStyle(color: Colors.black, fontSize: 17)),
-          actions: <Widget>[
-            GestureDetector(
-              child: Image.asset("assets/消息推送.png", height: 30, width: 30),
-              onTap: () {
-                print("msg........");
-              },
-            )
-          ],
+          // actions: <Widget>[
+          //   GestureDetector(
+          //     child: Image.asset("assets/消息推送.png", height: 30, width: 30),
+          //     onTap: () {
+          //       print("msg........");
+          //     },
+          //   )
+          // ],
+        ),
+        floatingActionButton: Padding(
+          padding: EdgeInsets.only(bottom: 50),
+          child: FloatingActionButton(
+            onPressed: () {
+              PSRoute.push(context, "post_post", null);
+            },
+            child: Icon(Icons.add),
+            elevation: 3.0,
+            highlightElevation: 2.0,
+            backgroundColor: Color(0xffFF8367),
+            // 红色
+          ),
         ),
         body: Padding(
           padding: EdgeInsets.all(10),

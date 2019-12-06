@@ -139,10 +139,13 @@ class _UserDetailState extends State<UserDetail> {
             onTap: (){
               _clickSettings();
             },
-            child: Image.asset(
+            child: Padding(
+              padding: EdgeInsets.only(left: 5,right: 5),
+              child: Image.asset(
               _offset < 220.0 ? "assets/设置2.png" : "assets/设置.png",
-              height: 24,
-              width: 24,
+              height: 22,
+              width: 22,
+            ),
             ),
           ),
         ],
@@ -182,7 +185,8 @@ class _UserDetailState extends State<UserDetail> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Scaffold(
+      body: Stack(
       children: <Widget>[
         CustomScrollView(
           controller: _controller,
@@ -193,6 +197,7 @@ class _UserDetailState extends State<UserDetail> {
           ],
         ),
       ],
+    ),
     );
   }
 }

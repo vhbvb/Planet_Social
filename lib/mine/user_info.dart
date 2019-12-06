@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:planet_social/base/utils.dart';
 import 'package:planet_social/models/user_model.dart';
 import 'package:planet_social/route.dart';
+import 'package:image_picker/image_picker.dart';
 
 class UserInfo extends StatefulWidget {
   const UserInfo({Key key, this.user}) : super(key: key);
@@ -15,21 +16,30 @@ class _UserInfoState extends State<UserInfo> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text(
-        "设置",
-        style: TextStyle(color: Colors.black, fontSize: 17),
+        title: Text(
+          "设置",
+          style: TextStyle(color: Colors.black, fontSize: 17),
+        ),
+        leading: GestureDetector(
+          onTap: () {
+            _pop();
+          },
+          child: Padding(
+            child: Image.asset(
+              "assets/返回图标.png",
+            ),
+            padding: EdgeInsets.all(11),
+          ),
+        ),
+        actions: <Widget>[
+          MaterialButton(
+            onPressed: (){
 
+            },
+            child: Text("保存",style: TextStyle(color: Colors.black ,fontSize: 16),),
+          )
+        ],
       ),
-
-      leading: GestureDetector(
-        onTap: (){
-          _pop();
-        },
-        child: Padding(child: Image.asset("assets/返回图标.png",),padding: EdgeInsets.all(11),),
-      ),
-      
-      ),
-      
       body: ListView.separated(
         itemBuilder: (context, index) {
           return _create(index);
@@ -69,17 +79,31 @@ class _UserInfoState extends State<UserInfo> {
 
       case 2:
         return _rowDetail(
-          index,
-          "性别",
-          Text(["未知", "男", "女"][widget.user.sex],
-              style: TextStyle(color: Colors.black, fontSize: 14)),
-        );
+            index,
+            "性别",
+            PopupMenuButton(
+              onSelected: (name){
+                setState(() {
+                  widget.user.sex = ["未知", "男", "女"].indexOf(name);
+                });
+              },
+              itemBuilder: (_) {
+                return ["未知", "男", "女"].map((name) {
+                  return PopupMenuItem(
+                    child: Text(name),
+                    value: name,
+                  );
+                }).toList();
+              },
+              child: Text(["未知", "男", "女"][widget.user.sex],
+                  style: TextStyle(color: Colors.black, fontSize: 14)),
+            ));
         break;
 
       case 3:
         return _rowDetail(
             index,
-            "性别",
+            "标签",
             Row(
               children: _tags(),
               mainAxisAlignment: MainAxisAlignment.end,
@@ -121,12 +145,64 @@ class _UserInfoState extends State<UserInfo> {
     );
   }
 
-  _pop(){
+  _pop() {
     PSRoute.pop(context);
   }
 
   _onClick(int index) {
-    
+    // Picker
+
+    if (index == 0) {
+      ImagePicker.pickImage(source: ImageSource.camera).then((value) {
+        print(value.path);
+        setState(() {
+          widget.user.avatar =
+              "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1575611710084&di=a8f691903dad2c12f22c078b0972760e&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201706%2F21%2F20170621232723_ZuvKF.jpeg";
+        });
+      });
+    }
+
+    if (index == 1) {
+      TextEditingController controller = TextEditingController();
+      showDialog(
+          context: context,
+          builder: (_) {
+            var actions = <Widget>[
+              MaterialButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("取消"),
+              ),
+              MaterialButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  setState(() {
+                    widget.user.nickName = controller.text;
+                  });
+                },
+                child: Text("确定"),
+              ),
+            ];
+            return AlertDialog(
+              title: Text(
+                '修改昵称',
+                style: TextStyle(fontSize: 16),
+              ),
+              content: TextField(
+                controller: controller,
+                maxLength: 10,
+                decoration: InputDecoration(
+                    hintText: "请输入昵称", border: InputBorder.none),
+              ),
+              actions: actions,
+            );
+          });
+    }
+
+    if(index == 3){
+      PSRoute.push(context, "user_tags", null);
+    }
   }
 
   List<Widget> _tags() {

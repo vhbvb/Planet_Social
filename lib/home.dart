@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:planet_social/base/bar_item.dart';
-import 'package:planet_social/explore/explore.dart';
-import 'package:planet_social/message/message.dart';
-import 'package:planet_social/mine/user_detail.dart';
-import 'package:planet_social/planet/my_planet.dart';
+import 'package:planet_social/route.dart';
 
 class PlanetSocial extends StatefulWidget {
   @override
@@ -16,10 +13,10 @@ class _PlanetSocialState extends State<PlanetSocial> {
 
   Widget _currentPage(){
     switch (_selectedIndex) {
-      case 0: return Explore();
-      case 1: return MyPlanet();
-      case 2: return Message();
-      case 3: return UserDetail();
+      case 0: return PSRoute.explore;
+      case 1: return PSRoute.myPlanet;
+      case 2: return PSRoute.message;
+      case 3: return PSRoute.me;
       default: return null;
     }
   }
@@ -54,6 +51,7 @@ class _PlanetSocialState extends State<PlanetSocial> {
       bottomNavigationBar: BottomNavigationBar(
         items: _createItems(),
         currentIndex: _selectedIndex,
+        type: BottomNavigationBarType.fixed,
         onTap: (int index){
           setState(() {
             print(index);

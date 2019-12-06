@@ -35,7 +35,7 @@ class _PostDetailState extends State<PostDetail> {
       );
 
   _footer() => Padding(
-    padding: EdgeInsets.only(top: 10),
+    padding: EdgeInsets.only(top: 5),
     child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -81,7 +81,7 @@ class _PostDetailState extends State<PostDetail> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.only(left: 15,right: 15,top: 20),
       child: Column(
         children: <Widget>[
           _header(),
@@ -89,7 +89,7 @@ class _PostDetailState extends State<PostDetail> {
           Container(
               height: 1,
               width: double.infinity,
-              color: Colors.black12,
+              color: Colors.grey.withAlpha(44),
             ),
           _footer(),
         ],
