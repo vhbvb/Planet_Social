@@ -23,7 +23,7 @@ class _PostDetailState extends State<PostDetail> {
                 style: TextStyle(color: Colors.black, fontSize: 12)),
           ),
           Text(
-            widget.post.createAt,
+            widget.post.createdAt,
             style: TextStyle(color: Colors.grey, fontSize: 12),
           )
         ],
@@ -41,7 +41,7 @@ class _PostDetailState extends State<PostDetail> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Expanded(
-            child: Text("#" + widget.post.star + "#",
+            child: Text("#" + widget.post.starTitle + "#",
                 style: TextStyle(color: Colors.grey, fontSize: 12)),
           ),
           Row(

@@ -40,7 +40,7 @@ class StarStyle extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.only(top: 5),
-            child: Text((model as Planet).name,
+            child: Text((model as Planet).title,
                 style: TextStyle(
                     color: Colors.white.withAlpha(200), fontSize: 13)),
           )

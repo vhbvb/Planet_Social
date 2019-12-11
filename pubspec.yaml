@@ -29,6 +29,10 @@ dev_dependencies:
   image_picker:
   flutter_test:
     sdk: flutter
+  test:
+  path:
+  sharesdk_plugin:
+  mobsms:
 
 
 # For information on the generic Dart part of this file, see the
@@ -76,6 +80,9 @@ flutter:
    - assets/star/star.jpeg
    - assets/stars.png
    - assets/users.png
+   - assets/验证码图标.png
+   - assets/手机号图标.png
+   - assets/密码图标.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

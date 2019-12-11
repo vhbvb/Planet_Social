@@ -5,26 +5,27 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
-
-import 'package:planet_social/main.dart';
+import 'package:planet_social/base/api_service.dart';
+import 'package:planet_social/models/user_model.dart';
+import 'package:test/test.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp());
+  test("registUser",()async{
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    String _body = null;
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    User user = User();
+    ApiService.shared.regist(user,"123456",(status,body){
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
-  });
+      // _body = body;
+      // print(status);
+      // print(body);
+    });
+
+
+  var value = await Future.delayed(Duration(seconds: 10),(){
+      return _body !=null;
+    });
+  expect(value, equals(true));
+  },timeout: Timeout(Duration(seconds: 20)));
 }

@@ -69,7 +69,7 @@ class _PlanetDetailState extends State<PlanetDetail> {
               padding: EdgeInsets.all(11),
             ),
           ),
-          title: Text(widget.plant.name,
+          title: Text(widget.plant.title,
               style: TextStyle(color: Colors.black, fontSize: 17)),
           // actions: <Widget>[
           //   GestureDetector(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:planet_social/common/login.dart';
 import 'package:planet_social/explore/explore.dart';
 import 'package:planet_social/message/message.dart';
 import 'package:planet_social/mine/user_detail.dart';
@@ -19,6 +20,8 @@ class PSRoute {
 
     switch (url) {
       case "user_detail":
+          return LoginPage();
+      case "user_detail":
           return UserDetail();
       case "user_settings":
           return UserInfo(user: params,);
@@ -36,6 +39,7 @@ class PSRoute {
 
   static push(BuildContext context,String url,dynamic params){
     Navigator.of(context).push(MaterialPageRoute(builder: (context)=>_page(url, params)));
+    // Navigator.of(context).push(ModalRoute(Rs))
   }
 
   static pop(BuildContext context){
