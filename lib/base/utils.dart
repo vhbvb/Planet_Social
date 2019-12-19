@@ -9,8 +9,4 @@ class Util {
         Random.secure().nextInt(135)+120, 
         Random.secure().nextInt(135)+120);
   }
-
-  // static Image clip(Image image, Rect src){
-    
-  // }
 }

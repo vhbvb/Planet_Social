@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:planet_social/base/manager.dart';
 import 'package:planet_social/const.dart';
 import 'package:planet_social/models/planet_model.dart';
 import 'package:planet_social/models/post_model.dart';
@@ -17,8 +18,13 @@ enum RequestType {
 
 class ApiService {
   static ApiService shared = ApiService();
-  void regist(User user, String password,
+
+  void _regist(User user, String password,
       Function(User, Map<String, dynamic> error) callback) {
+    if (user.phone != null) {
+      user.nickName = user.phone;
+    }
+
     Map<String, dynamic> params = user.jsonMap();
     params["password"] = password;
     _send("users", params, RequestType.post).then((response) {
@@ -51,7 +57,7 @@ class ApiService {
     });
   }
 
-  void login(User user, String password,
+  void _login(User user, String password,
       Function(User, Map<String, dynamic> error) callback) {
     Map<String, dynamic> params = user.jsonMap();
     params["password"] = password;
@@ -69,6 +75,21 @@ class ApiService {
     });
   }
 
+  void login(User user, Function(User, Map<String, dynamic> error) callback) {
+    String defaultPassword = "123456";
+    _queryUser(user, (res, error) {
+      if (error == null || (error != null && error["code"] == 211)) {
+        if (res != null) {
+          _login(res, defaultPassword, callback);
+        } else {
+          _regist(user, defaultPassword, callback);
+        }
+      } else {
+        if (callback != null) callback(null, error);
+      }
+    });
+  }
+
   void getUser(
       String userid, Function(User, Map<String, dynamic> error) callback) {
     _send("users/" + userid, null, RequestType.get).then((response) {
@@ -76,6 +97,99 @@ class ApiService {
         //2xx
         if (callback != null) {
           callback(User.withJson(jsonDecode(response.body)), null);
+        }
+      } else {
+        if (callback != null) {
+          callback(null, jsonDecode(response.body));
+        }
+      }
+    });
+  }
+
+  void _getUsers(Function(List<User>, Map<String, dynamic> error) callback) {
+    _send("users", null, RequestType.get).then((response) {
+      if (response.statusCode ~/ 100 == 2) {
+        //2xx
+        if (callback != null) {
+          List<dynamic> elems = jsonDecode(response.body)["results"];
+          var models = elems.map((map) {
+            return User.withJson(map);
+          }).toList();
+          callback(models, null);
+        }
+      } else {
+        if (callback != null) {
+          callback(null, jsonDecode(response.body));
+        }
+      }
+    });
+  }
+
+  void _getPlanets(
+      Function(List<Planet>, Map<String, dynamic> error) callback) {
+    _send("classes/planet", null, RequestType.get).then((response) {
+      if (response.statusCode ~/ 100 == 2) {
+        //2xx
+        if (callback != null) {
+          List<dynamic> elems = jsonDecode(response.body)["results"];
+          var models = elems.map((map) {
+            return Planet.withJson(map);
+          }).toList();
+          callback(models, null);
+        }
+      } else {
+        if (callback != null) {
+          callback(null, jsonDecode(response.body));
+        }
+      }
+    });
+  }
+
+  void getExploreItems(
+      Function(List<User> users, List<Planet> planets,
+              Map<String, dynamic> error)
+          callback) {
+    _getUsers((users, error) {
+      if (users != null) {
+        _getPlanets((planets, error) {
+          if (planets != null) {
+            planets = planets.map((p) {
+              for (var user in users) {
+                if (user.userId == p.ownerId) {
+                  p.owner = user;
+                }
+              }
+              return p;
+            }).toList();
+            callback(
+              users,
+              planets,
+              null,
+            );
+          } else {
+            callback(null, null, error);
+          }
+        });
+      } else {
+        callback(null, null, error);
+      }
+    });
+  }
+
+  void _queryUser(
+      User user, Function(User, Map<String, dynamic> error) callback) {
+    String query = jsonEncode(user.jsonMap());
+
+    _send("users?where=" + query, null, RequestType.get).then((response) {
+      if (response.statusCode ~/ 100 == 2) {
+        //2xx
+        if (callback != null) {
+          List users = jsonDecode(response.body)["results"];
+          if (users.length == 0) {
+            callback(null, null);
+          } else {
+            callback(User.withJson(users.first), null);
+          }
         }
       } else {
         if (callback != null) {
@@ -150,13 +264,48 @@ class ApiService {
     });
   }
 
-  void uploadImage(String path, Function(String) callback) {
+  void getNewPostOfPlanet(Planet planet,Function(List<Post>,Map<String, dynamic> error) callback)
+  {
+    String query = jsonEncode((Post()..starId=planet.id).jsonMap());
+    _getPosts(query, callback);
+  }
+
+  void getHotPostOfPlanet(Planet planet,Function(List<Post>,Map<String, dynamic> error) callback)
+  {
+    String query = jsonEncode((Post()..starId=planet.id).jsonMap());
+    _getPosts(query,callback);
+  }
+
+  void getPostOfUser(User user,Function(List<Post>,Map<String, dynamic> error) callback){
+    String query = jsonEncode((Post()..ownerId=user.userId).jsonMap());
+    _getPosts(query,callback);
+  }
+
+  void _getPosts(String query,Function(List<Post>,Map<String, dynamic> error) callback){
+
+    _send("classes/post?where=" + query, null, RequestType.get).then((response) {
+      if (response.statusCode ~/ 100 == 2) {
+        //2xx
+        if (callback != null) {
+          List posts = jsonDecode(response.body)["results"];
+          callback(posts.map((item)=>Post.withJson(item)).toList(), null);
+        }
+      } else {
+        if (callback != null) {
+          callback(null, jsonDecode(response.body));
+        }
+      }
+    });
+  }
+
+  void uploadImage(
+      String path, Function(String, Map<String, dynamic> error) callback) {
     _upload(File(path)).then((response) {
       response.stream.transform(utf8.decoder).listen((value) {
         if (response.statusCode ~/ 100 == 2) {
-          callback(jsonDecode(value)["url"]);
+          callback(jsonDecode(value)["url"], null);
         } else {
-          callback(null);
+          callback(null, jsonDecode(value));
         }
       });
     });
@@ -257,24 +406,36 @@ class ApiService {
   }
 
   Future<http.StreamedResponse> _upload(File file) async {
+    // var uri = Uri.parse("http://pub.dartlang.org/packages/create");
+    // var request = new http.MultipartRequest("POST", uri);
+    // request.fields['user'] = 'nweiz@google.com';
+    // request.files.add(new http.MultipartFile.fromPath(
+    //     'package',
+    //     'build/package.tar.gz',
+    //     contentType: new MediaType('application', 'x-tar'));
+    // var response = await request.send();
+    // if (response.statusCode == 200) print('Uploaded!');
+
     // open a bytestream
-    var stream = new http.ByteStream(DelegatingStream.typed(file.openRead()));
+    var stream = http.ByteStream(DelegatingStream.typed(file.openRead()));
     // get file length
     var length = await file.length();
     // string to uri
-    var uri = Uri.parse(Consts.fileUploadUrl + "avartar.png");
+    var uri = Uri.parse(Consts.baseUrl + "files/avartar.png");
 
     // create multipart request
-    var request = new http.MultipartRequest("POST", uri);
+    var request = http.MultipartRequest("POST", uri);
 
     // multipart that takes file
-    var multipartFile = new http.MultipartFile('file', stream, length,
+    var multipartFile = http.MultipartFile('file', stream, length,
         filename: basename(file.path));
 
     // add file to multipart
     request.files.add(multipartFile);
     request.headers["X-LC-Id"] = Consts.appID;
     request.headers["X-LC-Key"] = Consts.appKey;
+    // request.headers["Content-Type"] = "image/png";
+    request.headers["X-LC-Session"] = PSManager.shared.currentUser.sessionToken;
 
     // send
     return await request.send();
@@ -283,7 +444,8 @@ class ApiService {
   Future<http.Response> _send(
       String path, Map<String, dynamic> params, RequestType reqType) async {
     var client = new http.Client();
-    String url = Consts.baseUrl + path;
+    String url = Consts.baseUrl + Uri.encodeFull(path);
+    // String url = Consts.baseUrl + path;
     http.Response response;
 
     try {
@@ -292,6 +454,12 @@ class ApiService {
         "X-LC-Key": Consts.appKey,
         "Content-Type": "application/json"
       };
+
+      if (PSManager.shared.currentUser != null &&
+          PSManager.shared.currentUser.sessionToken != null) {
+        header["X-LC-Session"] = PSManager.shared.currentUser.sessionToken;
+      }
+
       switch (reqType) {
         case RequestType.post:
           response =

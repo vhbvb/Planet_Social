@@ -1,4 +1,6 @@
 PODS:
+  - audioplayers (0.0.1):
+    - Flutter
   - Flutter (1.0.0)
   - image_picker (0.0.1):
     - Flutter
@@ -34,7 +36,24 @@ PODS:
   - mob_sharesdk/ShareSDKUI (4.3.4):
     - mob_sharesdk/ShareSDK
     - MOBFoundation
+  - mob_smssdk (3.2.3):
+    - MOBFoundation
   - MOBFoundation (3.2.6)
+  - mobsms (0.0.1):
+    - Flutter
+    - mob_smssdk
+  - path_provider (0.0.1):
+    - Flutter
+  - rongcloud_im_plugin (0.0.1):
+    - Flutter
+    - RongCloudIM/IMLib
+  - RongCloudIM/IMLib (2.10.1)
+  - shared_preferences (0.0.1):
+    - Flutter
+  - shared_preferences_macos (0.0.1):
+    - Flutter
+  - shared_preferences_web (0.0.1):
+    - Flutter
   - sharesdk_plugin (1.1.0):
     - Flutter
     - mob_sharesdk
@@ -47,32 +66,76 @@ PODS:
     - mob_sharesdk/ShareSDKPlatforms/WeChat
     - mob_sharesdk/ShareSDKRestoreScene
     - mob_sharesdk/ShareSDKUI
+  - video_player (0.0.1):
+    - Flutter
+  - video_player_web (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
-  - Flutter (from `.symlinks/flutter/ios`)
+  - audioplayers (from `.symlinks/plugins/audioplayers/ios`)
+  - Flutter (from `Flutter`)
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
+  - mobsms (from `.symlinks/plugins/mobsms/ios`)
+  - path_provider (from `.symlinks/plugins/path_provider/ios`)
+  - rongcloud_im_plugin (from `.symlinks/plugins/rongcloud_im_plugin/ios`)
+  - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
+  - shared_preferences_macos (from `.symlinks/plugins/shared_preferences_macos/ios`)
+  - shared_preferences_web (from `.symlinks/plugins/shared_preferences_web/ios`)
   - sharesdk_plugin (from `.symlinks/plugins/sharesdk_plugin/ios`)
+  - video_player (from `.symlinks/plugins/video_player/ios`)
+  - video_player_web (from `.symlinks/plugins/video_player_web/ios`)
 
 SPEC REPOS:
   trunk:
     - mob_sharesdk
+    - mob_smssdk
     - MOBFoundation
+    - RongCloudIM
 
 EXTERNAL SOURCES:
+  audioplayers:
+    :path: ".symlinks/plugins/audioplayers/ios"
   Flutter:
-    :path: ".symlinks/flutter/ios"
+    :path: Flutter
   image_picker:
     :path: ".symlinks/plugins/image_picker/ios"
+  mobsms:
+    :path: ".symlinks/plugins/mobsms/ios"
+  path_provider:
+    :path: ".symlinks/plugins/path_provider/ios"
+  rongcloud_im_plugin:
+    :path: ".symlinks/plugins/rongcloud_im_plugin/ios"
+  shared_preferences:
+    :path: ".symlinks/plugins/shared_preferences/ios"
+  shared_preferences_macos:
+    :path: ".symlinks/plugins/shared_preferences_macos/ios"
+  shared_preferences_web:
+    :path: ".symlinks/plugins/shared_preferences_web/ios"
   sharesdk_plugin:
     :path: ".symlinks/plugins/sharesdk_plugin/ios"
+  video_player:
+    :path: ".symlinks/plugins/video_player/ios"
+  video_player_web:
+    :path: ".symlinks/plugins/video_player_web/ios"
 
 SPEC CHECKSUMS:
+  audioplayers: 84f968cea3f2deab00ec4f8ff53358b3c0b3992c
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   image_picker: e3eacd46b94694dde7cf2705955cece853aa1a8f
   mob_sharesdk: ecee6e8ba42f76a252a40d2da7a1f7301b9831d6
+  mob_smssdk: cdb6a31d4fd4667ed928e2eca03f21ad89ebc05c
   MOBFoundation: 08c456357888e4c984fba23bbf04cfd2f4fc1e02
+  mobsms: 141956ad151a39a69a47a2ddf2e186405346c4ef
+  path_provider: fb74bd0465e96b594bb3b5088ee4a4e7bb1f2a9d
+  rongcloud_im_plugin: 2e9076465c27d5970f4219058ae4745703470201
+  RongCloudIM: c1ef5fd24a32ab4f591b3df2ef1e0e01b58ff1b7
+  shared_preferences: 430726339841afefe5142b9c1f50cb6bd7793e01
+  shared_preferences_macos: f3f29b71ccbb56bf40c9dd6396c9acf15e214087
+  shared_preferences_web: 141cce0c3ed1a1c5bf2a0e44f52d31eeb66e5ea9
   sharesdk_plugin: 0eb7499dac8fb7feca8ecd100d26e69249654481
+  video_player: 69c5f029fac4ffe4fc8a85ea7f7b793709661549
+  video_player_web: da8cadb8274ed4f8dbee8d7171b420dedd437ce7
 
-PODFILE CHECKSUM: b6a0a141693093b304368d08511b46cf3d1d0ac5
+PODFILE CHECKSUM: 1b66dae606f75376c5f2135a8290850eeb09ae83
 
 COCOAPODS: 1.8.3

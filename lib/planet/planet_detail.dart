@@ -1,19 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:planet_social/base/api_service.dart';
+import 'package:planet_social/common/PSAlert.dart';
+import 'package:planet_social/const.dart';
 import 'package:planet_social/models/planet_model.dart';
+import 'package:planet_social/models/post_model.dart';
 import 'package:planet_social/planet/post_list.dart';
 import 'package:planet_social/route.dart';
 
 class PlanetDetail extends StatefulWidget {
-  const PlanetDetail({Key key, this.plant}) : super(key: key);
-  final Planet plant;
+  const PlanetDetail({Key key, this.planet}) : super(key: key);
+  final Planet planet;
   @override
   State<StatefulWidget> createState() => _PlanetDetailState();
 }
 
 class _PlanetDetailState extends State<PlanetDetail> {
+
+  int numbers = 0;
+  List<Post> news = [];
+  List<Post> hots = [];
+
+
   _header() => GestureDetector(
     onTap: (){
-      PSRoute.push(context, "user_detail", null);
+      PSRoute.push(context, "planet_likes", widget.planet);
     },
     child: Container(
         width: double.infinity,
@@ -27,16 +37,16 @@ class _PlanetDetailState extends State<PlanetDetail> {
               padding: EdgeInsets.only(left: 10, right: 15),
               child: ClipOval(
                   child: Image.network(
-                widget.plant.owner.avatar,
+                Consts.defaultAvatar,
                 height: 40,
                 width: 40,
               )),
             ),
-            Text(widget.plant.owner.nickName,
+            Text(widget.planet.owner==null?"":widget.planet.owner.nickName,
                 style: TextStyle(color: Colors.white, fontSize: 14)),
             Expanded(
               child: Text(
-                widget.plant.fans.toString(),
+                numbers.toString(),
                 style: TextStyle(color: Colors.white, fontSize: 14),
                 textAlign: TextAlign.right,
               ),
@@ -55,6 +65,32 @@ class _PlanetDetailState extends State<PlanetDetail> {
   );
 
   @override
+  void initState() {
+
+    ApiService.shared.getHotPostOfPlanet(widget.planet, (posts,error){
+      if(error == null){
+        setState(() {
+          hots.addAll(posts);
+        });
+      }else{
+        PSAlert.show(context, "热帖获取失败", error.toString());
+      }
+    });
+
+    ApiService.shared.getNewPostOfPlanet(widget.planet, (posts,error){
+      if(error == null){
+        setState(() {
+          news.addAll(posts);
+        });
+      }else{
+        PSAlert.show(context, "新帖获取失败", error.toString());
+      }
+    });
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
@@ -69,22 +105,14 @@ class _PlanetDetailState extends State<PlanetDetail> {
               padding: EdgeInsets.all(11),
             ),
           ),
-          title: Text(widget.plant.title,
+          title: Text(widget.planet.title,
               style: TextStyle(color: Colors.black, fontSize: 17)),
-          // actions: <Widget>[
-          //   GestureDetector(
-          //     child: Image.asset("assets/消息推送.png", height: 30, width: 30),
-          //     onTap: () {
-          //       print("msg........");
-          //     },
-          //   )
-          // ],
         ),
         floatingActionButton: Padding(
           padding: EdgeInsets.only(bottom: 50),
           child: FloatingActionButton(
             onPressed: () {
-              PSRoute.push(context, "post_post", null);
+              PSRoute.push(context, "post_post", widget.planet);
             },
             child: Icon(Icons.add),
             elevation: 3.0,
@@ -97,7 +125,7 @@ class _PlanetDetailState extends State<PlanetDetail> {
           padding: EdgeInsets.all(10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[_header(), PostList()],
+            children: <Widget>[_header(), PostList(news: news,hots: hots,)],
           ),
         ));
   }

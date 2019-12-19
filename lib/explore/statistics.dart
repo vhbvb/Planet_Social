@@ -30,7 +30,7 @@ class _StatisticsState extends State<Statistics> {
         children: <Widget>[
           Image.asset(isLeft?"assets/users.png":"assets/stars.png",height: 30,width: 30,),
           Text(
-            widget.users.toString()+(isLeft?"人":""),
+            (isLeft?widget.users.toString():widget.planets.toString())+(isLeft?" 人":" "),
             style: TextStyle(
               color: Colors.white,
               fontSize: 12

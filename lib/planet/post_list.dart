@@ -3,6 +3,11 @@ import 'package:planet_social/common/post_detail.dart';
 import 'package:planet_social/models/post_model.dart';
 
 class PostList extends StatefulWidget {
+  
+  final List<Post> news;
+  final List<Post> hots;
+
+  const PostList({Key key, this.news, this.hots}) : super(key: key);
   @override
   State<StatefulWidget> createState() => _PostListState();
 }
@@ -45,15 +50,15 @@ class _PostListState extends State<PostList>
           controller: _tapController,
           children: <Widget>[
             ListView.builder(
-              itemCount: 10,
+              itemCount: widget.news.length,
               itemBuilder: (context, index) => PostDetail(
-                post: Post(),
+                post: widget.news[index],
               ),
             ),
             ListView.builder(
-              itemCount: 10,
+              itemCount: widget.hots.length,
               itemBuilder: (context, index) => PostDetail(
-                post: Post(),
+                post: widget.hots[index],
               ),
             ),
           ],

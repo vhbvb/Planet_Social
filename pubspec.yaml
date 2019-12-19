@@ -33,6 +33,10 @@ dev_dependencies:
   path:
   sharesdk_plugin:
   mobsms:
+  video_player:
+  audioplayers:
+  rongcloud_im_plugin:
+  shared_preferences:
 
 
 # For information on the generic Dart part of this file, see the
@@ -83,6 +87,9 @@ flutter:
    - assets/验证码图标.png
    - assets/手机号图标.png
    - assets/密码图标.png
+   - assets/图标4a.png
+   - assets/图标4b.png
+   - assets/返回图标2.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

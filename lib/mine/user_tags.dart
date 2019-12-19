@@ -1,12 +1,15 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:planet_social/base/utils.dart';
+import 'package:planet_social/common/PSAlert.dart';
 import 'package:planet_social/models/user_model.dart';
 
 class UserTags extends StatefulWidget {
-  @override
-  final User user = User();
 
+  final User user ;
+  const UserTags({Key key, this.user}) : super(key: key);
+
+  @override
   State<StatefulWidget> createState() => UserTagsState();
 }
 
@@ -50,7 +53,12 @@ class UserTagsState extends State<UserTags> {
                       ),
                     ),
                     MaterialButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        setState(() {
+                          widget.user.tags.add(controller.text);
+                          controller.text = "";
+                        });
+                      },
                       child: Text(
                         "添加",
                         style: TextStyle(color: Colors.red, fontSize: 18),
@@ -65,8 +73,15 @@ class UserTagsState extends State<UserTags> {
                     spacing: 10,
                     runSpacing: 10,
                     children: widget.user.tags.map((tag) {
-                      return Container(
-                        // height: 30,
+                      return GestureDetector(
+                        onTap: (){
+                          PSAlert.showConfirm(context, "确定删除此标签？", (){
+                            setState(() {
+                              widget.user.tags.remove(tag);
+                            });
+                          });
+                        },
+                        child: Container(
                         padding: EdgeInsets.only(left: 12, right: 12,top: 5,bottom: 5),
                         decoration: BoxDecoration(
                           color: Util.randomColor(),
@@ -75,6 +90,7 @@ class UserTagsState extends State<UserTags> {
                         child: Text(tag,
                             style:
                                 TextStyle(color: Colors.white, fontSize: 12)),
+                      ),
                       );
                     }).toList(),
                   ))

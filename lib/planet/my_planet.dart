@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:planet_social/base/utils.dart';
 import 'package:planet_social/models/planet_model.dart';
+import 'package:planet_social/models/post_model.dart';
 import 'package:planet_social/planet/post_list.dart';
 import 'package:planet_social/route.dart';
 
@@ -10,6 +11,17 @@ class MyPlanet extends StatefulWidget {
 }
 
 class _MyPlanetState extends State<MyPlanet> {
+
+  final List<String> imIn = [];
+  final List<Post> hots = [];
+  final List<Post> news = [];
+
+  @override
+  void initState() {
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,21 +30,6 @@ class _MyPlanetState extends State<MyPlanet> {
           "星球",
           style: TextStyle(color: Colors.black, fontSize: 17),
         ),
-        // actions: <Widget>[
-        //   GestureDetector(
-        //     child: Padding(
-        //       child: Image.asset(
-        //         "assets/消息推送.png",
-        //         height: 30,
-        //         width: 30,
-        //       ),
-        //       padding: EdgeInsets.only(right: 10),
-        //     ),
-        //     onTap: () {
-        //       print("msg........");
-        //     },
-        //   )
-        // ],
       ),
       body: Padding(
         padding: EdgeInsets.all(10),
@@ -52,9 +49,21 @@ class _MyPlanetState extends State<MyPlanet> {
             SizedBox(
               height: 35,
               width: double.infinity,
-              child: ListView.separated(
+              child: _planetsIamIn()
+            ),
+            PostList(news:news,hots: hots,)
+          ],
+        ),
+      ),
+    );
+  }
+
+
+  _planetsIamIn(){
+    if(imIn.length > 0){
+     return ListView.separated(
                 scrollDirection: Axis.horizontal,
-                itemCount: 5,
+                itemCount: imIn.length,
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     child: Container(
@@ -64,12 +73,12 @@ class _MyPlanetState extends State<MyPlanet> {
                         borderRadius: BorderRadius.all(Radius.circular(3)),
                         color: Util.randomColor()),
                     child: Text(
-                      "来自未来的火星",
+                      imIn[index],
                       style: TextStyle(color: Colors.black, fontSize: 12),
                     ),
                   ),
                   onTap: (){
-                    PSRoute.push(context, "plant_detail", Planet());
+                    PSRoute.push(context, "planet_detail", Planet());
                   },
                   );
                 },
@@ -79,12 +88,9 @@ class _MyPlanetState extends State<MyPlanet> {
                     width: 10,
                   );
                 },
-              ),
-            ),
-            PostList()
-          ],
-        ),
-      ),
-    );
+              );
+    }else{
+      return Center(child: Text("你还没有加入任何星球哦。",style: TextStyle(color: Colors.deepOrange),));
+    }
   }
 }

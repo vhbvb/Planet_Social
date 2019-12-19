@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:planet_social/base/bar_item.dart';
 import 'package:planet_social/base/manager.dart';
-import 'package:planet_social/common/login.dart';
 import 'package:planet_social/route.dart';
 
 class PlanetSocial extends StatefulWidget {
@@ -46,18 +45,17 @@ class _PlanetSocialState extends State<PlanetSocial> {
   @override
   void initState() {
     super.initState();
-
-    // if(PSManager.shared.currentUser == null){
-    //   PSRoute.push(context, "login", null);
-    // }
+    PSManager.shared.isLogin.then((islogin) {
+      if (!islogin) {
+        Future.delayed(Duration(seconds: 1), () {
+          PSRoute.push(context, "login", null);
+        });
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (PSManager.shared.currentUser == null) {
-      return LoginPage();
-    }
-
     return Scaffold(
         body: _currentPage(),
         bottomNavigationBar: BottomNavigationBar(

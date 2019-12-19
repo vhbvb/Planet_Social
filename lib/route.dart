@@ -1,48 +1,68 @@
 import 'package:flutter/material.dart';
 import 'package:planet_social/common/login.dart';
 import 'package:planet_social/explore/explore.dart';
-import 'package:planet_social/message/message.dart';
+import 'package:planet_social/explore/planet_create.dart';
+import 'package:planet_social/message/im.dart';
 import 'package:planet_social/mine/user_detail.dart';
 import 'package:planet_social/mine/user_info.dart';
 import 'package:planet_social/mine/user_tags.dart';
 import 'package:planet_social/planet/my_planet.dart';
 import 'package:planet_social/planet/planet_detail.dart';
+import 'package:planet_social/planet/planet_likeList.dart';
 import 'package:planet_social/planet/post_content.dart';
 import 'package:planet_social/planet/post_post.dart';
 
 class PSRoute {
   static final explore = Explore();
   static final myPlanet = MyPlanet();
-  static final message = Message();
+  static final message = ConversationList();
   static final me = UserDetail();
 
-  static Widget _page(String url,dynamic params){
-
+  static Widget _page(String url, dynamic params) {
     switch (url) {
+      case "login":
+        return LoginPage();
       case "user_detail":
-          return LoginPage();
-      case "user_detail":
-          return UserDetail();
+        return UserDetail(
+          user: params,
+        );
       case "user_settings":
-          return UserInfo(user: params,);
+        return UserInfo(
+          user: params,
+        );
       case "user_tags":
-          return UserTags();
-      case "plant_detail":
-          return PlanetDetail(plant: params);
+        return UserTags(
+          user: params,
+        );
+      case "planet_detail":
+        return PlanetDetail(planet: params);
       case "post_post":
-          return PostPost();
+        return PostPost(planet: params,);
       case "post_content":
-          return PostContent(post: params);
-      default:return Message();
+        return PostContent(post: params);
+      case "planet_create":
+        return PlanetCreate();
+            case "planet_likes":
+        return PlanetLikeList(planet: params,);
+      default:
+        return null;
     }
   }
 
-  static push(BuildContext context,String url,dynamic params){
-    Navigator.of(context).push(MaterialPageRoute(builder: (context)=>_page(url, params)));
+  static push(BuildContext context, String url, dynamic params,
+      {bool replace = false}) {
+    if (replace) {
+      Navigator.of(context).pushReplacement(
+          (MaterialPageRoute(builder: (context) => _page(url, params))));
+    } else {
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => _page(url, params)));
+    }
+
     // Navigator.of(context).push(ModalRoute(Rs))
   }
 
-  static pop(BuildContext context){
+  static pop(BuildContext context) {
     Navigator.of(context).pop();
   }
 }

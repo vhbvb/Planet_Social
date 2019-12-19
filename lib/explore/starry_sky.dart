@@ -112,6 +112,7 @@ class _StarrySkyState extends State<StarrySky> with SingleTickerProviderStateMix
           model: item,
           left: distance.dx+3/2*cw,
           top: distance.dy+3/2*ch,
+          context: context,
         ));
       }
     }

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:planet_social/base/api_service.dart';
 import 'package:planet_social/base/utils.dart';
+import 'package:planet_social/common/PSAlert.dart';
+import 'package:planet_social/const.dart';
 import 'package:planet_social/models/user_model.dart';
 import 'package:planet_social/route.dart';
 import 'package:image_picker/image_picker.dart';
@@ -12,6 +15,24 @@ class UserInfo extends StatefulWidget {
 }
 
 class _UserInfoState extends State<UserInfo> {
+
+  @override
+  void initState() {
+    
+    if(widget.user.avatar == null){
+      widget.user.avatar = Consts.defaultAvatar;
+    }
+
+    if(widget.user.sex == null){
+      widget.user.sex = 0;
+    }
+
+    if(widget.user.tags == null){
+      widget.user.tags = [];
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,9 +54,7 @@ class _UserInfoState extends State<UserInfo> {
         ),
         actions: <Widget>[
           MaterialButton(
-            onPressed: (){
-
-            },
+            onPressed: _save,
             child: Text("保存",style: TextStyle(color: Colors.black ,fontSize: 16),),
           )
         ],
@@ -63,9 +82,11 @@ class _UserInfoState extends State<UserInfo> {
             "头像",
             ClipOval(
               child: Image.network(
+                
                 widget.user.avatar,
-                height: 64,
-                width: 64,
+                height: 44,
+                width: 44,
+                fit: BoxFit.fill,
               ),
             ));
 
@@ -153,11 +174,17 @@ class _UserInfoState extends State<UserInfo> {
     // Picker
 
     if (index == 0) {
-      ImagePicker.pickImage(source: ImageSource.camera).then((value) {
+      ImagePicker.pickImage(source: ImageSource.gallery).then((value) {
         print(value.path);
-        setState(() {
-          widget.user.avatar =
-              "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1575611710084&di=a8f691903dad2c12f22c078b0972760e&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201706%2F21%2F20170621232723_ZuvKF.jpeg";
+        
+        ApiService.shared.uploadImage(value.path, (url,error){
+          if(url != null){
+            setState(() {
+              widget.user.avatar = url;
+            });
+          }else{
+            PSAlert.show(context, "头像上传失败", error.toString());
+          }
         });
       });
     }
@@ -201,7 +228,7 @@ class _UserInfoState extends State<UserInfo> {
     }
 
     if(index == 3){
-      PSRoute.push(context, "user_tags", null);
+      PSRoute.push(context, "user_tags", widget.user);
     }
   }
 
@@ -221,6 +248,20 @@ class _UserInfoState extends State<UserInfo> {
           ),
         );
 
-    return widget.user.tags.map(_build).toList();
+    List<String> arr = widget.user.tags;
+    if (arr.length >3) {
+      arr = arr.sublist(0,3);
+    }
+    return arr.map(_build).toList();
+  }
+
+  _save(){
+    ApiService.shared.updateUserInfo(widget.user, (error){
+      if(error != null){
+        PSAlert.show(context, "用户更新失败", error.toString());
+      }else{
+        PSAlert.show(context, "成功", "信息已更新");
+      }
+    });
   }
 }
