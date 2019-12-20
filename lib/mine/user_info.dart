@@ -47,7 +47,7 @@ class _UserInfoState extends State<UserInfo> {
           },
           child: Padding(
             child: Image.asset(
-              "assets/返回图标.png",
+              "assets/back.png",
             ),
             padding: EdgeInsets.all(11),
           ),
@@ -155,7 +155,7 @@ class _UserInfoState extends State<UserInfo> {
             Padding(
               padding: EdgeInsets.only(left: 5),
               child: Image.asset(
-                "assets/箭头3.png",
+                "assets/row3.png",
                 width: 20,
                 height: 20,
               ),
@@ -260,7 +260,9 @@ class _UserInfoState extends State<UserInfo> {
       if(error != null){
         PSAlert.show(context, "用户更新失败", error.toString());
       }else{
-        PSAlert.show(context, "成功", "信息已更新");
+        PSAlert.show(context, "成功", "信息已更新",confirm: (){
+          PSRoute.pop(context);
+        });
       }
     });
   }

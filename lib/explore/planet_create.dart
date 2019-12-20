@@ -18,7 +18,7 @@ class _PlanetCreateState extends State<PlanetCreate> {
       body:AppBar(
           // backgroundColor: Colors.red,
           title: Text(
-            "修改标签",
+            "创建星球",
             style: TextStyle(color: Colors.white, fontSize: 17),
           ),
           leading: GestureDetector(
@@ -27,7 +27,7 @@ class _PlanetCreateState extends State<PlanetCreate> {
             },
             child: Padding(
               child: Image.asset(
-                "assets/返回图标2.png",
+                "assets/back2.png",
               ),
               padding: EdgeInsets.all(11),
             ),

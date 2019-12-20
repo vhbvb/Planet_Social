@@ -5,6 +5,7 @@ import 'package:planet_social/base/manager.dart';
 import 'package:planet_social/base/utils.dart';
 import 'package:planet_social/common/PSAlert.dart';
 import 'package:planet_social/common/post_detail.dart';
+import 'package:planet_social/const.dart';
 import 'package:planet_social/models/post_model.dart';
 import 'package:planet_social/models/user_model.dart';
 import 'package:planet_social/route.dart';
@@ -25,6 +26,7 @@ class _UserDetailState extends State<UserDetail> {
 
   int fans=0;
   int likes=0;
+  int likeState=0;//0未知 1喜欢，-1不喜欢
 
   ScrollController _controller;
   double _offset = 0.0;
@@ -32,6 +34,8 @@ class _UserDetailState extends State<UserDetail> {
 //用户标签
   List<Widget> _tags(){
 
+    if(widget.user.tags==null){return [];}
+    
     _build(String tag) => Padding(
       padding: EdgeInsets.only(left: 5,right: 5),
       child: Container(
@@ -56,7 +60,7 @@ class _UserDetailState extends State<UserDetail> {
       Padding(
         padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 80),
         child: ClipOval(
-        child: Image.network(widget.user.avatar,width: 60,height: 60,fit: BoxFit.fill,),
+        child: Image.network(widget.user.avatar==null?Consts.defaultAvatar:widget.user.avatar,width: 60,height: 60,fit: BoxFit.fill,),
       ),
       ),
       Padding(
@@ -106,13 +110,12 @@ class _UserDetailState extends State<UserDetail> {
 
         ],
       ),
+    ];
 
-      Padding(
+    Widget attention = Padding(
         padding: EdgeInsets.only(top: 20,bottom: 20),
         child: GestureDetector(
-          onTap: (){
-            print("关注。。。。。。。。。。。");
-          },
+          onTap: _like,
           child: Container(
             alignment: Alignment.center,
             height: 40,
@@ -121,14 +124,13 @@ class _UserDetailState extends State<UserDetail> {
               color: Color.fromARGB(255, 255, 139, 139),
               borderRadius: BorderRadius.all(Radius.circular(20)),
             ),
-          child: Text("关注",style: TextStyle(color: Colors.white,fontSize: 16),),
+          child: Text(likeState<0?"关注":"已关注",style: TextStyle(color: Colors.white,fontSize: 16),),
         ),
         ),
-      )
-    ];
+      );
 
-    if(isSelf){
-      childrens.removeLast();
+    if(!isSelf && likeState != 0){
+      childrens.add(attention);
     }
 
   return Column(
@@ -137,8 +139,6 @@ class _UserDetailState extends State<UserDetail> {
   );
   }
 
-
-
   _header(){ 
 
     return SliverAppBar(
@@ -146,7 +146,7 @@ class _UserDetailState extends State<UserDetail> {
             style: TextStyle(
                 color: _offset < 220.0 ? Colors.white : Colors.black)),
         centerTitle: true,
-        expandedHeight: isSelf?330:350 +MediaQuery.of(context).padding.top,
+        expandedHeight: isSelf?330:375 +MediaQuery.of(context).padding.top,
         floating: false,
         pinned: true,
         snap: false,
@@ -159,7 +159,7 @@ class _UserDetailState extends State<UserDetail> {
             child: Padding(
               padding: EdgeInsets.only(left: 5,right: 5),
               child: Image.asset(
-              _offset < 220.0 ? "assets/设置2.png" : "assets/设置.png",
+              _offset < 220.0 ? "assets/set2.png" : "assets/set.png",
               height: 22,
               width: 22,
             ),
@@ -193,6 +193,7 @@ class _UserDetailState extends State<UserDetail> {
   @override
   void initState() {
 
+// 状态栏渐变
     _controller = ScrollController()
       ..addListener(() {
         setState(() {
@@ -200,12 +201,18 @@ class _UserDetailState extends State<UserDetail> {
         });
       });
 
+// 变量初始化
     if(widget.user == null){
       widget.user = PSManager.shared.currentUser;
     }
-    tagColors =  widget.user.tags.map((_)=>Util.randomColor()).toList();
+    if( widget.user.tags != null){
+        tagColors =  widget.user.tags.map((_)=>Util.randomColor()).toList();
+    }else{
+      tagColors = [];
+    }
     isSelf = (widget.user == PSManager.shared.currentUser);
 
+//获取帖子
     if(posts.length == 0){
       ApiService.shared.getPostOfUser(widget.user, (results,error){
         if(error == null){
@@ -218,6 +225,26 @@ class _UserDetailState extends State<UserDetail> {
       });
     }
 
+    //检查是否关注
+    if(!isSelf){
+      ApiService.shared.checkIfLikeUser(PSManager.shared.currentUser, widget.user, (didlike,error){
+        setState(() {
+          likeState = didlike?1:-1;
+        });
+      });
+    }
+
+    ApiService.shared.userLikesCount(widget.user, (count){
+      setState(() {
+        likes = count;
+      });
+    });
+
+    ApiService.shared.userFansCount(widget.user, (count){
+      setState(() {
+        fans = count;
+      });
+    });
     super.initState();
   }
 
@@ -236,5 +263,33 @@ class _UserDetailState extends State<UserDetail> {
       ],
     ),
     );
+  }
+
+  //  点击关注
+  _like(){
+
+    _alertError(dynamic error){
+      if (error != null){
+        PSAlert.show(context, "失败", error.toString());
+      }
+    }
+
+    if(likeState == 1){
+      var current = PSManager.shared.currentUser;
+      ApiService.shared.dislikeUser(current, widget.user, (error){
+        setState(() {
+            likeState = (error == null)?-1:1;
+          });
+        _alertError(error);
+      });
+    }else{
+      var current = PSManager.shared.currentUser;
+      ApiService.shared.likeUser(current, widget.user, (error){
+        setState(() {
+            likeState = (error == null)?1:-1;
+          });
+        _alertError(error);
+      });
+    }
   }
 }

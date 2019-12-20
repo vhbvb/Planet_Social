@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:planet_social/base/manager.dart';
 import 'package:planet_social/const.dart';
+import 'package:planet_social/models/comment_model.dart';
 import 'package:planet_social/models/planet_model.dart';
 import 'package:planet_social/models/post_model.dart';
 import 'package:planet_social/models/user_model.dart';
@@ -97,6 +98,22 @@ class ApiService {
         //2xx
         if (callback != null) {
           callback(User.withJson(jsonDecode(response.body)), null);
+        }
+      } else {
+        if (callback != null) {
+          callback(null, jsonDecode(response.body));
+        }
+      }
+    });
+  }
+
+  void getPlanet(
+      String pid, Function(Planet, Map<String, dynamic> error) callback) {
+    _send("classes/planet/" + pid, null, RequestType.get).then((response) {
+      if (response.statusCode ~/ 100 == 2) {
+        //2xx
+        if (callback != null) {
+          callback(Planet.withJson(jsonDecode(response.body)), null);
         }
       } else {
         if (callback != null) {
@@ -264,31 +281,67 @@ class ApiService {
     });
   }
 
-  void getNewPostOfPlanet(Planet planet,Function(List<Post>,Map<String, dynamic> error) callback)
-  {
-    String query = jsonEncode((Post()..starId=planet.id).jsonMap());
+  void getNewPostOfPlanet(Planet planet,
+      Function(List<Post>, Map<String, dynamic> error) callback) {
+    String query = jsonEncode((Post()..starId = planet.id).jsonMap());
     _getPosts(query, callback);
   }
 
-  void getHotPostOfPlanet(Planet planet,Function(List<Post>,Map<String, dynamic> error) callback)
-  {
-    String query = jsonEncode((Post()..starId=planet.id).jsonMap());
-    _getPosts(query,callback);
+  void getHotPostOfPlanet(Planet planet,
+      Function(List<Post>, Map<String, dynamic> error) callback) {
+    String query = jsonEncode((Post()..starId = planet.id).jsonMap());
+    _getPosts(query, callback);
   }
 
-  void getPostOfUser(User user,Function(List<Post>,Map<String, dynamic> error) callback){
-    String query = jsonEncode((Post()..ownerId=user.userId).jsonMap());
-    _getPosts(query,callback);
+  void getPostOfUser(
+      User user, Function(List<Post>, Map<String, dynamic> error) callback) {
+    String query = jsonEncode((Post()..ownerId = user.userId).jsonMap());
+    _getPosts(query, callback);
   }
 
-  void _getPosts(String query,Function(List<Post>,Map<String, dynamic> error) callback){
-
-    _send("classes/post?where=" + query, null, RequestType.get).then((response) {
+  void _getPosts(
+      String query, Function(List<Post>, Map<String, dynamic> error) callback) {
+    _send("classes/post?where=" + query, null, RequestType.get)
+        .then((response) {
       if (response.statusCode ~/ 100 == 2) {
         //2xx
         if (callback != null) {
           List posts = jsonDecode(response.body)["results"];
-          callback(posts.map((item)=>Post.withJson(item)).toList(), null);
+          callback(posts.map((item) => Post.withJson(item)).toList(), null);
+        }
+      } else {
+        if (callback != null) {
+          callback(null, jsonDecode(response.body));
+        }
+      }
+    });
+  }
+
+    void createComment(
+      Comment comment, Function(Comment, Map<String, dynamic> error) callback) {
+    _send("classes/comment", comment.jsonMap(), RequestType.post).then((response) {
+      if (response.statusCode ~/ 100 == 2) {
+        //2xx
+        if (callback != null) {
+          callback(Comment.withJson(jsonDecode(response.body)), null);
+        }
+      } else {
+        if (callback != null) {
+          callback(null, jsonDecode(response.body));
+        }
+      }
+    });
+  }
+
+void getCommentsOfPost(
+      Post post, Function(List<Comment>, Map<String, dynamic> error) callback) { 
+    _send("classes/comment?where=" + jsonEncode((Comment()..postId = post.id).jsonMap()), null, RequestType.get)
+        .then((response) {
+      if (response.statusCode ~/ 100 == 2) {
+        //2xx
+        if (callback != null) {
+          List posts = jsonDecode(response.body)["results"];
+          callback(posts.map((item) => Comment.withJson(item)).toList(), null);
         }
       } else {
         if (callback != null) {
@@ -311,9 +364,109 @@ class ApiService {
     });
   }
 
+  void joinPlanet(
+      User current, Planet planet, Function(Map<String, dynamic> error) callback) {
+    _send("classes/join_planet", {"userId": current.userId, "planetId": planet.id,},
+            RequestType.post)
+        .then((response) {
+      if (response.statusCode ~/ 100 == 2) {
+        callback(null);
+      } else {
+        callback(jsonDecode(response.body));
+      }
+    });
+  }
+
+void planetsJoined(
+      User current, Function(List<Planet>,Map<String, dynamic> error) callback) {
+        var query  = {"userId": current.userId};
+    _send("classes/join_planet?where="+jsonEncode(query), null,
+            RequestType.get)
+        .then((response) {
+      if (response.statusCode ~/ 100 == 2) {
+        List items = jsonDecode(response.body)["results"];
+
+        List planetIds = items.map((map)=>map["planetId"]).toList();
+        List<Planet> results = [];
+
+        int i = 0;
+        for (String item in planetIds) 
+        {
+          this.getPlanet(item, (planet,error){
+            i = i+1;
+            if(error == null && planet != null){
+              results.add(planet);
+            }else{
+              print("ERROR:"+error.toString());
+            }
+
+            if(i == planetIds.length){
+              callback(results,null);
+            }
+          });
+        }
+        // callback();
+      } else {
+        callback(null,jsonDecode(response.body));
+      }
+    });
+  }
+
+
+    void planetUsersCount(Planet planet,Function(int count) callback){
+        var query = {"planetId": planet.id};
+    _send("classes/join_planet?where=" + jsonEncode(query) + "&count=1", null,
+            RequestType.get)
+        .then((response) {
+      if (response.statusCode ~/ 100 == 2) {
+        callback(jsonDecode(response.body)["count"]);
+      } else {
+        callback(0);
+        print("ERROR:"+response.body);
+      }
+    });
+  }
+
+      void planetUsers(Planet planet,Function(List<User>,Map<String, dynamic> error) callback){
+        var query = {"planetId": planet.id};
+    _send("classes/join_planet?where=" + jsonEncode(query), null,
+            RequestType.get)
+        .then((response) {
+      if (response.statusCode ~/ 100 == 2) {
+        List items = jsonDecode(response.body)["results"];
+
+        List userIds = items.map((map)=>map["userId"]).toList();
+        List<User> results = [];
+
+        int i = 0;
+        for (String item in userIds) 
+        {
+          this.getUser(item, (user,error){
+            i = i+1;
+            if(error == null && user != null){
+              results.add(user);
+            }else{
+              print("ERROR:"+error.toString());
+            }
+
+            if(i == userIds.length){
+              callback(results,null);
+            }
+          });
+        }
+
+        // callback();
+      } else {
+        callback(null,jsonDecode(response.body));
+      }
+    });
+  }
+  
+  
+
   void likePost(
       User current, Post post, Function(Map<String, dynamic> error) callback) {
-    _send("classes/post_like", {"userId": current.userId, "postId": post.id},
+    _send("classes/post_like", {"userId": current.userId, "postId": post.id,"tId":post.ownerId},
             RequestType.post)
         .then((response) {
       if (response.statusCode ~/ 100 == 2) {
@@ -326,18 +479,88 @@ class ApiService {
 
   void dislikePost(
       User current, Post post, Function(Map<String, dynamic> error) callback) {
-    String uid = current.userId;
-    String pid = post.id;
     _send(
-            "classes/post_like/<objectId>?where=" +
-                Uri.encodeFull('{"userId":$uid,"postId":$pid}'),
+            "classes/post_like/"+current.userId+"?where=" +
+                jsonEncode({"userId": current.userId, "postId": post.id}),
             null,
             RequestType.delete)
         .then((response) {
+
       if (response.statusCode ~/ 100 == 2) {
         callback(null);
       } else {
         callback(jsonDecode(response.body));
+      }
+    });
+  }
+
+  void userLikesCount(User user,Function(int count) callback){
+        var query = {"tId": user.userId};
+    _send("classes/post_like?where=" + jsonEncode(query) + "&count=1", null,
+            RequestType.get)
+        .then((response) {
+      if (response.statusCode ~/ 100 == 2) {
+        callback(jsonDecode(response.body)["count"]);
+      } else {
+        callback(0);
+        print("ERROR:"+response.body);
+      }
+    });
+  }
+
+    void userFansCount(User user,Function(int count) callback){
+        var query = {"tId": user.userId};
+    _send("classes/user_like?where=" + jsonEncode(query) + "&count=1", null,
+            RequestType.get)
+        .then((response) {
+      if (response.statusCode ~/ 100 == 2) {
+        callback(jsonDecode(response.body)["count"]);
+      } else {
+        callback(0);
+        print("ERROR:"+response.body);
+      }
+    });
+  }
+
+  void checkIfLikePost(User current, Post post,
+      Function(bool like, Map<String, dynamic> error) callback) {
+
+    var query = {"userId": current.userId, "postId": post.id};
+    _send("classes/post_like?where=" + jsonEncode(query) + "&count=1", null,
+            RequestType.get)
+        .then((response) {
+      if (response.statusCode ~/ 100 == 2) {
+        callback(jsonDecode(response.body)["count"] > 0, null);
+      } else {
+        callback(false, jsonDecode(response.body));
+      }
+    });
+  }
+
+  void postCommentsCount(Post post,Function(int) callback){
+    var query = (Comment()..postId = post.id).jsonMap();
+    _send("classes/comment?where=" + jsonEncode(query) + "&count=1", null,
+            RequestType.get)
+        .then((response) {
+      if (response.statusCode ~/ 100 == 2) {
+        callback(jsonDecode(response.body)["count"]);
+      } else {
+        callback(0);
+        print("ERROR:"+response.body);
+      }
+    });
+  }
+
+  void postLikesCount(Post post,Function(int) callback){
+    var query = {"postId":post.id};
+    _send("classes/post_like?where=" + jsonEncode(query) + "&count=1", null,
+            RequestType.get)
+        .then((response) {
+      if (response.statusCode ~/ 100 == 2) {
+        callback(jsonDecode(response.body)["count"]);
+      } else {
+        callback(0);
+        print("ERROR:"+response.body);
       }
     });
   }
@@ -360,10 +583,9 @@ class ApiService {
     String sid = current.userId;
     String tid = user.userId;
 
-    _send(
-            "classes/user_like/<objectId>?where=" +
-                Uri.decodeFull('{"sId": $sid, "tId": $tid}'),
-            null,
+    var query = {"sId": sid, "tId": tid};
+
+    _send("classes/user_like/"+ current.userId +"?where=" + jsonEncode(query), null,
             RequestType.delete)
         .then((response) {
       if (response.statusCode ~/ 100 == 2) {
@@ -374,16 +596,45 @@ class ApiService {
     });
   }
 
-  void likePlanet(User current, Planet planet,
-      Function(Map<String, dynamic> error) callback) {
-    _send("classes/planet_like",
-            {"userId": current.userId, "planetId": planet.id}, RequestType.post)
+  void checkIfLikeUser(User current, User user,
+      Function(bool like, Map<String, dynamic> error) callback) {
+    var query = {"sId": current.userId, "tId": user.userId};
+    _send("classes/user_like?where=" + jsonEncode(query) + "&count=1", null,
+            RequestType.get)
         .then((response) {
       if (response.statusCode ~/ 100 == 2) {
-        callback(null);
+        callback(jsonDecode(response.body)["count"] > 0, null);
       } else {
-        callback(jsonDecode(response.body));
+        callback(false, jsonDecode(response.body));
       }
+    });
+  }
+
+  // void likePlanet(User current, Planet planet,
+  //     Function(Map<String, dynamic> error) callback) {
+  //   _send("classes/join_planet",
+  //           {"userId": current.userId, "planetId": planet.id}, RequestType.post)
+  //       .then((response) {
+  //     if (response.statusCode ~/ 100 == 2) {
+  //       callback(null);
+  //     } else {
+  //       callback(jsonDecode(response.body));
+  //     }
+  //   });
+  // }
+
+    void islikePlanet(User current, Planet planet,
+      Function(bool,Map<String, dynamic> error) callback) {
+        var query = {"userId": current.userId, "planetId": planet.id};
+
+    _send("classes/join_planet?where="+jsonEncode(query)+ "&count=1",null, RequestType.get)
+        .then((response) {
+          
+    if (response.statusCode ~/ 100 == 2) {
+            callback(jsonDecode(response.body)["count"] > 0, null);
+          } else {
+            callback(false, jsonDecode(response.body));
+          }
     });
   }
 
@@ -393,7 +644,7 @@ class ApiService {
     String pid = planet.id;
     _send(
             "classes/planet_like/<objectId>?where=" +
-                Uri.encodeFull('{"userId": $uid, "planetId": $pid}'),
+                jsonEncode({"userId": uid, "planetId": pid}),
             null,
             RequestType.post)
         .then((response) {
@@ -446,6 +697,8 @@ class ApiService {
     var client = new http.Client();
     String url = Consts.baseUrl + Uri.encodeFull(path);
     // String url = Consts.baseUrl + path;
+    print("reqUrl:"+url);
+    print("params:"+params.toString());
     http.Response response;
 
     try {
@@ -482,6 +735,7 @@ class ApiService {
       client.close();
     }
 
+    print(response.body);
     return response;
   }
 }

@@ -52,44 +52,38 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-   - assets/QQ图标.png
-   - assets/图标2b.png
-   - assets/消息推送.png
-   - assets/icon .png
-   - assets/箭头3.png
-   - assets/添加图片.png
-   - assets/icon.png
-   - assets/图标3a.png
-   - assets/点赞图标.png
-   - assets/icon_xinlang.png
-   - assets/图标3b.png
-   - assets/点赞通知.png
-   - assets/图标1a.png
-   - assets/关注通知.png
-   - assets/评论图标.png
-   - assets/图标1b.png
-   - assets/分享图标.png
-   - assets/返回图标.png
-   - assets/分享2.png
-   - assets/发帖按钮.png
-   - assets/消息推送2.png
-   - assets/箭头2.png
-   - assets/回复通知.png
-   - assets/点赞图标2.png
-   - assets/设置2.png
-   - assets/设置.png
-   - assets/微信图标.png
-   - assets/图标2a.png
-   - assets/微博图标.png
-   - assets/star/star.jpeg
-   - assets/stars.png
-   - assets/users.png
-   - assets/验证码图标.png
-   - assets/手机号图标.png
-   - assets/密码图标.png
-   - assets/图标4a.png
-   - assets/图标4b.png
-   - assets/返回图标2.png
+     - assets/3b.png
+     - assets/3a.png
+     - assets/2b.png
+     - assets/4a.png
+     - assets/4b.png
+     - assets/1a.png
+     - assets/1b.png
+     - assets/2a.png
+     - assets/QQ.png
+     - assets/msg_push.png
+     - assets/msg_push2.png
+     - assets/row3.png
+     - assets/row2.png
+     - assets/ad_ph.png
+     - assets/icon.png
+     - assets/zan.png
+     - assets/icon_xinlang.png
+     - assets/cmt.png
+     - assets/share.png
+     - assets/back.png
+     - assets/share2.png
+     - assets/zan2.png
+     - assets/set2.png
+     - assets/set.png
+     - assets/wexin.png
+     - assets/weibo.png
+     - assets/star/star.jpeg
+     - assets/stars.png
+     - assets/users.png
+     - assets/ph.png
+     - assets/sec.png
+     - assets/back2.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

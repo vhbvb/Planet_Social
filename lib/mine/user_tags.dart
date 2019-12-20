@@ -29,7 +29,7 @@ class UserTagsState extends State<UserTags> {
             },
             child: Padding(
               child: Image.asset(
-                "assets/返回图标.png",
+                "assets/back.png",
               ),
               padding: EdgeInsets.all(11),
             ),

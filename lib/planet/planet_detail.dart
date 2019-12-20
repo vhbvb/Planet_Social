@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:planet_social/base/api_service.dart';
+import 'package:planet_social/base/manager.dart';
 import 'package:planet_social/common/PSAlert.dart';
 import 'package:planet_social/const.dart';
 import 'package:planet_social/models/planet_model.dart';
@@ -19,6 +22,7 @@ class _PlanetDetailState extends State<PlanetDetail> {
   int numbers = 0;
   List<Post> news = [];
   List<Post> hots = [];
+  bool like = false;
 
 
   _header() => GestureDetector(
@@ -42,7 +46,7 @@ class _PlanetDetailState extends State<PlanetDetail> {
                 width: 40,
               )),
             ),
-            Text(widget.planet.owner==null?"":widget.planet.owner.nickName,
+            Text(widget.planet.owner==null?"null":widget.planet.owner.nickName,
                 style: TextStyle(color: Colors.white, fontSize: 14)),
             Expanded(
               child: Text(
@@ -54,7 +58,7 @@ class _PlanetDetailState extends State<PlanetDetail> {
             Padding(
               padding: EdgeInsets.only(right: 10),
               child: Image.asset(
-                "assets/箭头2.png",
+                "assets/row2.png",
                 width: 30,
                 height: 30,
               ),
@@ -87,6 +91,18 @@ class _PlanetDetailState extends State<PlanetDetail> {
       }
     });
 
+    ApiService.shared.planetUsersCount(widget.planet, (count){
+      setState(() {
+        numbers = count;
+      });
+    });
+
+    ApiService.shared.islikePlanet(PSManager.shared.currentUser,widget.planet, (didlike,error){
+      setState(() {
+        like = didlike;
+      });
+    });
+
     super.initState();
   }
 
@@ -100,7 +116,7 @@ class _PlanetDetailState extends State<PlanetDetail> {
             },
             child: Padding(
               child: Image.asset(
-                "assets/返回图标.png",
+                "assets/back.png",
               ),
               padding: EdgeInsets.all(11),
             ),
@@ -110,16 +126,7 @@ class _PlanetDetailState extends State<PlanetDetail> {
         ),
         floatingActionButton: Padding(
           padding: EdgeInsets.only(bottom: 50),
-          child: FloatingActionButton(
-            onPressed: () {
-              PSRoute.push(context, "post_post", widget.planet);
-            },
-            child: Icon(Icons.add),
-            elevation: 3.0,
-            highlightElevation: 2.0,
-            backgroundColor: Color(0xffFF8367),
-            // 红色
-          ),
+          child: _floatButton()
         ),
         body: Padding(
           padding: EdgeInsets.all(10),
@@ -128,5 +135,34 @@ class _PlanetDetailState extends State<PlanetDetail> {
             children: <Widget>[_header(), PostList(news: news,hots: hots,)],
           ),
         ));
+  }
+
+  _floatButton(){
+
+    if(like){
+      return      FloatingActionButton(
+            onPressed: (){PSRoute.push(context, "post_post", widget.planet);},
+            child: Icon(Icons.add),
+            elevation: 3.0,
+            highlightElevation: 2.0,
+            backgroundColor: Color(0xffFF8367),
+            // 红色
+          );
+    }else{
+            return  FloatingActionButton(
+            onPressed: (){
+              ApiService.shared.joinPlanet(PSManager.shared.currentUser,widget.planet, (error){
+                setState(() {
+                  like = (error==null);
+                });
+              });
+            },
+            child: Icon(Icons.favorite),
+            elevation: 3.0,
+            highlightElevation: 2.0,
+            backgroundColor: Color(0xffFF8367),
+            // 红色
+          );
+    }
   }
 }

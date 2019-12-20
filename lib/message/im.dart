@@ -67,14 +67,14 @@ class _ConversationListState extends State<ConversationList> {
   Widget _creatConversations(int index) {
     return new GestureDetector(
       onTap: () {
-        final userid = _conversations[index];
+        // final userid = _conversations[index];
 
-        Navigator.push(
-            context,
-            new MaterialPageRoute(
-              builder: (BuildContext context) => new FTIMChat(uid: userid),
-              // fullscreenDialog: true,
-            ));
+        // Navigator.push(
+        //     context,
+        //     new MaterialPageRoute(
+        //       builder: (BuildContext context) => new FTIMChat(uid: userid),
+        //       // fullscreenDialog: true,
+        //     ));
       },
       child: _configCell(),
     );
@@ -96,22 +96,22 @@ class _ConversationListState extends State<ConversationList> {
           middle: new Text("消息",
               style: new TextStyle(
                   fontSize: 17.0, color: Color.fromARGB(255, 73, 73, 83))),
-          leading: new GestureDetector(
-            child:
-                new Image.asset("assets/back.png", height: 30.0, width: 30.0),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-          trailing: new GestureDetector(
-            child: new Image.asset(
-              "assets/service.png",
-              height: 27.0, width: 27.0
-            ),
-            onTap: () {
-              print("------------> pressed");
-            },
-          ),
+          // leading: new GestureDetector(
+          //   child:
+          //       new Image.asset("assets/back.png", height: 30.0, width: 30.0),
+          //   onTap: () {
+          //     Navigator.pop(context);
+          //   },
+          // ),
+          // trailing: new GestureDetector(
+          //   child: new Image.asset(
+          //     "assets/service.png",
+          //     height: 27.0, width: 27.0
+          //   ),
+          //   onTap: () {
+          //     print("------------> pressed");
+          //   },
+          // ),
         ),
         // backgroundColor: Colors.green,
         child: new Material(

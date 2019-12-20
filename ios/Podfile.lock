@@ -12,9 +12,6 @@ PODS:
   - mob_sharesdk/ShareSDKExtension (4.3.4):
     - mob_sharesdk/ShareSDK
     - MOBFoundation
-  - mob_sharesdk/ShareSDKPlatforms/Douyin (4.3.4):
-    - mob_sharesdk/ShareSDK
-    - MOBFoundation
   - mob_sharesdk/ShareSDKPlatforms/Facebook (4.3.4):
     - mob_sharesdk/ShareSDK
     - MOBFoundation
@@ -58,7 +55,6 @@ PODS:
     - Flutter
     - mob_sharesdk
     - mob_sharesdk/ShareSDKExtension
-    - mob_sharesdk/ShareSDKPlatforms/Douyin
     - mob_sharesdk/ShareSDKPlatforms/Facebook
     - mob_sharesdk/ShareSDKPlatforms/QQ
     - mob_sharesdk/ShareSDKPlatforms/SinaWeibo
@@ -132,7 +128,7 @@ SPEC CHECKSUMS:
   shared_preferences: 430726339841afefe5142b9c1f50cb6bd7793e01
   shared_preferences_macos: f3f29b71ccbb56bf40c9dd6396c9acf15e214087
   shared_preferences_web: 141cce0c3ed1a1c5bf2a0e44f52d31eeb66e5ea9
-  sharesdk_plugin: 0eb7499dac8fb7feca8ecd100d26e69249654481
+  sharesdk_plugin: 8b57f21721efb60b147d40bcf49b7114cdf71f76
   video_player: 69c5f029fac4ffe4fc8a85ea7f7b793709661549
   video_player_web: da8cadb8274ed4f8dbee8d7171b420dedd437ce7
 

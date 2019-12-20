@@ -18,7 +18,7 @@ class _PostListState extends State<PostList>
 
   _tabbar() => Padding(
         padding: EdgeInsets.only(
-            top: 30, right: MediaQuery.of(context).size.width / 2),
+            top: 30, right: MediaQuery.of(context).size.width * 0.4),
         child: TabBar(
           controller: _tapController,
           indicatorPadding: EdgeInsets.only(right: 30, left: 30),

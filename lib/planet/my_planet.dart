@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:planet_social/base/api_service.dart';
+import 'package:planet_social/base/manager.dart';
 import 'package:planet_social/base/utils.dart';
+import 'package:planet_social/common/PSAlert.dart';
 import 'package:planet_social/models/planet_model.dart';
 import 'package:planet_social/models/post_model.dart';
 import 'package:planet_social/planet/post_list.dart';
@@ -12,12 +15,45 @@ class MyPlanet extends StatefulWidget {
 
 class _MyPlanetState extends State<MyPlanet> {
 
-  final List<String> imIn = [];
+  final List<Planet> imIn = [];
   final List<Post> hots = [];
   final List<Post> news = [];
 
   @override
   void initState() {
+
+    _loadPosts(){
+
+      for (var item in imIn) 
+      {
+        ApiService.shared.getHotPostOfPlanet(item, (results,error){
+          if(error == null){
+            setState(() {
+              hots.addAll(results);
+            });
+          }
+        });  
+
+        ApiService.shared.getNewPostOfPlanet(item, (results,error){
+                    if(error == null){
+            setState(() {
+              news.addAll(results);
+            });
+          }
+        });  
+      }
+    }
+
+    ApiService.shared.planetsJoined(PSManager.shared.currentUser, (results,error){
+      if(error == null){
+        setState(() {
+          imIn.addAll(results);
+        });
+        _loadPosts();
+      }else{
+        PSAlert.show(context, "星球获取失败", error.toString());
+      }
+    });
 
     super.initState();
   }
@@ -58,7 +94,6 @@ class _MyPlanetState extends State<MyPlanet> {
     );
   }
 
-
   _planetsIamIn(){
     if(imIn.length > 0){
      return ListView.separated(
@@ -73,12 +108,12 @@ class _MyPlanetState extends State<MyPlanet> {
                         borderRadius: BorderRadius.all(Radius.circular(3)),
                         color: Util.randomColor()),
                     child: Text(
-                      imIn[index],
+                      imIn[index].title,
                       style: TextStyle(color: Colors.black, fontSize: 12),
                     ),
                   ),
                   onTap: (){
-                    PSRoute.push(context, "planet_detail", Planet());
+                    PSRoute.push(context, "planet_detail", imIn[index]);
                   },
                   );
                 },

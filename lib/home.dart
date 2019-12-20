@@ -52,6 +52,8 @@ class _PlanetSocialState extends State<PlanetSocial> {
         });
       }
     });
+
+    PSManager.shared.registThirdParty();
   }
 
   @override

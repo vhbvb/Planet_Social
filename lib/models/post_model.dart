@@ -5,7 +5,7 @@ class Post {
   Post();
   User owner;
   String id;
-  String parentId;
+  // String parentId;
   String ownerId;
   String content;
   List images;
@@ -19,7 +19,7 @@ class Post {
   Map<String, dynamic> jsonMap() {
     Map<String, dynamic> map = Map();
     map["objectId"] = id;
-    map["parentId"] = parentId;
+    // map["parentId"] = parentId;
     map["ownerId"] = ownerId;
     map["content"] = content;
     map["images"] = jsonEncode(images);
@@ -37,7 +37,7 @@ class Post {
   factory Post.withJson(Map<String, dynamic> rawData) {
     Post post = Post();
     post.id = rawData["objectId"];
-    post.parentId = rawData["parentId"];
+    // post.parentId = rawData["parentId"];
     post.ownerId = rawData["ownerId"];
     post.content = rawData["content"];
     if (rawData["images"] != null) {

@@ -4,6 +4,7 @@ import 'package:planet_social/common/PSAlert.dart';
 import 'package:planet_social/explore/starry_sky.dart';
 import 'package:planet_social/explore/statistics.dart';
 import 'package:planet_social/route.dart';
+import 'dart:math';
 
 class Explore extends StatefulWidget {
   @override
@@ -16,6 +17,12 @@ class _ExploreState extends State<Explore>{
   int usersNumber = 0;
   List _elements = [];
 
+  Offset _offset = Offset(0, 0);
+
+  double get distance {
+    return sqrt(_offset.dx*_offset.dx + _offset.dy*_offset.dy);
+  }
+
   _header() => Column(
     crossAxisAlignment: CrossAxisAlignment.center,
     children: <Widget>[
@@ -25,6 +32,14 @@ class _ExploreState extends State<Explore>{
       ),
       Statistics(users: usersNumber,planets: planetsNumber,)
     ],
+  );
+
+  _distance() => Align(
+    alignment: Alignment.bottomCenter,
+    child: Padding(
+      padding: EdgeInsets.only(bottom: 37),
+      child: Text("距离您的距离:"+distance.toStringAsFixed(2)+"光年",style: TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.bold),),
+    )
   );
 
   @override
@@ -55,10 +70,13 @@ class _ExploreState extends State<Explore>{
       body: Stack(
       children: <Widget>[
         StarrySky(onScroll: (offset){
-          // _stars.
+          setState(() {
+            _offset = offset;
+          });
         },
         stars: _elements),
         _header(),
+        _distance()
       ],
     ),
     floatingActionButton: Padding(
