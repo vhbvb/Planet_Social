@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:planet_social/base/api_service.dart';
 import 'package:planet_social/base/manager.dart';
 import 'package:planet_social/common/PSAlert.dart';
+import 'package:planet_social/common/PSProcess.dart';
 import 'package:planet_social/models/planet_model.dart';
 import 'package:planet_social/models/post_model.dart';
 import 'package:planet_social/route.dart';
@@ -150,6 +151,7 @@ class _PostPostState extends State<PostPost> {
   }
 
   _post() {
+    PSProcess.show(context);
     var post = Post();
     post.ownerId = PSManager.shared.currentUser.userId;
     post.content = controller.text;
@@ -160,6 +162,7 @@ class _PostPostState extends State<PostPost> {
         post.images = paths;
 
         ApiService.shared.createPost(post, (_, error) {
+          PSProcess.dismiss(context);
           if (error == null) {
             PSAlert.show(context, "成功", "帖子发布成功", confirm: () {
               PSRoute.pop(context);
@@ -169,6 +172,7 @@ class _PostPostState extends State<PostPost> {
           }
         });
       } else {
+        PSProcess.dismiss(context);
         PSAlert.show(context, "图片上传失败", error.toString());
       }
     });
@@ -177,8 +181,12 @@ class _PostPostState extends State<PostPost> {
   _uploadImages(
       Function(List<String> paths, Map<String, dynamic> error) callback) {
     List<String> paths = [];
-
     int i = images.length - 1;
+
+    if(i<0){
+      callback(paths, null);
+      return;
+    }
 
     _up() {
       ApiService.shared.uploadImage(images[i], (url, error) {

@@ -16,15 +16,17 @@ class UserInfo extends StatefulWidget {
 
 class _UserInfoState extends State<UserInfo> {
 
+  bool first = false;
   @override
   void initState() {
+
+    if(widget.user.sex == null){
+      first = true;
+      widget.user.sex = 0;
+    }
     
     if(widget.user.avatar == null){
       widget.user.avatar = Consts.defaultAvatar;
-    }
-
-    if(widget.user.sex == null){
-      widget.user.sex = 0;
     }
 
     if(widget.user.tags == null){
@@ -41,7 +43,7 @@ class _UserInfoState extends State<UserInfo> {
           "设置",
           style: TextStyle(color: Colors.black, fontSize: 17),
         ),
-        leading: GestureDetector(
+        leading: first?null:GestureDetector(
           onTap: () {
             _pop();
           },
@@ -94,7 +96,7 @@ class _UserInfoState extends State<UserInfo> {
         return _rowDetail(
           index,
           "昵称",
-          Text(widget.user.nickName,
+          Text(widget.user.nickName==null?"":widget.user.nickName,
               style: TextStyle(color: Colors.black, fontSize: 14)),
         );
 

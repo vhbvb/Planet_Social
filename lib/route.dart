@@ -41,7 +41,7 @@ class PSRoute {
       case "post_content":
         return PostContent(post: params);
       case "planet_create":
-        return PlanetCreate();
+        return PlanetCreate(offset: params,);
             case "planet_likes":
         return PlanetLikeList(planet: params,);
       default:

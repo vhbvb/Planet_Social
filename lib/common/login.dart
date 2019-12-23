@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import "package:mobsms/mobsms.dart";
@@ -29,48 +31,45 @@ class _LoginPageState extends State<LoginPage> {
         child: Row(
           children: <Widget>[
             Expanded(
-              child:GestureDetector(
+              child: GestureDetector(
                 onTap: _wechat,
                 child: ClipOval(
-                child: Image.asset(
-                  "assets/wexin.png",
-                  height: 36,
-                  width: 36,
+                  child: Image.asset(
+                    "assets/wexin.png",
+                    height: 36,
+                    width: 36,
+                  ),
                 ),
               ),
             ),
-              ) ,
-       Expanded(
-              child: GestureDetector(
-                onTap: _qq,
-                child: ClipOval(
+            Expanded(
+                child: GestureDetector(
+              onTap: _qq,
+              child: ClipOval(
                 child: Image.asset(
                   "assets/QQ.png",
                   height: 36,
                   width: 36,
                 ),
               ),
-              )
-            ),
-
+            )),
             Expanded(
-              child: GestureDetector(
-                onTap: _weibo,
-                child: ClipOval(
+                child: GestureDetector(
+              onTap: _weibo,
+              child: ClipOval(
                 child: Image.asset(
                   "assets/weibo.png",
                   height: 36,
                   width: 36,
                 ),
               ),
-              )
-            ),
+            )),
           ],
         ),
       );
 
   _loginButton() => GestureDetector(
-        onTap: _login,
+        onTap: _phone,
         child: Container(
           alignment: Alignment.center,
           decoration: BoxDecoration(
@@ -214,36 +213,6 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  _login() {
-    PSProcess.show(context);
-
-    CircularProgressIndicator();
-    Smssdk.commitCode(phoneController.text, "86", verifyCodeController.text, (ret,error){
-      if(error != null){
-        PSProcess.dismiss(context);
-        PSAlert.show(context, "验证码验证失败", error.toString());
-      }else{
-    ApiService.shared.login(User()..phone = phoneController.text,
-        (User user, Map<String, dynamic> error) {
-      print(user != null ? user.jsonMap() : error.toString());
-      PSProcess.dismiss(context);
-      if (user != null) {
-        PSManager.shared.setUser(user).then((_) {
-          // 第一次注册，性别参数是空的
-          if (user.sex == null) {
-            PSRoute.push(context, "user_settings", user, replace: true);
-          } else {
-            PSRoute.pop(context);
-          }
-        });
-      } else {
-        PSAlert.show(context, "登录失败", error.toString());
-      }
-    });
-      }
-    });
-  }
-
   _verifyCodeInterface() {
     if (PSManager.shared.smsTimer != null &&
         PSManager.shared.smsTimer.isActive) {
@@ -261,31 +230,87 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  _wechat(){
-
+  _wechat() {
     var platform = ShareSDKPlatforms.wechatSession;
     _thirdPartyLogin(platform);
   }
 
-  _weibo(){
-var platform = ShareSDKPlatforms.sina;
-_thirdPartyLogin(platform);
+  _weibo() {
+    var platform = ShareSDKPlatforms.sina;
+    _thirdPartyLogin(platform);
   }
 
-  _qq(){
+  _qq() {
     var platform = ShareSDKPlatforms.qq;
     _thirdPartyLogin(platform);
   }
 
-  _thirdPartyLogin(ShareSDKPlatform platform){
-    SharesdkPlugin.auth(platform, null, (state,resp,error){
-      if(state == SSDKResponseState.Success){
-
-        PSAlert.show(context, "暂未做绑定", resp.toString());
-
-      }else{
+  _thirdPartyLogin(ShareSDKPlatform platform) {
+    PSProcess.show(context);
+    SharesdkPlugin.auth(platform, null, (state, resp, error) {
+      if (state == SSDKResponseState.Success) {
+        print("-------->" + jsonEncode(resp));
+        User third = User();
+        third.avatar = resp["icon"];
+        third.nickName = resp["nickname"];
+        third.authData = {
+          platform.name: {
+            "openid": resp["uid"],
+            "access_token": resp["credential"]["token"],
+            "expires_in": resp["credential"]["expired"].toString()
+          }
+        };
+        
+        ApiService.shared.login(third, (user, error) {
+          _processLogined(user, error);
+        });
+      } else {
         PSAlert.show(context, "登录失败", error.toString());
       }
     });
+  }
+
+  _phone() {
+    PSProcess.show(context);
+
+    Smssdk.commitCode(phoneController.text, "86", verifyCodeController.text,
+        (ret, error) {
+      if (error != null) {
+        PSProcess.dismiss(context);
+        PSAlert.show(context, "验证码验证失败", error.toString());
+      } else {
+        User third = User();
+        third.phone = phoneController.text;
+        String uid = phoneController.text;
+        String token = phoneController.text +
+            DateTime.now().millisecondsSinceEpoch.toString();
+
+        third.authData = {
+          "phone": {"openid": uid, "access_token": token, "expires_in": "36000"}
+        };
+
+        ApiService.shared.login(third,
+            (User user, Map<String, dynamic> error) {
+          _processLogined(user, error);
+        });
+      }
+    });
+  }
+
+  _processLogined(User user, Map<String, dynamic> error) {
+    PSProcess.dismiss(context);
+    print(user != null ? user.jsonMap() : error.toString());
+    if (user != null) {
+      PSManager.shared.setUser(user).then((_) {
+        // 第一次注册
+        if (user.sex == null) {
+          PSRoute.push(context, "user_settings", user, replace: true);
+        } else {
+          PSRoute.pop(context);
+        }
+      });
+    } else {
+      PSAlert.show(context, "登录失败", error.toString());
+    }
   }
 }

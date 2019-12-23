@@ -7,6 +7,7 @@ class User {
 
   String avatar;
   String nickName;
+  String userName;
   List<String> tags;
   int fans;
   int like;
@@ -16,12 +17,14 @@ class User {
   String userId;
   String sessionToken;
   String plannetId;
+  Map authData;
   Map<String,dynamic> rawJson;
 
   Map<String,dynamic> jsonMap(){
     Map<String,dynamic> map = Map();
     map["avatar"] = avatar;
-    map["username"] = nickName;
+    map["username"] = userName;
+    map["nickname"] = nickName;
     if(tags != null){
       map["tags"] = tags.join(",");
     }
@@ -35,13 +38,18 @@ class User {
     map.removeWhere((key, value){
       return value == null;
     });
+    map["authData"] = authData;
+    map.removeWhere((key, value) {
+      return value == null || value == "null";
+    });
     return map;
   }
 
   factory User.withJson(Map<String,dynamic> rawData){
     User user = User();
     user.avatar = rawData["avatar"];
-    user.nickName = rawData["username"];
+    user.nickName = rawData["nickname"];
+    user.userName = rawData["username"];
     if(rawData["tags"] != null){
       user.tags = (rawData["tags"] as String).split(",");
     }
@@ -52,6 +60,7 @@ class User {
     user.userId = rawData["objectId"];
     user.sessionToken = rawData["sessionToken"];
     user.plannetId = rawData["plannetId"];
+    user.authData = rawData["authData"];
     return user;
   }
 }

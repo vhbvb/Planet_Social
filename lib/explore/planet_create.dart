@@ -4,13 +4,23 @@ import 'package:planet_social/base/manager.dart';
 import 'package:planet_social/common/PSAlert.dart';
 import 'package:planet_social/models/planet_model.dart';
 import 'package:planet_social/route.dart';
+import 'dart:math';
 
 class PlanetCreate extends StatefulWidget {
+  final Offset offset;
+
+  const PlanetCreate({Key key, this.offset}) : super(key: key);
   @override
   State<StatefulWidget> createState() => _PlanetCreateState();
 }
 
 class _PlanetCreateState extends State<PlanetCreate> {
+  
+    double get distance {
+    var x = widget.offset.dx;
+    var y = widget.offset.dy;
+    return sqrt(x*x+ y*y);
+  }
   var controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -38,7 +48,20 @@ class _PlanetCreateState extends State<PlanetCreate> {
               image: DecorationImage(
                   image: ExactAssetImage("assets/star/star.jpeg"),
                   fit: BoxFit.fill)),
-          child: Column(
+          child: Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+              _buildCreate(),
+              _distance()
+            ],
+          )
+          ),
+        ),
+      );
+  }
+
+  _buildCreate() => SingleChildScrollView(
+    child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Stack(
@@ -76,7 +99,7 @@ class _PlanetCreateState extends State<PlanetCreate> {
                         ),
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
               Padding(padding: EdgeInsets.only(bottom: 46)),
@@ -96,15 +119,22 @@ class _PlanetCreateState extends State<PlanetCreate> {
                 ),
               ),
             ],
-          )),
-        ),
-      );
-  }
+          ),
+  );
+
+  _distance() => Align(
+    alignment: Alignment.bottomCenter,
+    child: Padding(
+      padding: EdgeInsets.only(bottom: 37),
+      child: Text("距离您的距离:"+distance.toStringAsFixed(2)+"光年",style: TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.bold),),
+    )
+  );
 
   _createPlanet(){
     Planet planet = Planet();
     planet.title = controller.text;
     planet.ownerId = PSManager.shared.currentUser.userId;
+    planet.position = Offset(-widget.offset.dx, -widget.offset.dy);
     ApiService.shared.createPlanet(planet, (planet,error){
       if(error == null){
         PSAlert.show(context, "成功", "星球已成功创建",confirm:(){

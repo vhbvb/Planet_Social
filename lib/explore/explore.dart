@@ -3,6 +3,7 @@ import 'package:planet_social/base/api_service.dart';
 import 'package:planet_social/common/PSAlert.dart';
 import 'package:planet_social/explore/starry_sky.dart';
 import 'package:planet_social/explore/statistics.dart';
+import 'package:planet_social/models/planet_model.dart';
 import 'package:planet_social/route.dart';
 import 'dart:math';
 
@@ -82,9 +83,7 @@ class _ExploreState extends State<Explore>{
     floatingActionButton: Padding(
           padding: EdgeInsets.only(bottom: 50),
           child: FloatingActionButton(
-            onPressed: () {
-              PSRoute.push(context, "planet_create", null);
-            },
+            onPressed: _create,
             child: Icon(Icons.add),
             elevation: 3.0,
             highlightElevation: 2.0,
@@ -93,5 +92,22 @@ class _ExploreState extends State<Explore>{
           ),
         ),
     );
+  }
+
+  _create()
+  {
+    for (var item in _elements) 
+    {
+      if(item is Planet){
+        double x = item.position.dx - _offset.dx;
+        double y = item.position.dy - _offset.dy;
+        double distance = sqrt(x*x + y*y);
+        if(distance < 80.0){
+          PSAlert.show(context, "提示", "创建的地方离其他星球太近了哦,请重新选择地方创建您的星球。");
+          return;
+        }
+      }  
+    }
+    PSRoute.push(context, "planet_create", _offset);
   }
 }

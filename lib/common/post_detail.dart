@@ -45,7 +45,7 @@ class _PostDetailState extends State<PostDetail> {
                     fontWeight: FontWeight.bold)),
           ),
           Text(
-            widget.post.createdAt,
+            DateTime.parse(widget.post.createdAt).toString(),
             style: TextStyle(color: Colors.grey, fontSize: 12),
           )
         ],
@@ -181,7 +181,6 @@ class _PostDetailState extends State<PostDetail> {
         }
       });
     }
-
 
       ApiService.shared.checkIfLikePost(
           PSManager.shared.currentUser, widget.post, (didLike, error) {

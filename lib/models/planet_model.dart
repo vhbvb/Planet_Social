@@ -10,8 +10,8 @@ class Planet
   String id;
   String title;
   String ownerId;
-  String location;
-  Offset position = Offset(Random().nextDouble()*2000-1000,Random().nextDouble()*2000-1000);
+  // String location;
+  Offset position;
   Color color = Util.randomColor();
   User owner;
 
@@ -20,8 +20,9 @@ class Planet
     map["objectId"] = id;
     map["title"] = title;
     map["ownerId"] = ownerId;
-    map["location"] = location;
-    // map["color"] = color.toString();
+    if(position != null){
+map["location"] = [position.dx.toString(),position.dy.toString()].join(",");
+    }
     return map;
   }
   factory Planet.withJson(Map<String,dynamic> rawData){
@@ -29,7 +30,11 @@ class Planet
     planet.id = rawData["objectId"];
     planet.title = rawData["title"];
     planet.ownerId = rawData["ownerId"];
-    planet.location = rawData["location"];
+    if (rawData["location"] != null){
+      List data = rawData["location"].split(",");
+      planet.position = Offset(double.parse(data.first), double.parse(data.last));
+    }
+    
     return planet;
   }
 }

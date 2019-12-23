@@ -20,28 +20,6 @@ enum RequestType {
 class ApiService {
   static ApiService shared = ApiService();
 
-  void _regist(User user, String password,
-      Function(User, Map<String, dynamic> error) callback) {
-    if (user.phone != null) {
-      user.nickName = user.phone;
-    }
-
-    Map<String, dynamic> params = user.jsonMap();
-    params["password"] = password;
-    _send("users", params, RequestType.post).then((response) {
-      if (response.statusCode ~/ 100 == 2) {
-        //2xx
-        if (callback != null) {
-          callback(User.withJson(jsonDecode(response.body)), null);
-        }
-      } else {
-        if (callback != null) {
-          callback(null, jsonDecode(response.body));
-        }
-      }
-    });
-  }
-
   void updateUserInfo(
       User user, Function(Map<String, dynamic> error) callback) {
     Map<String, dynamic> params = user.jsonMap();
@@ -58,11 +36,11 @@ class ApiService {
     });
   }
 
-  void _login(User user, String password,
+  void login(User user,
       Function(User, Map<String, dynamic> error) callback) {
     Map<String, dynamic> params = user.jsonMap();
-    params["password"] = password;
-    _send("login", params, RequestType.post).then((response) {
+
+    _send("users", params, RequestType.post).then((response) {
       if (response.statusCode ~/ 100 == 2) {
         //2xx
         if (callback != null) {
@@ -72,21 +50,6 @@ class ApiService {
         if (callback != null) {
           callback(null, jsonDecode(response.body));
         }
-      }
-    });
-  }
-
-  void login(User user, Function(User, Map<String, dynamic> error) callback) {
-    String defaultPassword = "123456";
-    _queryUser(user, (res, error) {
-      if (error == null || (error != null && error["code"] == 211)) {
-        if (res != null) {
-          _login(res, defaultPassword, callback);
-        } else {
-          _regist(user, defaultPassword, callback);
-        }
-      } else {
-        if (callback != null) callback(null, error);
       }
     });
   }
