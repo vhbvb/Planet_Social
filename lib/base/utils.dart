@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:planet_social/common/image_preview.dart';
 
 class Util {
   static Map<String,Color> colors = {};
@@ -18,8 +19,19 @@ class Util {
     }
   }
 
-  static Widget loadImage(String path, {double height, double width}) {
-    return CachedNetworkImage(
+  static Widget loadImage(String path, {double height, double width, bool enableTap = false, List sources, BuildContext context}) {
+    return GestureDetector(
+      onTap: (){
+        if (enableTap){
+        Navigator.of(context).push( FadeRoute(page: ImagePreview(
+        images:sources,//传入图片list
+        index: sources.indexOf(path),
+        heroTag: "",//传入当前点击的图片的index
+        //传入当前点击的图片的hero tag （可选）
+    )));
+        }
+      },
+      child: CachedNetworkImage(
       fit: BoxFit.fill,
       height: height,
       width: width,
@@ -40,6 +52,7 @@ class Util {
         width: width,
         child: Center(child: Icon(Icons.error)),
       ),
+    ),
     );
   }
 }

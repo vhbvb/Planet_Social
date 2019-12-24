@@ -204,7 +204,7 @@ class _UserDetailState extends State<UserDetail>
 
   _posts() => SliverList(
           delegate: SliverChildBuilderDelegate((context, index) {
-        return PostDetail(post: posts[index]);
+        return PostDetail(post: posts[index],);
       }, childCount: posts.length));
 
   _clickSettings() {

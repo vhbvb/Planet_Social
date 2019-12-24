@@ -62,7 +62,7 @@ class _PostListState extends State<PostList>
               child: ListView.builder(
               itemCount: posts.length,
               itemBuilder: (context, index) => PostDetail(
-                post: posts[index],
+                post: posts[index],parentContext: context,
               ),
             ),
             );

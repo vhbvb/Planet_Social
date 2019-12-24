@@ -67,7 +67,7 @@ class _PostContentState extends State<PostContent> {
             itemCount: 1 + comments.length,
             itemBuilder: (_, index) {
               if (index == 0) {
-                return PostDetail(post: widget.post,parentContext: context,);
+                return PostDetail(post: widget.post,parentContext: context,inDetail: true,);
               } else {
                 return CommentDetail(comment: comments[index-1]);
               }

@@ -11,9 +11,10 @@ import 'package:planet_social/route.dart';
 
 
 class PostDetail extends StatefulWidget {
-  PostDetail({Key key, this.post, this.parentContext}) : super(key: key);
+  PostDetail({Key key, this.post, this.parentContext,this.inDetail = false}) : super(key: key);
   Post post;
   BuildContext parentContext;
+  bool inDetail;
 
   @override
   State<StatefulWidget> createState() => _PostDetailState();
@@ -25,7 +26,9 @@ class _PostDetailState extends State<PostDetail> {
   int shares = 0;
   bool like = false;
 
-  _header() => Row(
+  _header() => GestureDetector(
+    onTap: _click,
+    child: Row(
         children: <Widget>[
           ClipOval(
             child: Util.loadImage(
@@ -50,7 +53,8 @@ class _PostDetailState extends State<PostDetail> {
             style: TextStyle(color: Colors.grey, fontSize: 12),
           )
         ],
-      );
+      ),
+  );
 
   _content() => GestureDetector(
       onTap: _click,
@@ -136,18 +140,16 @@ class _PostDetailState extends State<PostDetail> {
 
       double imageH = 0.6 * imageW;
 
-      Widget imageWidget = GestureDetector(
-        child: Wrap(
+      Widget imageWidget = Wrap(
             spacing: 10,
             runSpacing: 10,
             children: images.map((url) {
               return Util.loadImage(url,
-                  height: imageH, width: imageW);
-            }).toList()),
-        onTap: () {
-          //图片预览
-        },
-      );
+                  height: imageH, width: imageW,
+                                context: widget.parentContext,
+              enableTap: true,
+              sources: widget.post.images);
+            }).toList());
 
       widgets.insert(2, imageWidget);
     }
@@ -204,10 +206,12 @@ class _PostDetailState extends State<PostDetail> {
   }
 
   _click() {
-    if (widget.parentContext != null) {
+    if(widget.parentContext != null){
+          if (widget.inDetail) {
       showDialog(context: widget.parentContext,builder: (_) => PostComment(post: widget.post));
     } else {
       PSRoute.push(context, "post_content", widget.post);
+    }
     }
   }
 

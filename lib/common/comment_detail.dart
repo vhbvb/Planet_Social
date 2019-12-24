@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:planet_social/base/api_service.dart';
 import 'package:planet_social/base/data_center.dart';
 import 'package:planet_social/base/utils.dart';
 import 'package:planet_social/const.dart';
