@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:planet_social/base/api_service.dart';
 import 'package:planet_social/base/manager.dart';
@@ -13,58 +15,72 @@ class MyPlanet extends StatefulWidget {
   State<StatefulWidget> createState() => _MyPlanetState();
 }
 
-class _MyPlanetState extends State<MyPlanet> with AutomaticKeepAliveClientMixin{
-  
-    @override
+class _MyPlanetState extends State<MyPlanet>
+    with AutomaticKeepAliveClientMixin {
+  @override
   bool get wantKeepAlive => true;
 
   final List<Planet> imIn = [];
   final List<Post> hots = [];
   final List<Post> news = [];
 
+  _loadNews(Function finised) {
+    int i = 0;
+    news.clear();
+    for (var item in imIn) {
+      ApiService.shared.getNewPostOfPlanet(item, (results, error) {
+        i = i + 1;
+        if (i == imIn.length) {
+          finised();
+        }
+        if (error == null) {
+          setState(() {
+            news.addAll(results);
+          });
+        }
+      });
+    }
+  }
+
+  _loadHots(Function finised) {
+    print("dadada");
+    int i = 0;
+    hots.clear();
+    for (var item in imIn) {
+      ApiService.shared.getHotPostOfPlanet(item, (results, error) {
+        i = i + 1;
+        if (i == imIn.length) {
+          finised();
+        }
+        if (error == null) {
+          setState(() {
+            print("dadada");
+            hots.addAll(results);
+          });
+        }
+      });
+    }
+  }
+
   @override
   void initState() {
-
-        _loadPosts(){
-
-      for (var item in imIn) 
-      {
-        ApiService.shared.getHotPostOfPlanet(item, (results,error){
-          if(error == null){
+    PSManager.shared.isLogin.then((isLogined) {
+      if (isLogined) {
+        ApiService.shared.planetsJoined(PSManager.shared.currentUser,
+            (results, error) {
+          if (error == null) {
             setState(() {
-              hots.addAll(results);
+              imIn.addAll(results);
+              _loadHots(() {});
+              _loadNews(() {});
             });
+          } else {
+            PSAlert.show(context, "星球获取失败", error.toString());
           }
-        });  
-
-        ApiService.shared.getNewPostOfPlanet(item, (results,error){
-                    if(error == null){
-            setState(() {
-              news.addAll(results);
-            });
-          }
-        });  
-      }
-    }
-
-    PSManager.shared.isLogin.then((isLogined){
-
-      if(isLogined){
-
-            ApiService.shared.planetsJoined(PSManager.shared.currentUser, (results,error){
-      if(error == null){
-        setState(() {
-          imIn.addAll(results);
         });
-        _loadPosts();
-      }else{
-        PSAlert.show(context, "星球获取失败", error.toString());
       }
     });
 
-      }
-    });
-    
     super.initState();
   }
 
@@ -94,49 +110,71 @@ class _MyPlanetState extends State<MyPlanet> with AutomaticKeepAliveClientMixin{
               ),
             ),
             SizedBox(
-              height: 35,
-              width: double.infinity,
-              child: _planetsIamIn()
-            ),
-            PostList(news:news,hots: hots,)
+                height: 35, width: double.infinity, child: _planetsIamIn()),
+            PostList(
+              news: news,
+              hots: hots,
+              onRefresh: (pos) {
+                if (pos == 0) {
+                  var completer = Completer();
+                  _loadNews(() {
+                    completer.complete();
+                  });
+
+                  return completer.future;
+                } else {
+                  var completer = Completer();
+                  _loadHots(() {
+                    completer.complete();
+                  });
+
+                  return completer.future;
+                }
+              },
+              onLoad: (pos) {},
+            )
           ],
         ),
       ),
     );
   }
 
-  _planetsIamIn(){
-    if(imIn.length > 0){
-     return ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: imIn.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    child: Container(
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.only(left: 18, right: 18),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(3)),
-                        color: Util.randomColor(key:imIn[index].title)),
-                    child: Text(
-                      imIn[index].title,
-                      style: TextStyle(color: Colors.black, fontSize: 12),
-                    ),
-                  ),
-                  onTap: (){
-                    PSRoute.push(context, "planet_detail", imIn[index]);
-                  },
-                  );
-                },
-                separatorBuilder: (context, index) {
-                  return SizedBox(
-                    height: 30,
-                    width: 10,
-                  );
-                },
-              );
-    }else{
-      return Center(child: Text("你还没有加入任何星球哦。",style: TextStyle(color: Colors.deepOrange),));
+  _planetsIamIn() {
+    if (imIn.length > 0) {
+      return ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: imIn.length,
+        itemBuilder: (context, index) {
+          return GestureDetector(
+            child: Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.only(left: 18, right: 18),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(3)),
+                  color: Util.randomColor(key: imIn[index].title)),
+              child: Text(
+                imIn[index].title,
+                style: TextStyle(color: Colors.black, fontSize: 12),
+              ),
+            ),
+            onTap: () {
+              PSRoute.push(context, "planet_detail", imIn[index]);
+            },
+          );
+        },
+        separatorBuilder: (context, index) {
+          return SizedBox(
+            height: 30,
+            width: 10,
+          );
+        },
+      );
+    } else {
+      return Center(
+          child: Text(
+        "你还没有加入任何星球哦。",
+        style: TextStyle(color: Colors.deepOrange),
+      ));
     }
   }
 }

@@ -7,8 +7,10 @@ class PostList extends StatefulWidget {
   
   final List<Post> news;
   final List<Post> hots;
+  final Function(int) onRefresh;
+  final Function(int) onLoad;
 
-  const PostList({Key key, this.news, this.hots}) : super(key: key);
+  const PostList({Key key, this.news, this.hots, this.onRefresh, this.onLoad}) : super(key: key);
   @override
   State<StatefulWidget> createState() => _PostListState();
 }
@@ -46,41 +48,32 @@ class _PostListState extends State<PostList>
         ),
       );
 
+  _posts (int pos) {
+
+    List posts = pos== 0 ? widget.news:widget.hots;
+
+   return EasyRefresh(
+              onRefresh: (){
+               return widget.onRefresh(pos);
+              },
+              onLoad: (){
+               return widget.onLoad(pos);
+              },
+              child: ListView.builder(
+              itemCount: posts.length,
+              itemBuilder: (context, index) => PostDetail(
+                post: posts[index],
+              ),
+            ),
+            );
+  }
+  
   _postsTabView() => Expanded(
         child: TabBarView(
           controller: _tapController,
           children: <Widget>[
-            // EasyRefresh(
-            //   onRefresh: (){
-
-            //   },
-            //   onLoad: (){
-
-            //   },
-            //   firstRefresh: true,
-            //   child: ListView.builder(
-            //   itemCount: widget.news.length,
-            //   itemBuilder: (context, index) => PostDetail(
-            //     post: widget.news[index],
-            //   ),
-            // ),
-            // ),
-
-            ListView.builder(
-              itemCount: widget.news.length,
-              itemBuilder: (context, index) => PostDetail(
-                post: widget.news[index],
-              ),
-            ),
-
-
-
-            ListView.builder(
-              itemCount: widget.hots.length,
-              itemBuilder: (context, index) => PostDetail(
-                post: widget.hots[index],
-              ),
-            ),
+            _posts(0),
+            _posts(1)
           ],
         ),
       );
