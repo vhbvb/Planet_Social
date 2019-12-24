@@ -13,7 +13,10 @@ class MyPlanet extends StatefulWidget {
   State<StatefulWidget> createState() => _MyPlanetState();
 }
 
-class _MyPlanetState extends State<MyPlanet> {
+class _MyPlanetState extends State<MyPlanet> with AutomaticKeepAliveClientMixin{
+  
+    @override
+  bool get wantKeepAlive => true;
 
   final List<Planet> imIn = [];
   final List<Post> hots = [];
@@ -22,7 +25,7 @@ class _MyPlanetState extends State<MyPlanet> {
   @override
   void initState() {
 
-    _loadPosts(){
+        _loadPosts(){
 
       for (var item in imIn) 
       {
@@ -44,7 +47,11 @@ class _MyPlanetState extends State<MyPlanet> {
       }
     }
 
-    ApiService.shared.planetsJoined(PSManager.shared.currentUser, (results,error){
+    PSManager.shared.isLogin.then((isLogined){
+
+      if(isLogined){
+
+            ApiService.shared.planetsJoined(PSManager.shared.currentUser, (results,error){
       if(error == null){
         setState(() {
           imIn.addAll(results);
@@ -55,11 +62,15 @@ class _MyPlanetState extends State<MyPlanet> {
       }
     });
 
+      }
+    });
+    
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -106,7 +117,7 @@ class _MyPlanetState extends State<MyPlanet> {
                     padding: EdgeInsets.only(left: 18, right: 18),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(3)),
-                        color: Util.randomColor()),
+                        color: Util.randomColor(key:imIn[index].title)),
                     child: Text(
                       imIn[index].title,
                       style: TextStyle(color: Colors.black, fontSize: 12),

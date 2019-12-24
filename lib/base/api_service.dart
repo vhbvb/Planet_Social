@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:planet_social/base/data_center.dart';
 import 'package:planet_social/base/manager.dart';
 import 'package:planet_social/const.dart';
 import 'package:planet_social/models/comment_model.dart';
@@ -355,7 +356,7 @@ void planetsJoined(
         int i = 0;
         for (String item in planetIds) 
         {
-          this.getPlanet(item, (planet,error){
+          DataSource.center.getPlanet(item, (planet,error){
             i = i+1;
             if(error == null && planet != null){
               results.add(planet);
@@ -648,7 +649,6 @@ void planetsJoined(
     request.files.add(multipartFile);
     request.headers["X-LC-Id"] = Consts.appID;
     request.headers["X-LC-Key"] = Consts.appKey;
-    // request.headers["Content-Type"] = "image/png";
     request.headers["X-LC-Session"] = PSManager.shared.currentUser.sessionToken;
 
     // send

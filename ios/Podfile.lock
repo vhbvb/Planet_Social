@@ -2,6 +2,9 @@ PODS:
   - audioplayers (0.0.1):
     - Flutter
   - Flutter (1.0.0)
+  - FMDB (2.7.5):
+    - FMDB/standard (= 2.7.5)
+  - FMDB/standard (2.7.5)
   - image_picker (0.0.1):
     - Flutter
   - mob_sharesdk (4.3.4):
@@ -62,6 +65,9 @@ PODS:
     - mob_sharesdk/ShareSDKPlatforms/WeChat
     - mob_sharesdk/ShareSDKRestoreScene
     - mob_sharesdk/ShareSDKUI
+  - sqflite (0.0.1):
+    - Flutter
+    - FMDB (~> 2.7.2)
   - video_player (0.0.1):
     - Flutter
   - video_player_web (0.0.1):
@@ -78,11 +84,13 @@ DEPENDENCIES:
   - shared_preferences_macos (from `.symlinks/plugins/shared_preferences_macos/ios`)
   - shared_preferences_web (from `.symlinks/plugins/shared_preferences_web/ios`)
   - sharesdk_plugin (from `.symlinks/plugins/sharesdk_plugin/ios`)
+  - sqflite (from `.symlinks/plugins/sqflite/ios`)
   - video_player (from `.symlinks/plugins/video_player/ios`)
   - video_player_web (from `.symlinks/plugins/video_player_web/ios`)
 
 SPEC REPOS:
   trunk:
+    - FMDB
     - mob_sharesdk
     - mob_smssdk
     - MOBFoundation
@@ -109,6 +117,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences_web/ios"
   sharesdk_plugin:
     :path: ".symlinks/plugins/sharesdk_plugin/ios"
+  sqflite:
+    :path: ".symlinks/plugins/sqflite/ios"
   video_player:
     :path: ".symlinks/plugins/video_player/ios"
   video_player_web:
@@ -117,6 +127,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   audioplayers: 84f968cea3f2deab00ec4f8ff53358b3c0b3992c
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   image_picker: e3eacd46b94694dde7cf2705955cece853aa1a8f
   mob_sharesdk: ecee6e8ba42f76a252a40d2da7a1f7301b9831d6
   mob_smssdk: cdb6a31d4fd4667ed928e2eca03f21ad89ebc05c
@@ -129,6 +140,7 @@ SPEC CHECKSUMS:
   shared_preferences_macos: f3f29b71ccbb56bf40c9dd6396c9acf15e214087
   shared_preferences_web: 141cce0c3ed1a1c5bf2a0e44f52d31eeb66e5ea9
   sharesdk_plugin: 8b57f21721efb60b147d40bcf49b7114cdf71f76
+  sqflite: 4001a31ff81d210346b500c55b17f4d6c7589dd0
   video_player: 69c5f029fac4ffe4fc8a85ea7f7b793709661549
   video_player_web: da8cadb8274ed4f8dbee8d7171b420dedd437ce7
 

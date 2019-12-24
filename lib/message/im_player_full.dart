@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:planet_social/base/utils.dart';
 import 'package:video_player/video_player.dart';
 import 'dart:io';
 import "package:flutter/cupertino.dart";
@@ -29,7 +30,7 @@ final String url;
     Widget image;
     if (url.startsWith("http")) 
     {
-      image = new Image.network(url);
+      image = Util.loadImage(url);
     }
     else
     {
@@ -127,7 +128,7 @@ return (vp.value.initialized)
             child: new Stack(
               alignment: Alignment.center,
               children: <Widget>[
-                Image.network(
+                Util.loadImage(
                     "http://i2.letvimg.com/vrs/201409/03/fda8fc43-c8ad-4358-ab30-e49327b5d8f8.jpg"),
                 Image.asset("assets/im_player.png")
               ],

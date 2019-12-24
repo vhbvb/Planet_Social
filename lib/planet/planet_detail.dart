@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:planet_social/base/api_service.dart';
 import 'package:planet_social/base/manager.dart';
+import 'package:planet_social/base/utils.dart';
 import 'package:planet_social/common/PSAlert.dart';
 import 'package:planet_social/const.dart';
 import 'package:planet_social/models/planet_model.dart';
@@ -40,7 +41,7 @@ class _PlanetDetailState extends State<PlanetDetail> {
             Padding(
               padding: EdgeInsets.only(left: 10, right: 15),
               child: ClipOval(
-                  child: Image.network(
+                  child: Util.loadImage(
                 Consts.defaultAvatar,
                 height: 40,
                 width: 40,

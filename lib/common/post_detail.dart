@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:planet_social/base/api_service.dart';
+import 'package:planet_social/base/data_center.dart';
 import 'package:planet_social/base/manager.dart';
+import 'package:planet_social/base/utils.dart';
 import 'package:planet_social/common/PSAlert.dart';
 import 'package:planet_social/const.dart';
 import 'package:planet_social/models/post_model.dart';
@@ -26,13 +28,12 @@ class _PostDetailState extends State<PostDetail> {
   _header() => Row(
         children: <Widget>[
           ClipOval(
-            child: Image.network(
+            child: Util.loadImage(
               widget.post.owner == null
                   ? Consts.defaultAvatar
                   : widget.post.owner.avatar,
               height: 44,
               width: 44,
-              fit: BoxFit.fill,
             ),
           ),
           Padding(
@@ -45,7 +46,7 @@ class _PostDetailState extends State<PostDetail> {
                     fontWeight: FontWeight.bold)),
           ),
           Text(
-            DateTime.parse(widget.post.createdAt).toString(),
+            DateTime.parse(widget.post.createdAt).toString().split(".")[0],
             style: TextStyle(color: Colors.grey, fontSize: 12),
           )
         ],
@@ -140,8 +141,8 @@ class _PostDetailState extends State<PostDetail> {
             spacing: 10,
             runSpacing: 10,
             children: images.map((url) {
-              return Image.network(url,
-                  height: imageH, width: imageW, fit: BoxFit.fill);
+              return Util.loadImage(url,
+                  height: imageH, width: imageW);
             }).toList()),
         onTap: () {
           //图片预览
@@ -173,7 +174,7 @@ class _PostDetailState extends State<PostDetail> {
 
   _getPostDetail() {
     if (widget.post.owner == null) {
-      ApiService.shared.getUser(widget.post.ownerId, (user, error) {
+      DataSource.center.getUser(widget.post.ownerId, (user, error) {
         if (error == null) {
           setState(() {
             widget.post.owner = user;

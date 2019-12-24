@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:planet_social/base/api_service.dart';
+import 'package:planet_social/base/data_center.dart';
+import 'package:planet_social/base/utils.dart';
 import 'package:planet_social/const.dart';
 import 'package:planet_social/models/planet_model.dart';
 import 'package:planet_social/models/user_model.dart';
@@ -44,11 +45,10 @@ class _StarStyleState extends State<StarStyle> {
                 // right: -10,
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(15)),
-                  child: Image.network(
+                  child: Util.loadImage(
                     widget.model.owner==null?Consts.defaultAvatar:widget.model.owner.avatar,
                     height: 30,
                     width: 30,
-                    fit: BoxFit.fill,
                   ),
                 ),
               )
@@ -73,7 +73,7 @@ class _StarStyleState extends State<StarStyle> {
         children: <Widget>[
           ClipRRect(
             borderRadius: BorderRadius.all(Radius.circular(10)),
-            child: Image.network(
+            child: Util.loadImage(
               (widget.model as User).avatar,
               height: 20,
               width: 20,
@@ -106,8 +106,7 @@ class _StarStyleState extends State<StarStyle> {
 
      if(widget.model is Planet){
            if (widget.model.owner == null) {
-
-            ApiService.shared.getUser(widget.model.ownerId, (user, error) {
+            DataSource.center.getUser(widget.model.ownerId, (user, error) {
               if (error == null) {
                 setState(() {
                   widget.model.owner = user;

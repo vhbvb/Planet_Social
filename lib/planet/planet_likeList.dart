@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:planet_social/base/api_service.dart';
+import 'package:planet_social/base/utils.dart';
 import 'package:planet_social/common/PSAlert.dart';
 import 'package:planet_social/models/planet_model.dart';
 import 'package:planet_social/models/user_model.dart';
@@ -65,7 +66,7 @@ class _PlanetLikeListState extends State<PlanetLikeList>{
                   child: Row(
                 children: <Widget>[
                   ClipOval(
-                    child: Image.network(users[index].avatar,height: 40,width: 40,),
+                    child: Util.loadImage(users[index].avatar,height: 40,width: 40,),
                   ),
 
                   Padding(

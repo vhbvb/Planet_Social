@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:planet_social/base/utils.dart';
 import 'dart:io';
 import 'im_video.dart';
 import 'im_voice.dart';
@@ -25,7 +26,7 @@ class MessageCellBuilder {
     return new Padding(
       padding: EdgeInsets.only(left: 10.0, right: 5.0),
       child: new ClipOval(
-          child: Image.network(
+          child: Util.loadImage(
         !isSend
             ? "https://i2.hdslb.com/bfs/face/d83b402cdab58ff84d415941f79b515ec14fd44f.jpg"
             : "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1021928129,596627892&fm=26&gp=0.jpg",
@@ -46,10 +47,10 @@ class MessageCellBuilder {
 
     Widget image;
     if (content.startsWith("http")) {
-      image = new Image.network(content);
+      image = Util.loadImage(content);
     }else
     {
-      image =new Image.file(new File(content));
+      image = Image.file(new File(content));
     }
 
     return new GestureDetector(

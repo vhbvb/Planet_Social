@@ -5,20 +5,19 @@ class User {
 
   User();
 
+  int fans;
+  int like;
+
   String avatar;
   String nickName;
   String userName;
   List<String> tags;
-  int fans;
-  int like;
   int sex;
   Offset position = Offset(Random().nextDouble()*2000-1000,Random().nextDouble()*2000-1000);
   String phone;
   String userId;
   String sessionToken;
-  String plannetId;
   Map authData;
-  Map<String,dynamic> rawJson;
 
   Map<String,dynamic> jsonMap(){
     Map<String,dynamic> map = Map();
@@ -34,7 +33,7 @@ class User {
     map["phoneNumber"] = phone;
     map["objectId"] = userId;
     map["sessionToken"] = sessionToken;
-    map["plannetId"] = plannetId;
+    // map["plannetId"] = plannetId;
     map.removeWhere((key, value){
       return value == null;
     });
@@ -59,8 +58,9 @@ class User {
     user.phone = rawData["phoneNumber"];
     user.userId = rawData["objectId"];
     user.sessionToken = rawData["sessionToken"];
-    user.plannetId = rawData["plannetId"];
+    // user.plannetId = rawData["plannetId"];
     user.authData = rawData["authData"];
+    // user.rawJson = rawData;
     return user;
   }
 }

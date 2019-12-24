@@ -12,7 +12,7 @@ class Planet
   String ownerId;
   // String location;
   Offset position;
-  Color color = Util.randomColor();
+  Color get color => Util.randomColor(key: title);
   User owner;
 
   Map<String,dynamic> jsonMap(){

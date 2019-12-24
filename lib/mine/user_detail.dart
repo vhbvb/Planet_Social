@@ -17,16 +17,38 @@ class UserDetail extends StatefulWidget {
   State<StatefulWidget> createState() => _UserDetailState();
 }
 
-class _UserDetailState extends State<UserDetail> {
+class _UserDetailState extends State<UserDetail> with AutomaticKeepAliveClientMixin{
+
+    @override
+  bool get wantKeepAlive => true;
 
   List<Post> posts = [];
 
   List tagColors;
-  bool isSelf;
+  bool _isSelf = false;
 
   int fans=0;
   int likes=0;
   int likeState=0;//0未知 1喜欢，-1不喜欢
+
+  String get _nickName {
+    if(widget.user != null && widget.user.nickName != null){
+      return widget.user.nickName;
+    }else
+    {
+      return "";
+    }
+  }
+
+  String get _avatar {
+    if(widget.user != null && widget.user.avatar != null){
+      return widget.user.avatar;
+    }else
+    {
+      return Consts.defaultAvatar;
+    }
+  }
+
 
   ScrollController _controller;
   double _offset = 0.0;
@@ -34,7 +56,9 @@ class _UserDetailState extends State<UserDetail> {
 //用户标签
   List<Widget> _tags(){
 
-    if(widget.user.tags==null){return [];}
+    if(widget.user==null || widget.user.tags==null){
+      return [];
+      }
     
     _build(String tag) => Padding(
       padding: EdgeInsets.only(left: 5,right: 5),
@@ -43,7 +67,7 @@ class _UserDetailState extends State<UserDetail> {
       padding: EdgeInsets.only(left: 10,right: 10),
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: tagColors[widget.user.tags.indexOf(tag)],
+        color: Util.randomColor(key: tag),
         borderRadius: BorderRadius.all(Radius.circular(15)),
       ),
       child: Text(tag,style:TextStyle(color: Colors.white,fontSize: 12)),
@@ -60,13 +84,13 @@ class _UserDetailState extends State<UserDetail> {
       Padding(
         padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 80),
         child: ClipOval(
-        child: Image.network(widget.user.avatar==null?Consts.defaultAvatar:widget.user.avatar,width: 60,height: 60,fit: BoxFit.fill,),
+        child: Util.loadImage(_avatar,width: 60,height: 60,),
       ),
       ),
       Padding(
         padding: EdgeInsets.only(top: 10,bottom: 20),
         child: Text(
-          widget.user.nickName,
+          _nickName,
           style: TextStyle(color: Colors.white,fontSize: 14),
         ),
       ),
@@ -129,7 +153,7 @@ class _UserDetailState extends State<UserDetail> {
         ),
       );
 
-    if(!isSelf && likeState != 0){
+    if(!_isSelf && likeState != 0){
       childrens.add(attention);
     }
 
@@ -140,13 +164,12 @@ class _UserDetailState extends State<UserDetail> {
   }
 
   _header(){ 
-
     return SliverAppBar(
-        title: Text(widget.user.nickName,
+        title: Text(_nickName,
             style: TextStyle(
                 color: _offset < 220.0 ? Colors.white : Colors.black)),
         centerTitle: true,
-        expandedHeight: isSelf?330:375 +MediaQuery.of(context).padding.top,
+        expandedHeight: _isSelf?330:375 +MediaQuery.of(context).padding.top,
         floating: false,
         pinned: true,
         snap: false,
@@ -203,14 +226,15 @@ class _UserDetailState extends State<UserDetail> {
 
 // 变量初始化
     if(widget.user == null){
-      widget.user = PSManager.shared.currentUser;
-    }
-    if( widget.user.tags != null){
-        tagColors =  widget.user.tags.map((_)=>Util.randomColor()).toList();
+      PSManager.shared.isLogin.then((logined){
+        if(logined){
+          setState(() {
+            _isSelf = true;
+            widget.user = PSManager.shared.currentUser;
+          });
+        }
+      });
     }else{
-      tagColors = [];
-    }
-    isSelf = (widget.user == PSManager.shared.currentUser);
 
 //获取帖子
     if(posts.length == 0){
@@ -226,7 +250,7 @@ class _UserDetailState extends State<UserDetail> {
     }
 
     //检查是否关注
-    if(!isSelf){
+    if(!_isSelf){
       ApiService.shared.checkIfLikeUser(PSManager.shared.currentUser, widget.user, (didlike,error){
         setState(() {
           likeState = didlike?1:-1;
@@ -245,11 +269,14 @@ class _UserDetailState extends State<UserDetail> {
         fans = count;
       });
     });
+    }
+    
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       body: Stack(
       children: <Widget>[

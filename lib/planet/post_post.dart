@@ -151,7 +151,9 @@ class _PostPostState extends State<PostPost> {
   }
 
   _post() {
-    PSProcess.show(context);
+
+    if (controller.text.length >0){
+      PSProcess.show(context);
     var post = Post();
     post.ownerId = PSManager.shared.currentUser.userId;
     post.content = controller.text;
@@ -176,6 +178,10 @@ class _PostPostState extends State<PostPost> {
         PSAlert.show(context, "图片上传失败", error.toString());
       }
     });
+    }else
+    {
+      PSAlert.show(context, "错误", "请输入帖子内容");
+    }
   }
 
   _uploadImages(

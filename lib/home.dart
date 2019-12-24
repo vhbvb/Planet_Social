@@ -11,21 +11,6 @@ class PlanetSocial extends StatefulWidget {
 class _PlanetSocialState extends State<PlanetSocial> {
   int _selectedIndex = 0;
 
-  Widget _currentPage() {
-    switch (_selectedIndex) {
-      case 0:
-        return PSRoute.explore;
-      case 1:
-        return PSRoute.myPlanet;
-      case 2:
-        return PSRoute.message;
-      case 3:
-        return PSRoute.me;
-      default:
-        return null;
-    }
-  }
-
   List<BottomNavigationBarItem> _createItems() {
     return BarItems.items().map((item) {
       return BottomNavigationBarItem(
@@ -44,7 +29,7 @@ class _PlanetSocialState extends State<PlanetSocial> {
 
   @override
   void initState() {
-    super.initState();
+
     PSManager.shared.isLogin.then((islogin) {
       if (!islogin) {
         Future.delayed(Duration(seconds: 1), () {
@@ -54,12 +39,30 @@ class _PlanetSocialState extends State<PlanetSocial> {
     });
 
     PSManager.shared.registThirdParty();
+
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: _currentPage(),
+        body: IndexedStack(
+          
+          children: <Widget>[
+            PSRoute.explore,
+            PSRoute.myPlanet,
+            PSRoute.message,
+            PSRoute.me
+          ],
+          index: _selectedIndex,
+        ),
+
+        // body: <Widget>[
+        //     PSRoute.explore,
+        //     PSRoute.myPlanet,
+        //     PSRoute.message,
+        //     PSRoute.me
+        //   ][_selectedIndex],
         bottomNavigationBar: BottomNavigationBar(
           items: _createItems(),
           currentIndex: _selectedIndex,

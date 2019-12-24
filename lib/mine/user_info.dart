@@ -83,12 +83,11 @@ class _UserInfoState extends State<UserInfo> {
             index,
             "头像",
             ClipOval(
-              child: Image.network(
+              child: Util.loadImage(
                 
                 widget.user.avatar,
                 height: 44,
                 width: 44,
-                fit: BoxFit.fill,
               ),
             ));
 
@@ -242,7 +241,7 @@ class _UserInfoState extends State<UserInfo> {
             padding: EdgeInsets.only(left: 10, right: 10),
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: Util.randomColor(),
+              color: Util.randomColor(key: tag),
               borderRadius: BorderRadius.all(Radius.circular(15)),
             ),
             child:

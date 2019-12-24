@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:planet_social/common/post_detail.dart';
 import 'package:planet_social/models/post_model.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 
 class PostList extends StatefulWidget {
   
@@ -49,12 +50,31 @@ class _PostListState extends State<PostList>
         child: TabBarView(
           controller: _tapController,
           children: <Widget>[
+            // EasyRefresh(
+            //   onRefresh: (){
+
+            //   },
+            //   onLoad: (){
+
+            //   },
+            //   firstRefresh: true,
+            //   child: ListView.builder(
+            //   itemCount: widget.news.length,
+            //   itemBuilder: (context, index) => PostDetail(
+            //     post: widget.news[index],
+            //   ),
+            // ),
+            // ),
+
             ListView.builder(
               itemCount: widget.news.length,
               itemBuilder: (context, index) => PostDetail(
                 post: widget.news[index],
               ),
             ),
+
+
+
             ListView.builder(
               itemCount: widget.hots.length,
               itemBuilder: (context, index) => PostDetail(

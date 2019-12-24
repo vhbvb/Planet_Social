@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:planet_social/base/api_service.dart';
+import 'package:planet_social/base/data_center.dart';
+import 'package:planet_social/base/utils.dart';
 import 'package:planet_social/const.dart';
 import 'package:planet_social/models/comment_model.dart';
 
@@ -17,13 +19,12 @@ class _CommentDetailState extends State<CommentDetail> {
         // mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           ClipOval(
-            child: Image.network(
+            child: Util.loadImage(
               widget.comment.owner == null
                   ? Consts.defaultAvatar
                   : widget.comment.owner.avatar,
               height: 44,
               width: 44,
-              fit: BoxFit.fill,
             ),
           ),
           Padding(
@@ -87,7 +88,7 @@ class _CommentDetailState extends State<CommentDetail> {
 
   _getDetail() {
     if (widget.comment.owner == null) {
-      ApiService.shared.getUser(widget.comment.ownerId, (user, error) {
+      DataSource.center.getUser(widget.comment.ownerId, (user, error) {
         if (error == null) {
           setState(() {
             widget.comment.owner = user;

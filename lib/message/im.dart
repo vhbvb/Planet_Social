@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:planet_social/base/utils.dart';
 import './im_chat.dart';
 
 class ConversationList extends StatefulWidget {
@@ -20,7 +21,7 @@ class _ConversationListState extends State<ConversationList> {
           new Padding(
             padding: EdgeInsets.only(left: 15.0, right: 15.0),
             child: new ClipOval(
-                child: new Image.network(
+                child: Util.loadImage(
               "http://i2.hdslb.com/bfs/face/d83b402cdab58ff84d415941f79b515ec14fd44f.jpg",
               height: 55.0,
               width: 55.0,

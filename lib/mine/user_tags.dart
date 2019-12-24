@@ -84,7 +84,7 @@ class UserTagsState extends State<UserTags> {
                         child: Container(
                         padding: EdgeInsets.only(left: 12, right: 12,top: 5,bottom: 5),
                         decoration: BoxDecoration(
-                          color: Util.randomColor(),
+                          color: Util.randomColor(key: tag),
                           borderRadius: BorderRadius.all(Radius.circular(15)),
                         ),
                         child: Text(tag,
