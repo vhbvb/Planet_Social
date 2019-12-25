@@ -30,14 +30,8 @@ class _PlanetSocialState extends State<PlanetSocial> {
   @override
   void initState() {
 
-    PSManager.shared.isLogin.then((islogin) {
-      if (!islogin) {
-        Future.delayed(Duration(seconds: 1), () {
-          PSRoute.push(context, "login", null);
-        });
-      }
-    });
-
+    PSManager.shared.mainContext = context;
+    PSManager.shared.login();
     PSManager.shared.registThirdParty();
 
     super.initState();

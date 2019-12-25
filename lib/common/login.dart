@@ -12,6 +12,9 @@ import 'package:planet_social/route.dart';
 import 'package:sharesdk_plugin/sharesdk_plugin.dart';
 
 class LoginPage extends StatefulWidget {
+
+  final Function result;
+  const LoginPage({Key key, this.result}) : super(key: key);
   @override
   State<StatefulWidget> createState() => _LoginPageState();
 }
@@ -273,12 +276,12 @@ class _LoginPageState extends State<LoginPage> {
   _phone() {
     PSProcess.show(context);
 
-    Smssdk.commitCode(phoneController.text, "86", verifyCodeController.text,
-        (ret, error) {
-      if (error != null) {
-        PSProcess.dismiss(context);
-        PSAlert.show(context, "验证码验证失败", error.toString());
-      } else {
+    // Smssdk.commitCode(phoneController.text, "86", verifyCodeController.text,
+    //     (ret, error) {
+    //   if (error != null) {
+    //     PSProcess.dismiss(context);
+    //     PSAlert.show(context, "验证码验证失败", error.toString());
+    //   } else {
         User third = User();
         third.phone = phoneController.text;
         String uid = phoneController.text;
@@ -293,8 +296,8 @@ class _LoginPageState extends State<LoginPage> {
             (User user, Map<String, dynamic> error) {
           _processLogined(user, error);
         });
-      }
-    });
+    //   }
+    // });
   }
 
   _processLogined(User user, Map<String, dynamic> error) {
@@ -303,6 +306,7 @@ class _LoginPageState extends State<LoginPage> {
     if (user != null) {
       PSManager.shared.setUser(user).then((_) {
         // 第一次注册
+        widget.result();
         if (user.sex == null) {
           PSRoute.push(context, "user_settings", user, replace: true);
         } else {

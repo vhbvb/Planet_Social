@@ -6,6 +6,8 @@ import './im_chat.dart';
 class ConversationList extends StatefulWidget {
   final title = "消息";
 
+    Function refresh;
+
   @override
   State<StatefulWidget> createState() => _ConversationListState();
 }
@@ -84,7 +86,13 @@ class _ConversationListState extends State<ConversationList> {
   @override
   void initState() {
     // TODO: implement initState
-    setState(() {});
+    // setState(() {});
+    
+    widget.refresh = (){
+      setState(() {
+    
+      });
+    };
 
     super.initState();
   }

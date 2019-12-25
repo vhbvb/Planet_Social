@@ -21,7 +21,7 @@ class PSRoute {
   static Widget _page(String url, dynamic params) {
     switch (url) {
       case "login":
-        return LoginPage();
+        return LoginPage(result:params,);
       case "user_detail":
         return UserDetail(
           user: params,

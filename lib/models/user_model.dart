@@ -18,6 +18,7 @@ class User {
   String userId;
   String sessionToken;
   Map authData;
+  String imToken;
 
   Map<String,dynamic> jsonMap(){
     Map<String,dynamic> map = Map();
@@ -38,6 +39,7 @@ class User {
       return value == null;
     });
     map["authData"] = authData;
+    map["imToken"] = imToken;
     map.removeWhere((key, value) {
       return value == null || value == "null";
     });
@@ -60,6 +62,7 @@ class User {
     user.sessionToken = rawData["sessionToken"];
     // user.plannetId = rawData["plannetId"];
     user.authData = rawData["authData"];
+    user.imToken = rawData["imToken"];
     // user.rawJson = rawData;
     return user;
   }

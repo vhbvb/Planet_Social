@@ -11,6 +11,8 @@ import 'package:planet_social/planet/post_list.dart';
 import 'package:planet_social/route.dart';
 
 class MyPlanet extends StatefulWidget {
+  Function refresh;
+
   @override
   State<StatefulWidget> createState() => _MyPlanetState();
 }
@@ -43,7 +45,6 @@ class _MyPlanetState extends State<MyPlanet>
   }
 
   _loadHots(Function finised) {
-    print("dadada");
     int i = 0;
     hots.clear();
     for (var item in imIn) {
@@ -54,7 +55,6 @@ class _MyPlanetState extends State<MyPlanet>
         }
         if (error == null) {
           setState(() {
-            print("dadada");
             hots.addAll(results);
           });
         }
@@ -62,24 +62,28 @@ class _MyPlanetState extends State<MyPlanet>
     }
   }
 
+  void _planets() {
+    if (PSManager.shared.currentUser != null) {
+      ApiService.shared.planetsJoined(PSManager.shared.currentUser,
+          (results, error) {
+        if (error == null) {
+          setState(() {
+            imIn.addAll(results);
+            _loadHots(() {});
+            _loadNews(() {});
+          });
+        } else {
+          PSAlert.show(context, "星球获取失败", error.toString());
+        }
+      });
+    }
+  }
+
   @override
   void initState() {
-    PSManager.shared.isLogin.then((isLogined) {
-      if (isLogined) {
-        ApiService.shared.planetsJoined(PSManager.shared.currentUser,
-            (results, error) {
-          if (error == null) {
-            setState(() {
-              imIn.addAll(results);
-              _loadHots(() {});
-              _loadNews(() {});
-            });
-          } else {
-            PSAlert.show(context, "星球获取失败", error.toString());
-          }
-        });
-      }
-    });
+    widget.refresh = () {
+      _planets();
+    };
 
     super.initState();
   }

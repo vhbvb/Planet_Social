@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:planet_social/base/api_service.dart';
+import 'package:planet_social/base/manager.dart';
 import 'package:planet_social/base/utils.dart';
 import 'package:planet_social/common/PSAlert.dart';
 import 'package:planet_social/const.dart';
@@ -257,12 +258,14 @@ class _UserInfoState extends State<UserInfo> {
   }
 
   _save(){
-    ApiService.shared.updateUserInfo(widget.user, (error){
+    ApiService.shared.updateUserInfo(widget.user, (user,error){
       if(error != null){
         PSAlert.show(context, "用户更新失败", error.toString());
       }else{
+        PSManager.shared.setUser(user);
         PSAlert.show(context, "成功", "信息已更新",confirm: (){
           PSRoute.pop(context);
+          PSManager.shared.refreshUserinfo();
         });
       }
     });

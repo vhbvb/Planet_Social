@@ -13,6 +13,8 @@ import 'package:planet_social/route.dart';
 class UserDetail extends StatefulWidget {
   User user;
   UserDetail({Key key, this.user}) : super(key: key);
+  Function refresh;
+
   @override
   State<StatefulWidget> createState() => _UserDetailState();
 }
@@ -176,7 +178,7 @@ class _UserDetailState extends State<UserDetail>
       pinned: true,
       snap: false,
       brightness: Brightness.light,
-      actions: <Widget>[
+      actions: _isSelf?<Widget>[
         GestureDetector(
           onTap: () {
             _clickSettings();
@@ -190,7 +192,7 @@ class _UserDetailState extends State<UserDetail>
             ),
           ),
         ),
-      ],
+      ]:null,
       flexibleSpace: FlexibleSpaceBar(
           background: Stack(
         children: <Widget>[
@@ -204,7 +206,9 @@ class _UserDetailState extends State<UserDetail>
 
   _posts() => SliverList(
           delegate: SliverChildBuilderDelegate((context, index) {
-        return PostDetail(post: posts[index],);
+        return PostDetail(
+          post: posts[index],
+        );
       }, childCount: posts.length));
 
   _clickSettings() {
@@ -213,6 +217,13 @@ class _UserDetailState extends State<UserDetail>
 
   @override
   void initState() {
+    widget.refresh = () {
+      setState(() {
+        if (_isSelf){
+          widget.user = PSManager.shared.currentUser;
+        }
+      });
+    };
 // 状态栏渐变
     _controller = ScrollController()
       ..addListener(() {
@@ -223,15 +234,11 @@ class _UserDetailState extends State<UserDetail>
 
 // 变量初始化
     if (widget.user == null) {
-      PSManager.shared.isLogin.then((logined) {
-        if (logined) {
-          setState(() {
-            _isSelf = true;
-            widget.user = PSManager.shared.currentUser;
-          });
-        }
-      });
-    } else {
+      widget.user = PSManager.shared.currentUser;
+      _isSelf = true;
+    }
+
+    if (widget.user != null) {
 //获取帖子
       if (posts.length == 0) {
         ApiService.shared.getPostOfUser(widget.user, (results, error) {
