@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 import 'package:planet_social/base/data_center.dart';
 import 'package:planet_social/base/manager.dart';
 import 'package:planet_social/const.dart';
@@ -11,7 +10,7 @@ import 'package:planet_social/models/user_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
 import 'package:async/async.dart';
-import 'package:crypto/crypto.dart';
+
 
 enum RequestType {
   post,
@@ -28,10 +27,7 @@ class ApiService {
     Map<String, dynamic> params = user.jsonMap();
     _send("users/" + user.userId, params, RequestType.put).then((response) {
       if (response.statusCode ~/ 100 == 2) {
-        loginIM(user, (token,error){
-          user.imToken = token;
-          callback(user,null);
-        });
+        callback(user,null);
       } else {
         if (callback != null) {
           callback(null,jsonDecode(response.body));
@@ -49,14 +45,15 @@ class ApiService {
         //2xx
         if (callback != null) {
           var user = User.withJson(jsonDecode(response.body));
-          loginIM(user, (token,error){
-            if(error == null){
-              user.imToken = token;
-              callback(user,null);
-            }else{
-              callback(null,error);
-            }
-          });
+          callback(user,null);
+          // loginIM(user, (token,error){
+          //   if(error == null){
+          //     user.imToken = token;
+          //     callback(user,null);
+          //   }else{
+          //     callback(null,error);
+          //   }
+          // });
         }
       } else {
         if (callback != null) {
@@ -66,46 +63,6 @@ class ApiService {
     });
   }
 
-  void loginIM(User user,
-      Function(String, Map<String, dynamic> error) callback) {
-        var url = "https://api-cn.ronghub.com/user/getToken.json";
-        var params = {"userId":user.userId,
-        "name":user.nickName==null?"null":user.nickName,
-        "portraitUri":user.avatar==null?Consts.defaultAvatar:user.avatar};
-        var client =  http.Client();
-        http.Response response;
-
-    try {
-              String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
-        String nonce = Random().nextDouble().toString();
-        String signSource = (Consts.imSecret + nonce + timestamp);
-        var sign = sha1.convert(utf8.encode(signSource));
-      Map<String, String> header = {
-        "App-Key": Consts.imKey,
-        "Nonce": nonce,
-        "Timestamp": timestamp,
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Signature":sign.toString()
-      };
-
-      var paramsStr = params.entries.map((e){
-        return e.key + "=" + Uri.encodeFull(e.value);
-      }).join("&");
-
-      client.post(url, body: paramsStr, headers: header).then((res){
-
-        var info = jsonDecode(res.body);
-        if(res.statusCode == 200){
-          callback(info["token"],null);
-        }else{
-          callback(null,info);
-        }
-      });
-      
-    } finally {
-      client.close();
-    }
-    }
 
   void getUser(
       String userid, Function(User, Map<String, dynamic> error) callback) {

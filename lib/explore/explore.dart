@@ -33,7 +33,7 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin{
               padding: EdgeInsets.only(top: 58, bottom: 13),
               child: Text(
                 "探索",
-                style: TextStyle(fontSize: 17, color: Colors.white),
+                style: TextStyle(fontSize: 17, color: Colors.white,fontWeight: FontWeight.bold),
               )),
           Statistics(
             users: usersNumber,

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:planet_social/base/api_service.dart';
+import 'package:planet_social/base/im_service.dart';
 import 'package:planet_social/const.dart';
 import 'package:planet_social/route.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -31,8 +32,7 @@ class PSManager {
   }
 
   Future setUser(User user) async {
-    if (user != null) 
-    {
+    if (user != null) {
       currentUser = user;
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString(Consts.kUser, jsonEncode(currentUser.jsonMap()));
@@ -50,9 +50,9 @@ class PSManager {
 
     var islogin = currentUser != null && currentUser.sessionToken != null;
 
-    if (!islogin){
+    if (!islogin) {
       var complete = Completer();
-      PSRoute.push(mainContext, "login", (){
+      PSRoute.push(mainContext, "login", () {
         islogin = true;
         complete.complete();
       });
@@ -64,12 +64,11 @@ class PSManager {
   }
 
   void registThirdParty() {
-      _registShare();
-      _registIM();
+    _registShare();
+    _registIM();
   }
 
   void _registShare() {
-
     ShareSDKRegister register = ShareSDKRegister();
     register.setupWechat("wx617c77c82218ea2c",
         "c7253e5289986cf4c4c74d1ccc185fb1", "https://www.sandslee.com/");
@@ -84,39 +83,41 @@ class PSManager {
     SharesdkPlugin.regist(register);
   }
 
-  void _registIM(){
+  void _registIM() {
     RongcloudImPlugin.init(Consts.imKey);
   }
 
-  void _didLogined(){
+  void _didLogined() {
     PSRoute.me.refresh();
     PSRoute.myPlanet.refresh();
-    _connectIM();
-  }
-
-  void _connectIM(){
-    RongcloudImPlugin.connect(currentUser.imToken).then((r){
-      if(r == 0){
-  print("IM connected");
-  PSRoute.message.refresh();
-      }else{
-        print("IM connect failed code:"+r.toString());
-      }
-    });
-  }
-
-  void refreshUserinfo(){
-    PSRoute.me.refresh();
-
-        ApiService.shared.loginIM(currentUser, (token,error){
-      if(error == null){
+    IMService.shared.loginIM(currentUser, (token, error) {
+      if (error == null) {
         currentUser.imToken = token;
         _connectIM();
-        setUser(currentUser);
-        
+      }
+    });
+    // _connectIM();
+  }
+
+  void _connectIM() {
+    RongcloudImPlugin.connect(currentUser.imToken).then((r) {
+      if (r == 0) {
+        print("IM connected");
+        PSRoute.message.refresh();
+      } else {
+        print("IM connect failed code:" + r.toString());
       }
     });
   }
 
+  void refreshUserinfo() {
+    PSRoute.me.refresh();
 
+    IMService.shared.loginIM(currentUser, (token, error) {
+      if (error == null) {
+        currentUser.imToken = token;
+        _connectIM();
+      }
+    });
+  }
 }

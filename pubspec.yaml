@@ -88,6 +88,34 @@ flutter:
      - assets/ph.png
      - assets/sec.png
      - assets/back2.png
+     - assets/message_left.png
+     - assets/message_right.png
+     - assets/keyboard.png
+     - assets/add.png
+     - assets/emoj.png
+     - assets/imtable/im_file.png
+     - assets/imtable/im_jankenpo.png
+     - assets/imtable/im_media.png
+     - assets/imtable/im_position.png
+     - assets/imtable/im_receipt.png
+     - assets/imtable/im_redpacket.png
+     - assets/imtable/im_shoot.png
+     - assets/imtable/im_tmp.png
+     - assets/imtable/im_voice.png
+     - assets/im_row.png
+     - assets/im_player.png
+     - assets/im_sound@2x.png
+     - assets/im_sound_1@2x.png
+     - assets/msg_recv_voice_1.png
+     - assets/msg_recv_voice_2.png
+     - assets/msg_recv_voice_3.png
+     - assets/msg_recv_voice_4.png
+     - assets/msg_send_voice_1.png
+     - assets/msg_send_voice_2.png
+     - assets/msg_send_voice_3.png
+     - assets/msg_send_voice_4.png
+     - assets/videoPlay.png
+     - assets/voicePlay.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

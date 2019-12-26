@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:planet_social/common/login.dart';
 import 'package:planet_social/explore/explore.dart';
 import 'package:planet_social/explore/planet_create.dart';
-import 'package:planet_social/message/im.dart';
+import 'package:planet_social/message/chat_scaffold.dart';
+import 'package:planet_social/message/conversation_list.dart';
 import 'package:planet_social/mine/user_detail.dart';
 import 'package:planet_social/mine/user_info.dart';
 import 'package:planet_social/mine/user_tags.dart';
@@ -44,6 +45,8 @@ class PSRoute {
         return PlanetCreate(offset: params,);
             case "planet_likes":
         return PlanetLikeList(planet: params,);
+      case "chat_scaffold":
+      return ChatScaffold(user: params,);
       default:
         return null;
     }
@@ -58,8 +61,6 @@ class PSRoute {
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (context) => _page(url, params)));
     }
-
-    // Navigator.of(context).push(ModalRoute(Rs))
   }
 
   static pop(BuildContext context) {

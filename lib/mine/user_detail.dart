@@ -171,28 +171,14 @@ class _UserDetailState extends State<UserDetail>
     return SliverAppBar(
       title: Text(_nickName,
           style:
-              TextStyle(color: _offset < 220.0 ? Colors.white : Colors.black)),
+              TextStyle(color: _offset < 220.0 ? Colors.white : Colors.black,fontSize: 17)),
       centerTitle: true,
       expandedHeight: _isSelf ? 330 : 375 + MediaQuery.of(context).padding.top,
       floating: false,
       pinned: true,
       snap: false,
       brightness: Brightness.light,
-      actions: _isSelf?<Widget>[
-        GestureDetector(
-          onTap: () {
-            _clickSettings();
-          },
-          child: Padding(
-            padding: EdgeInsets.only(left: 5, right: 5),
-            child: Image.asset(
-              _offset < 220.0 ? "assets/set2.png" : "assets/set.png",
-              height: 22,
-              width: 22,
-            ),
-          ),
-        ),
-      ]:null,
+      actions: _action(),
       flexibleSpace: FlexibleSpaceBar(
           background: Stack(
         children: <Widget>[
@@ -204,6 +190,44 @@ class _UserDetailState extends State<UserDetail>
     );
   }
 
+ List<Widget> _action(){
+
+    var setIcon =          GestureDetector(
+          onTap: _clickSetting,
+          child: Padding(
+            padding: EdgeInsets.only(left: 5, right: 5),
+            child: Image.asset(
+              _offset < 220.0 ? "assets/set2.png" : "assets/set.png",
+              height: 22,
+              width: 22,
+            ),
+          ),
+        );
+
+      var msgIcon =          GestureDetector(
+          onTap: _clickMessage,
+          child: Padding(
+            padding: EdgeInsets.only(left: 5, right: 5),
+            child: Image.asset(
+              _offset < 220.0 ? "assets/msg_push2.png" : "assets/msg_push.png",
+              height: 33,
+              width: 33,
+            ),
+          ),
+        );
+      
+
+    return [_isSelf?setIcon:msgIcon];
+  }
+
+  _clickSetting() {
+    PSRoute.push(context, "user_settings", widget.user);
+  }
+
+  _clickMessage() {
+    PSRoute.push(context, "chat_scaffold", widget.user);
+  }
+
   _posts() => SliverList(
           delegate: SliverChildBuilderDelegate((context, index) {
         return PostDetail(
@@ -211,9 +235,7 @@ class _UserDetailState extends State<UserDetail>
         );
       }, childCount: posts.length));
 
-  _clickSettings() {
-    PSRoute.push(context, "user_settings", widget.user);
-  }
+
 
   @override
   void initState() {
