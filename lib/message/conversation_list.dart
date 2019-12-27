@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:planet_social/base/data_center.dart';
 import 'package:planet_social/base/im_service.dart';
+import 'package:planet_social/base/utils.dart';
 import 'package:planet_social/const.dart';
 import 'package:planet_social/models/user_model.dart';
 import 'package:planet_social/route.dart';
@@ -21,13 +22,14 @@ class _ConversationListState extends State<ConversationList> {
   final List _conversations = [];
   final List<_ConversationDetailElements> _details = [];
 
-  Widget _creatConversations(int index) {
+  Widget _createConversations(int index) {
     var elem = _details[index];
 
     return GestureDetector(
       onTap: () {
         PSRoute.push(context, "chat_scaffold",elem.target);
       },
+      behavior: HitTestBehavior.opaque,
       child: ConversationDetail(
         icon: elem.icon,
         title: elem.title,
@@ -60,7 +62,7 @@ class _ConversationListState extends State<ConversationList> {
           child: ListView.builder(
             itemCount: _conversations.length,
             itemBuilder: (BuildContext context, int position) {
-              return _creatConversations(position);
+              return _createConversations(position);
             },
           ),
         ));
@@ -96,7 +98,7 @@ class _ConversationDetailElements {
 
   Future<_ConversationDetailElements> requestDetail() async {
     unRead = await IMService.shared.unreadCount(c.conversationType, c.targetId);
-    timesTamp = DateTime.fromMillisecondsSinceEpoch(c.sentTime).toString();
+    timesTamp = Util.timesTamp(DateTime.fromMillisecondsSinceEpoch(c.sentTime));
 
 // class RCConversationType {
 //   static const int Private = 1;

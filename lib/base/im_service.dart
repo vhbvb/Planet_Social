@@ -4,11 +4,14 @@ import 'dart:math';
 import 'package:crypto/crypto.dart';
 import 'package:planet_social/const.dart';
 import 'package:planet_social/models/user_model.dart';
+import 'package:planet_social/route.dart';
 import 'package:rongcloud_im_plugin/rongcloud_im_plugin.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 
 class IMService {
   static final shared = IMService();
+  final List<IMServiceObserver> observers = [];
 
   Future<Message> sendText(String text, String uid) async {
     var txtMessage = TextMessage()..content = text;
@@ -16,7 +19,7 @@ class IMService {
         RCConversationType.Private, uid, txtMessage);
   }
 
-  sendImage(String path, String uid) async {
+  Future<Message> sendImage(String path, String uid) async {
     var imgMessage = ImageMessage()..localPath = path;
     return await RongcloudImPlugin.sendMessage(
         RCConversationType.Private, uid, imgMessage);
@@ -34,10 +37,18 @@ class IMService {
           msg.messageId.toString() +
           " left:" +
           left.toString());
+
+      PSRoute.message.refresh();
+
+      for (var item in observers) {
+        item.onrev(msg, left == 0);
+      }
     };
   }
 
   Future<List<dynamic>> conversationList() async {
+    int count = await totalUnreadCount();
+    FlutterAppBadger.updateBadgeCount(count);
     return await RongcloudImPlugin.getConversationList([
       RCConversationType.Private,
       RCConversationType.Group,
@@ -57,20 +68,20 @@ class IMService {
     return res;
   }
 
-  Future<List<dynamic>> localMessagesList(String uid,{int type = 1,int messageId=0}) async {
+  Future<List<dynamic>> localMessagesList(String uid,
+      {int type = 1, int messageId = 0}) async {
     return await RongcloudImPlugin.getHistoryMessage(type, uid, 0, 20);
   }
 
-   Future<List<dynamic>> remoteMessagesList(String uid,{int type = 1}) async {
-     var c  =Completer();
-     List msgs = [];
-    RongcloudImPlugin.getRemoteHistoryMessages(type, uid, 0, 100,(List msgList,int code) {
-
-      if(code == 0) 
-      {
+  Future<List<dynamic>> remoteMessagesList(String uid, {int type = 1}) async {
+    var c = Completer();
+    List msgs = [];
+    RongcloudImPlugin.getRemoteHistoryMessages(type, uid, 0, 100,
+        (List msgList, int code) {
+      if (code == 0) {
         msgs.addAll(msgList);
-      }else{
-        print("errorCode:"+code.toString());
+      } else {
+        print("errorCode:" + code.toString());
       }
       c.complete();
     });
@@ -197,6 +208,12 @@ class IMService {
 
     return response;
   }
+
+  Future<bool> sendReadReceipt(String tid, {int type = 1}) async {
+    var res = await RongcloudImPlugin.clearMessagesUnreadStatus(type, tid);
+    PSRoute.message.refresh();
+    return res;
+  }
 }
 
 // 黑名单
@@ -232,3 +249,13 @@ class IMService {
 //         print("userId:"+userId);
 //       });
 //     });
+
+class IMServiceObserver {
+  IMServiceObserver() {
+    IMService.shared.observers.add(this);
+  }
+  Function(Message, bool) onrev;
+  void dispose() {
+    IMService.shared.observers.remove(this);
+  }
+}

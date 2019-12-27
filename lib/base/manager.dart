@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:planet_social/base/api_service.dart';
 import 'package:planet_social/base/im_service.dart';
 import 'package:planet_social/const.dart';
 import 'package:planet_social/route.dart';
@@ -103,6 +102,7 @@ class PSManager {
     RongcloudImPlugin.connect(currentUser.imToken).then((r) {
       if (r == 0) {
         print("IM connected");
+        IMService.shared.start();
         PSRoute.message.refresh();
       } else {
         print("IM connect failed code:" + r.toString());

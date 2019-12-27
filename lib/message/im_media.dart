@@ -5,28 +5,14 @@ class FTIMMedia extends StatelessWidget {
 
   final FTIMMediaControl control;
 
-  final firstPageItems = [
+  final pageItems = [
     "assets/imtable/im_media.png",
     "assets/imtable/im_shoot.png",
-    "assets/imtable/im_position.png",
-    "assets/imtable/im_jankenpo.png",
-    "assets/imtable/im_redpacket.png",
-    "assets/imtable/im_redpacket.png",
-    "assets/imtable/im_redpacket.png",
-    "assets/imtable/im_redpacket.png"
   ];
-  final firstPageItemNames = [
+  final pageItemNames = [
     "相册",
     "拍摄",
-    "位置",
-    "石头剪刀布",
-    "视频通话",
-    "文件传输",
-    "提示消息",
-    "已读回执"
   ];
-  final secondPageItems = ["assets/imtable/im_redpacket.png"];
-  final secondPageItemNames = ["红包"];
   List<Widget> _creatItems(List items, List itemNames) {
     List tmp = <Widget>[];
     for (int i = 0; i < items.length; i++) {
@@ -36,22 +22,22 @@ class FTIMMedia extends StatelessWidget {
   }
 
   GestureDetector _creatItem(String image, String name) {
-    return new GestureDetector(
+    return  GestureDetector(
         onTap: () {
           _itemClickHandler(name);
         },
-        child: new Container(
+        child:  Container(
             // alignment: Alignment.topLeft,
             width: 66.0,
             // color: Colors.red,
-            child: new Column(
+            child:  Column(
               children: <Widget>[
-                new Image.asset(
+                 Image.asset(
                   image,
                   height: 50.0,
                   width: 50.0,
                 ),
-                new Text(
+                 Text(
                   name,
                   style: TextStyle(fontSize: 12.0),
                 )
@@ -68,30 +54,30 @@ class FTIMMedia extends StatelessWidget {
         control.onShootClick();
         break;
       default:
-        control.testFunc(firstPageItemNames.indexOf(itemName));
         break;
     }
   }
 
   StatelessWidget build(BuildContext context) {
-    return new Container(
+    return  Container(
         padding: EdgeInsets.only(top: 15.0),
         // color: Colors.green,
         height: 175.0,
-        child: new PageView.builder(
+        child:  PageView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: 2,
+            itemCount: 1,
             itemBuilder: (context, i) {
-              return new Padding(
+              return  Padding(
                   padding: EdgeInsets.only(left: 30.0),
-                  child: new Wrap(
+                  child:  Wrap(
                       alignment: WrapAlignment.start,
                       spacing: 30.0,
                       runSpacing: 15.0,
-                      children: _creatItems(
-                          i == 0 ? firstPageItems : secondPageItems,
-                          i == 0 ? firstPageItemNames : secondPageItemNames)));
-            }));
+                      children: _creatItems(pageItems,pageItemNames)));
+                      }
+          
+          )
+          );
   }
 }
 

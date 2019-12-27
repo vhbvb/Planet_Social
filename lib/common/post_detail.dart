@@ -49,7 +49,7 @@ class _PostDetailState extends State<PostDetail> {
                     fontWeight: FontWeight.bold)),
           ),
           Text(
-            DateTime.parse(widget.post.createdAt).toString().split(".")[0],
+            Util.timesTamp(DateTime.parse(widget.post.createdAt)),
             style: TextStyle(color: Colors.grey, fontSize: 12),
           )
         ],
@@ -147,7 +147,7 @@ class _PostDetailState extends State<PostDetail> {
               return Util.loadImage(url,
                   height: imageH, width: imageW,
                                 context: widget.parentContext,
-              enableTap: true,
+              enablePreview: true,
               sources: widget.post.images);
             }).toList());
 

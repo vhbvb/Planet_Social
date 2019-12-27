@@ -137,6 +137,7 @@ class _PlanetCreateState extends State<PlanetCreate> {
     planet.position = Offset(-widget.offset.dx, -widget.offset.dy);
     ApiService.shared.createPlanet(planet, (planet,error){
       if(error == null){
+        PSRoute.explore.refresh();
         PSAlert.show(context, "成功", "星球已成功创建",confirm:(){
            PSRoute.pop(context);
         });

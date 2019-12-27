@@ -6,13 +6,6 @@ import 'home.dart';
 
 void main() => runApp(MyApp());
 
-// void main() {
-//   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
-//     .then((_) {
-//       runApp(MyApp());
-//     });
-// }
-
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override

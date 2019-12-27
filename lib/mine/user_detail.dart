@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:planet_social/base/api_service.dart';
 import 'package:planet_social/base/images.dart';
@@ -9,6 +11,7 @@ import 'package:planet_social/const.dart';
 import 'package:planet_social/models/post_model.dart';
 import 'package:planet_social/models/user_model.dart';
 import 'package:planet_social/route.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 
 class UserDetail extends StatefulWidget {
   User user;
@@ -170,8 +173,9 @@ class _UserDetailState extends State<UserDetail>
   _header() {
     return SliverAppBar(
       title: Text(_nickName,
-          style:
-              TextStyle(color: _offset < 220.0 ? Colors.white : Colors.black,fontSize: 17)),
+          style: TextStyle(
+              color: _offset < 220.0 ? Colors.white : Colors.black,
+              fontSize: 17)),
       centerTitle: true,
       expandedHeight: _isSelf ? 330 : 375 + MediaQuery.of(context).padding.top,
       floating: false,
@@ -190,34 +194,32 @@ class _UserDetailState extends State<UserDetail>
     );
   }
 
- List<Widget> _action(){
+  List<Widget> _action() {
+    var setIcon = GestureDetector(
+      onTap: _clickSetting,
+      child: Padding(
+        padding: EdgeInsets.only(left: 5, right: 5),
+        child: Image.asset(
+          _offset < 220.0 ? "assets/set2.png" : "assets/set.png",
+          height: 22,
+          width: 22,
+        ),
+      ),
+    );
 
-    var setIcon =          GestureDetector(
-          onTap: _clickSetting,
-          child: Padding(
-            padding: EdgeInsets.only(left: 5, right: 5),
-            child: Image.asset(
-              _offset < 220.0 ? "assets/set2.png" : "assets/set.png",
-              height: 22,
-              width: 22,
-            ),
-          ),
-        );
+    var msgIcon = GestureDetector(
+      onTap: _clickMessage,
+      child: Padding(
+        padding: EdgeInsets.only(left: 5, right: 5),
+        child: Image.asset(
+          _offset < 220.0 ? "assets/msg_push2.png" : "assets/msg_push.png",
+          height: 33,
+          width: 33,
+        ),
+      ),
+    );
 
-      var msgIcon =          GestureDetector(
-          onTap: _clickMessage,
-          child: Padding(
-            padding: EdgeInsets.only(left: 5, right: 5),
-            child: Image.asset(
-              _offset < 220.0 ? "assets/msg_push2.png" : "assets/msg_push.png",
-              height: 33,
-              width: 33,
-            ),
-          ),
-        );
-      
-
-    return [_isSelf?setIcon:msgIcon];
+    return [_isSelf ? setIcon : msgIcon];
   }
 
   _clickSetting() {
@@ -235,18 +237,17 @@ class _UserDetailState extends State<UserDetail>
         );
       }, childCount: posts.length));
 
-
-
   @override
   void initState() {
     widget.refresh = () {
       setState(() {
-        if (_isSelf){
-          widget.user = PSManager.shared.currentUser;
-        }
+        _fresh((){});
       });
     };
-// 状态栏渐变
+
+    _fresh(() {});
+
+    // 状态栏渐变
     _controller = ScrollController()
       ..addListener(() {
         setState(() {
@@ -254,7 +255,11 @@ class _UserDetailState extends State<UserDetail>
         });
       });
 
-// 变量初始化
+    super.initState();
+  }
+
+  _fresh(Function res) {
+    // 变量初始化
     if (widget.user == null) {
       widget.user = PSManager.shared.currentUser;
       _isSelf = true;
@@ -262,17 +267,17 @@ class _UserDetailState extends State<UserDetail>
 
     if (widget.user != null) {
 //获取帖子
-      if (posts.length == 0) {
         ApiService.shared.getPostOfUser(widget.user, (results, error) {
+          res();
           if (error == null) {
             setState(() {
-              posts.addAll(results);
+              posts.clear();
+              posts.addAll(results.reversed);
             });
           } else {
             PSAlert.show(context, "帖子获取失败", error.toString());
           }
         });
-      }
 
       //检查是否关注
       if (!_isSelf) {
@@ -295,23 +300,27 @@ class _UserDetailState extends State<UserDetail>
           fans = count;
         });
       });
+    }else{
+      res();
     }
-
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          CustomScrollView(
+      body: EasyRefresh(
+          onRefresh: () {
+                    var c = Completer();
+        _fresh(() {
+          c.complete();
+        });
+        return c.future;
+          },
+          child: CustomScrollView(
             controller: _controller,
             slivers: <Widget>[_header(), _posts()],
-          ),
-        ],
-      ),
+          )),
     );
   }
 

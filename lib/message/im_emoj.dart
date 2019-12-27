@@ -8,7 +8,7 @@ class FTIMEmoj extends StatelessWidget {
     return new Container(
       color: Colors.red, height: 100.0,
       child:new Center(
-        child: new Text("这个需求没法实现 ~~~",style: TextStyle(fontSize:20.0,color:Colors.white),),
+        child: new Text("待实现 ~~~",style: TextStyle(fontSize:20.0,color:Colors.white),),
       )
     );
   }

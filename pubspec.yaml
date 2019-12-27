@@ -41,6 +41,7 @@ dev_dependencies:
   cached_network_image: ^2.0.0-rc
   photo_view:
   crypto:
+  flutter_app_badger:
 
 
 # For information on the generic Dart part of this file, see the

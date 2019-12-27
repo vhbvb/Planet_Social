@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
@@ -28,6 +30,8 @@ class _ImagePreviewState extends State<ImagePreview> {
 
     @override
     Widget build(BuildContext context) {
+
+
         return Scaffold(
             body: Stack(
                 children: <Widget>[
@@ -40,8 +44,17 @@ class _ImagePreviewState extends State<ImagePreview> {
                             child: PhotoViewGallery.builder(
                                 scrollPhysics: const BouncingScrollPhysics(),
                                 builder: (BuildContext context, int index) {
+
+                                  var url = widget.images[index];
+                                  var provider ;
+                                  if((url as String).startsWith("http")){
+                                   provider = CachedNetworkImageProvider(widget.images[index]);
+                                  }else{
+                                    provider = FileImage(File(url));
+                                  }
+
                                     return PhotoViewGalleryPageOptions(
-                                        imageProvider: CachedNetworkImageProvider(widget.images[index]),
+                                        imageProvider: provider,
                                         heroAttributes: widget.heroTag.isNotEmpty?PhotoViewHeroAttributes(tag: widget.heroTag):null,
                                         
                                     );

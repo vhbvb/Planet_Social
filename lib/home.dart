@@ -63,7 +63,6 @@ class _PlanetSocialState extends State<PlanetSocial> {
           type: BottomNavigationBarType.fixed,
           onTap: (int index) {
             setState(() {
-              print(index);
               _selectedIndex = index;
             });
           },

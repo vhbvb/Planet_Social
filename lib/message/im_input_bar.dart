@@ -15,13 +15,12 @@ class _FTIMChatInputState extends State<FTIMChatInput> with TickerProviderStateM
   _FTIMChatInputState({this.control}) : super();
 
   FTIMChatInputControl control;
-  final _focus = new FocusNode();
-  // AnimationController _animationController;
+  final _focus = FocusNode();
   final TextEditingController _textController = new TextEditingController();
 
   @override
     void initState() {
-      // _animationController = AnimationController(duration: const Duration(milliseconds: 2000), vsync: this);
+
       _focus.addListener((){
         control.onFocusChange(_focus.hasFocus);
       });
@@ -36,37 +35,33 @@ class _FTIMChatInputState extends State<FTIMChatInput> with TickerProviderStateM
 
   @override
     void dispose() {
-        // _animationController.dispose();
         super.dispose();
       }
 
   @override
     Widget build(BuildContext context) {
 
-      // TODO: implement build
-      return new Container(
-        // color: Colors.green.withAlpha(50),
-        // padding: EdgeInsets.only(top:15.0),
+      return  Container(
         decoration: BoxDecoration(
-          border:new Border(
+          border: Border(
             top: BorderSide(
               color:Color.fromARGB(255, 229, 225, 218)
             )
           )
         ),
-        constraints: new BoxConstraints(
+        constraints:  BoxConstraints(
           maxHeight:120.0
         ),
         // alignment: Alignment.topCenter,
-        child: new Row(
+        child:  Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
 
-            new Padding(
+             Padding(
               padding: EdgeInsets.only(left:10.0,top:7.0),
-              child:new GestureDetector(
-                child:new Image.asset("assets/keyboard.png",height:33.0,width:33.0),
+              child: GestureDetector(
+                child: Image.asset("assets/keyboard.png",height:33.0,width:33.0),
                 onTap: (){
                   // _animationController.forward();
                   if (_focus.hasFocus)
@@ -81,19 +76,19 @@ class _FTIMChatInputState extends State<FTIMChatInput> with TickerProviderStateM
               )
             ),
 
-            new Expanded(
-              child:new Padding(
+             Expanded(
+              child: Padding(
                 padding: EdgeInsets.only(left:12.0),
-                child: new TextField(
+                child:  TextField(
                   onSubmitted: (String text){
                     _textController.text = "";
                     control.onMessageSend(text);
                   },
-                  decoration:new InputDecoration(
+                  decoration: InputDecoration(
                     hintText: "请输入消息...",
                     border: InputBorder.none
                   ),
-                  style: new TextStyle(
+                  style:  TextStyle(
                     fontSize:17.0,
                     color: Colors.black
                   ),
@@ -108,20 +103,20 @@ class _FTIMChatInputState extends State<FTIMChatInput> with TickerProviderStateM
                 )
               )
             ),
-            new Padding(
+             Padding(
               padding: EdgeInsets.only(left:11.0,top: 7.0),
-              child:new GestureDetector(
-                child:new Image.asset("assets/emoj.png",height:33.0,width:33.0),
+              child: GestureDetector(
+                child: Image.asset("assets/emoj.png",height:33.0,width:33.0),
                 onTap: (){
                   control.onEmojItemChange();
                 },
               )
             ),
 
-            new Padding(
+             Padding(
               padding: EdgeInsets.only(left:19.0,right: 12.0,top: 7.0),
-              child:new GestureDetector(
-                child:new Image.asset("assets/add.png",height:33.0,width:33.0),
+              child: GestureDetector(
+                child: Image.asset("assets/add.png",height:33.0,width:33.0),
                 onTap: (){
                   control.onMediaItemChange();
                 },

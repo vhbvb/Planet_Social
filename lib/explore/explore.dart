@@ -8,6 +8,7 @@ import 'package:planet_social/route.dart';
 import 'dart:math';
 
 class Explore extends StatefulWidget {
+  Function refresh;
   @override
   State<StatefulWidget> createState() => _ExploreState();
 }
@@ -47,15 +48,14 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin{
       child: Padding(
         padding: EdgeInsets.only(bottom: 37),
         child: Text(
-          "距离您的距离:" + distance.toStringAsFixed(2) + "光年",
+          "距离您的距离: " + distance.toStringAsFixed(2) + "光年",
           style: TextStyle(
               color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ));
 
-  @override
-  void initState() {
-
+    _refresh(){
+    
     DataSource.center.updateExplore((error) {
       if (error != null) {
         PSAlert.show(context, "星星获取失败", error.toString());
@@ -65,7 +65,13 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin{
         });
       }
     });
+    }
 
+  @override
+  void initState() {
+
+    widget.refresh = _refresh;
+    _refresh();
     super.initState();
   }
 

@@ -37,7 +37,7 @@ class _MyPlanetState extends State<MyPlanet>
         }
         if (error == null) {
           setState(() {
-            news.addAll(results);
+            news.addAll(results.reversed);
           });
         }
       });

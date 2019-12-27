@@ -141,6 +141,7 @@ class _UserInfoState extends State<UserInfo> {
       onTap: () {
         _onClick(index);
       },
+      behavior: HitTestBehavior.opaque,
       child: Container(
         padding: EdgeInsets.all(20),
         child: Row(

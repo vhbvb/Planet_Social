@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -71,18 +72,15 @@ class _PlanetDetailState extends State<PlanetDetail> {
 
   @override
   void initState() {
+_newPosts((){});
+_hotPost((){});
+_planetDetail();
+    super.initState();
+  }
 
-    ApiService.shared.getHotPostOfPlanet(widget.planet, (posts,error){
-      if(error == null){
-        setState(() {
-          hots.addAll(posts);
-        });
-      }else{
-        PSAlert.show(context, "热帖获取失败", error.toString());
-      }
-    });
-
+  _newPosts(Function res){
     ApiService.shared.getNewPostOfPlanet(widget.planet, (posts,error){
+       res();
       if(error == null){
         setState(() {
           news.addAll(posts);
@@ -91,8 +89,23 @@ class _PlanetDetailState extends State<PlanetDetail> {
         PSAlert.show(context, "新帖获取失败", error.toString());
       }
     });
+  }
 
-    ApiService.shared.planetUsersCount(widget.planet, (count){
+  _hotPost(Function res){
+        ApiService.shared.getHotPostOfPlanet(widget.planet, (posts,error){
+          res();
+      if(error == null){
+        setState(() {
+          hots.addAll(posts);
+        });
+      }else{
+        PSAlert.show(context, "热帖获取失败", error.toString());
+      }
+    });
+  }
+
+  _planetDetail(){
+        ApiService.shared.planetUsersCount(widget.planet, (count){
       setState(() {
         numbers = count;
       });
@@ -103,8 +116,6 @@ class _PlanetDetailState extends State<PlanetDetail> {
         like = didlike;
       });
     });
-
-    super.initState();
   }
 
   @override
@@ -133,7 +144,22 @@ class _PlanetDetailState extends State<PlanetDetail> {
           padding: EdgeInsets.all(10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[_header(), PostList(news: news,hots: hots,)],
+            children: <Widget>[_header(), PostList(news: news,hots: hots,onRefresh: (index){
+              var c =Completer();
+              if(index == 0){
+                news.clear();
+                _newPosts((){
+                  c.complete();
+                });
+              }else{
+                hots.clear();
+                _hotPost((){
+                  c.complete();
+                });
+              }
+
+              return c.future;
+            })],
           ),
         ));
   }

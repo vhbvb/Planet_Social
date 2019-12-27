@@ -69,7 +69,7 @@ class ConversationDetail extends StatelessWidget {
                             child: Opacity(
                               opacity: unreadCount == 0 ? 0 : 1,
                               child: Container(
-                                  padding: EdgeInsets.only(left: 5, right: 5),
+                                  padding: EdgeInsets.only(left: 6, right: 6),
                                   decoration: BoxDecoration(
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(10)),

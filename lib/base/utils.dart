@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -19,19 +21,15 @@ class Util {
     }
   }
 
-  static Widget loadImage(String path, {double height, double width, bool enableTap = false, List sources, BuildContext context}) {
-    return GestureDetector(
-      onTap: (){
-        if (enableTap){
-        Navigator.of(context).push( FadeRoute(page: ImagePreview(
-        images:sources,//传入图片list
-        index: sources.indexOf(path),
-        heroTag: "",//传入当前点击的图片的index
-        //传入当前点击的图片的hero tag （可选）
-    )));
-        }
-      },
-      child: CachedNetworkImage(
+  static Widget loadImage(String path, {double height, double width, bool enablePreview = false, List sources, BuildContext context,Function onTap}) {
+
+    Widget image;
+    if (!path.startsWith("http")){
+      image = Image.file(File(path),      fit: BoxFit.fill,
+      height: height,
+      width: width);
+    }else{
+     image = CachedNetworkImage(
       fit: BoxFit.fill,
       height: height,
       width: width,
@@ -52,7 +50,65 @@ class Util {
         width: width,
         child: Center(child: Icon(Icons.error)),
       ),
-    ),
     );
+    }
+
+    return GestureDetector(
+      onTap: (){
+        if (enablePreview){
+        Navigator.of(context).push( FadeRoute(page: ImagePreview(
+        images:sources,//传入图片list
+        index: sources.indexOf(path),
+        heroTag: "",//传入当前点击的图片的index
+    )));
+        }else if (onTap != null){
+          onTap();
+        }
+      },
+      child: image,
+    );
+  }
+
+  static String timesTamp(DateTime date){
+    var y = date.year;
+    var m = date.month;
+    var d = date.day;
+    var h = date.hour;
+    var min = date.minute;
+    var s = date.second;
+    var now = DateTime.now();
+
+    if(y == now.year){
+
+      if(d == now.day && m == now.month)
+      {
+        var dist_h = now.hour - h;
+
+        if(dist_h <= 5){
+          
+          if(dist_h > 0){
+            return "$dist_h 小时前";
+          }else{
+            var dist_min = now.minute - min;
+            
+            if (dist_min > 5){
+              return "$dist_min 分钟前";
+            }else{
+              return "刚刚";
+            }
+          }
+        }else{
+          return "$h:$min:$s";
+        }
+      }
+      else
+      {
+        return "$m-$d $h:$min";
+      }
+    }
+    else
+    {
+      return "$y-$m-$d";
+    }
   }
 }

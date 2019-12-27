@@ -6,70 +6,43 @@ import './im_input_bar.dart';
 import './im_emoj.dart';
 import './im_media.dart';
 import 'package:image_picker/image_picker.dart';
-import 'im_player_full.dart';
-
+import 'package:rongcloud_im_plugin/rongcloud_im_plugin.dart';
 
 class ChatScaffold extends StatefulWidget {
   ChatScaffold({Key key, this.user}) : super(key: key);
   final User user;
 
   @override
-  State<StatefulWidget> createState() =>  _ChatScaffoldState();
+  State<StatefulWidget> createState() => _ChatScaffoldState();
 }
 
-class _ChatScaffoldState extends State<ChatScaffold> with TickerProviderStateMixin {
+class _ChatScaffoldState extends State<ChatScaffold>
+    with TickerProviderStateMixin {
   final _messages = [];
-
   final _scrollController = ScrollController();
   FTIMChatInputControl _inputControl;
   FTIMMediaControl _mediaControl;
+  IMServiceObserver _observer;
 
   Widget _creatExt() {
     if (_inputControl.emojSelected) {
-      print("------------------->1");
-      return new FTIMEmoj();
+      return FTIMEmoj();
     } else if (_inputControl.mediaSelected) {
-      print("------------------->2");
-      return new FTIMMedia(control: _mediaControl);
+      return FTIMMedia(control: _mediaControl);
     } else {
-      print("------------------->3");
-      return new Container();
+      return Container();
     }
-  }
-
-  void _getImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      _messages.insert(0, "image:" + image.path);
-    });
-  }
-
-  void _shoot() async {
-    var file = await ImagePicker.pickImage(source: ImageSource.camera);
-    print("---------------------->" + file.path);
-    setState(() {
-      _messages.insert(0, "image:" + file.path);
-    });
   }
 
   @override
   void initState() {
-    print("hahha");
     _setupVariables();
     _refresh();
+    IMService.shared.sendReadReceipt(widget.user.userId);
     super.initState();
   }
 
-  _setupVariables(){
-// _cellBuilder = MessageCellBuilder(onImageClick: (String path) {
-//       Navigator.of(context)
-//           .push(PresentRoute(child: FTIMImagePreview(url: path)));
-//     }, onVideoClick: (String path) {
-//       print("Iam comming ~~");
-//       Navigator.of(context)
-//           .push(PresentRoute(child: FTIMVideoPreview(url: path)));
-//     });
-
+  _setupVariables() {
     _inputControl = FTIMChatInputControl(onFocusChange: (bool focus) {
       if (focus) {
         _inputControl.mediaSelected = false;
@@ -98,78 +71,122 @@ class _ChatScaffoldState extends State<ChatScaffold> with TickerProviderStateMix
       setState(() {});
       // });
     }, onMessageSend: (String text) {
-      _messages.insert(0, text);
+      _sendText(text);
     });
 
     _mediaControl = FTIMMediaControl(onAlbumClick: () {
-      _getImage();
+      _sendImage(true);
     }, onShootClick: () {
-      _shoot();
-    }, testFunc: (int index) {
-
+      _sendImage(false);
     });
+
+    _observer = IMServiceObserver()
+      ..onrev = (msg, needFresh) {
+        if (msg.senderUserId == widget.user.userId) {
+          if (needFresh) {
+            setState(() {
+              _messages.insert(0, msg);
+            });
+          }
+        }
+      };
+  }
+
+  @override
+  void dispose() {
+    _observer.dispose();
+    IMService.shared.sendReadReceipt(widget.user.userId);
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    List images = [];
+    for (var item in _messages) {
+      var content = (item as Message).content;
+      if (content is ImageMessage) {
+        images.add(content.imageUri);
+      }
+    }
 
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.user.nickName,
-              style: TextStyle(
-                  fontSize: 17.0, color: Colors.black)),
+              style: TextStyle(fontSize: 17.0, color: Colors.black)),
           leading: GestureDetector(
-              child:Padding(child: Image.asset("assets/back.png"),padding: EdgeInsets.all(10),),
+              child: Padding(
+                child: Image.asset("assets/back.png"),
+                padding: EdgeInsets.all(10),
+              ),
               onTap: () {
                 Navigator.pop(context);
               }),
         ),
         body: GestureDetector(
-            onTap: (){
-              _inputControl.emojSelected = false;
-              _inputControl.mediaSelected = false;
-              _inputControl.resignFocus();
-              setState(() {});
-            },
-            child:  Stack(
+          onTap: _resignAllFocus,
+          child: Stack(
             children: <Widget>[
-               SafeArea(
+              SafeArea(
                   bottom: true,
                   child: Column(children: <Widget>[
-                     Expanded(
+                    Expanded(
                       child: ListView.builder(
                           reverse: true,
                           controller: _scrollController,
                           itemCount: _messages.length,
                           itemBuilder: (BuildContext context, int index) {
-                            return MessageDetail(_messages[index],
-                            onImageClick: (){
-
-                            },
-                            onVideoClick: (){
-                              
-                            },);
+                            return MessageDetail(
+                              _messages[index],
+                              images: images,
+                            );
                           }),
                     ),
-                     Container(
-                        constraints:  BoxConstraints(
-                            minHeight: 50.0, maxHeight: 200.0),
-                        child:  FTIMChatInput(
+                    Container(
+                        constraints:
+                            BoxConstraints(minHeight: 50.0, maxHeight: 200.0),
+                        child: FTIMChatInput(
                           control: _inputControl,
                         )),
                     _creatExt()
                   ])),
             ],
           ),
-          ));
+        ));
   }
 
- Future _refresh({islocal = false}) async{
+  Future _refresh({islocal = false}) async {
     _messages.clear();
-    var msg =await IMService.shared.localMessagesList(widget.user.userId);
+    var msg = await IMService.shared.localMessagesList(widget.user.userId);
+    
     setState(() {
-       _messages.addAll(msg);
+      _messages.addAll(msg);
     });
     return msg;
+  }
+
+  void _sendImage(bool inAlbum) async {
+    var image = await ImagePicker.pickImage(
+        source: inAlbum ? ImageSource.gallery : ImageSource.camera);
+    var msg = await IMService.shared.sendImage(image.path, widget.user.userId);
+    setState(() {
+      _messages.insert(0, msg);
+    });
+    _resignAllFocus();
+  }
+
+//发送文本消息
+  _sendText(String text) {
+    IMService.shared.sendText(text, widget.user.userId).then((msg) {
+      setState(() {
+        _messages.insert(0, msg);
+      });
+    });
+  }
+
+  _resignAllFocus() {
+    _inputControl.emojSelected = false;
+    _inputControl.mediaSelected = false;
+    _inputControl.resignFocus();
+    setState(() {});
   }
 }
