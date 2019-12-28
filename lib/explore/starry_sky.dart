@@ -13,12 +13,13 @@ class StarrySky extends StatefulWidget {
   State<StatefulWidget> createState() => _StarrySkyState();
 }
 
-class _StarrySkyState extends State<StarrySky> with SingleTickerProviderStateMixin{
+class _StarrySkyState extends State<StarrySky> with TickerProviderStateMixin{
 
   Offset _offset = Offset(0, 0);
   Offset _cachedOffset = Offset(0, 0);
   List _gridViews;
   AnimationController _controller;
+  AnimationController _jumpController;
   Animation<Offset> _jumpAnimation;
   Animation<Offset> _animation;
   final int _animationTime = 1000;
@@ -27,18 +28,25 @@ class _StarrySkyState extends State<StarrySky> with SingleTickerProviderStateMix
   double get ch => MediaQuery.of(context).size.height;
 
   _background() => GestureDetector(
+      onDoubleTap: (){
+        _jumpTo(Offset(0,0));
+      },
       onPanStart: (start) {
       },
       onPanCancel: () {},
       onPanEnd: (end) {
+        _controller.reset();
         double x= end.velocity.pixelsPerSecond.dx;
         double y= end.velocity.pixelsPerSecond.dy;
         if(x == 0 && y == 0 && !_controller.isCompleted) return;
-
-        _controller.reset();
         Animation curve = CurvedAnimation(parent: _controller,curve: Curves.easeOut);
         _animation = Tween(begin: Offset(x,y),end: Offset(0, 0)).animate(curve)..addListener((){
           _needScroll(Offset(_animation.value.dx * 0.001,_animation.value.dy * 0.001));
+        })..addStatusListener((status){
+
+          if (AnimationStatus.completed == status){
+            // _controller.reset();
+          }
         });
         _controller.forward();
       },
@@ -158,25 +166,35 @@ class _StarrySkyState extends State<StarrySky> with SingleTickerProviderStateMix
     }
   }
 
-  @override
-  void initState() {
-    _controller = AnimationController(duration: Duration(milliseconds: _animationTime),vsync: this);
+  _jumpTo(Offset offset){
 
-    widget.controller.jumpTo = (offset){
       var x = offset.dx - _offset.dx;
       var y = offset.dy - _offset.dy;
 
-      if(x!=0 && y!=0 && _controller.isCompleted){
-        _controller.reset();
-      Animation curve = CurvedAnimation(parent: _controller,curve: Curves.easeOut);
+      if(x!=0 && y!=0){
+      _jumpController.reset();
+      Animation curve = CurvedAnimation(parent: _jumpController,curve: Curves.easeOut);
       _jumpAnimation = Tween(begin: _offset,end: offset).animate(curve)..addListener((){
 
-        var dis = Offset(_jumpAnimation.value.dx - _offset.dx, _jumpAnimation.value.dy - _offset.dy);
+        var x = _jumpAnimation.value.dx - _offset.dx;
+        var y = _jumpAnimation.value.dy - _offset.dy;
+
+        var dis = Offset(x, y);
           _needScroll(dis);
+        })..addStatusListener((status){
+          if(AnimationStatus.completed == status){
+            // _jumpController.reset();
+          }
         });
       }
-      _controller.forward();
-    };
+      _jumpController.forward();
+  }
+
+  @override
+  void initState() {
+    _controller = AnimationController(duration: Duration(milliseconds: _animationTime),vsync: this);
+    _jumpController = AnimationController(duration: Duration(milliseconds: _animationTime),vsync: this);
+    widget.controller.jumpTo = _jumpTo;
     super.initState();
   }
 
