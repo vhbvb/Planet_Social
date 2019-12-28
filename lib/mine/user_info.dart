@@ -118,9 +118,14 @@ class _UserInfoState extends State<UserInfo> {
                   );
                 }).toList();
               },
-              child: Text(["未知", "男", "女"][widget.user.sex],
+              child: Container(
+                alignment: Alignment.centerRight,
+                width: double.infinity,
+                child: Text(["未知", "男", "女"][widget.user.sex],
                   style: TextStyle(color: Colors.black, fontSize: 14)),
-            ));
+              ),
+            )
+            );
         break;
 
       case 3:
