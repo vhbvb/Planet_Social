@@ -11,9 +11,8 @@ import 'package:planet_social/route.dart';
 
 
 class PostDetail extends StatefulWidget {
-  PostDetail({Key key, this.post, this.parentContext,this.inDetail = false}) : super(key: key);
+  PostDetail({Key key, this.post,this.inDetail = false}) : super(key: key);
   Post post;
-  BuildContext parentContext;
   bool inDetail;
 
   @override
@@ -26,9 +25,7 @@ class _PostDetailState extends State<PostDetail> {
   int shares = 0;
   bool like = false;
 
-  _header() => GestureDetector(
-    onTap: _click,
-    child: Row(
+  _header() =>Row(
         children: <Widget>[
           ClipOval(
             child: Util.loadImage(
@@ -53,20 +50,16 @@ class _PostDetailState extends State<PostDetail> {
             style: TextStyle(color: Colors.grey, fontSize: 12),
           )
         ],
-      ),
-  );
+      );
 
-  _content() => GestureDetector(
-      onTap: _click,
-      child: Container(
+  _content() => Container(
         width: double.infinity,
         padding: EdgeInsets.only(top: 10, bottom: 10),
         child:
             Text(widget.post.content, style: TextStyle(color: Colors.black54)),
-      ));
+      );
 
   _footer() {
-
     _element(String icon,int counts,Function event) =>GestureDetector(
       onTap: event,
       child: Row(
@@ -89,7 +82,7 @@ class _PostDetailState extends State<PostDetail> {
 
     var childs = <Widget>[cmtPost,sharePost,likePost];
 
-    if (widget.parentContext != null) {
+    if (widget.inDetail) {
       childs.removeAt(1);
     }
 
@@ -126,7 +119,6 @@ class _PostDetailState extends State<PostDetail> {
     ];
 
     List images = widget.post.images;
-
     if (images != null && images.length > 0) {
       double w = MediaQuery.of(context).size.width - 80;
       double imageW = w;
@@ -146,7 +138,7 @@ class _PostDetailState extends State<PostDetail> {
             children: images.map((url) {
               return Util.loadImage(url,
                   height: imageH, width: imageW,
-                                context: widget.parentContext,
+                                context: context,
               enablePreview: true,
               sources: widget.post.images);
             }).toList());
@@ -165,12 +157,16 @@ class _PostDetailState extends State<PostDetail> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GestureDetector(
+      onTap: _click,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
       color: Colors.white,
       padding: EdgeInsets.only(left: 15, right: 15, top: 20),
       child: Column(
         children: _mainWidgets(),
       ),
+    ),
     );
   }
 
@@ -206,23 +202,21 @@ class _PostDetailState extends State<PostDetail> {
   }
 
   _click() {
-    if(widget.parentContext != null){
-          if (widget.inDetail) {
-      showDialog(context: widget.parentContext,builder: (_) => PostComment(post: widget.post));
+    if (widget.inDetail) {
+      showDialog(context: context,builder: (_) => PostComment(post: widget.post));
     } else {
       PSRoute.push(context, "post_content", widget.post);
-    }
     }
   }
 
   _likePost() {
-    if (widget.parentContext == null) return;
+    if (!widget.inDetail) return;
 
     _alertError(dynamic error) 
     {
       if (error != null)
       {
-        PSAlert.show(widget.parentContext, "失败", error.toString());
+        PSAlert.show(context, "失败", error.toString());
       }
     }
 
