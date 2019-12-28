@@ -26,6 +26,7 @@ class _StarStyleState extends State<StarStyle> {
         onTap: (){
           PSRoute.push(context, "planet_detail", widget.model);
         },
+        behavior: HitTestBehavior.opaque,
         child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
@@ -68,6 +69,7 @@ class _StarStyleState extends State<StarStyle> {
         onTap: (){
           PSRoute.push(context, "user_detail", widget.model);
         },
+        behavior: HitTestBehavior.opaque,
         child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[

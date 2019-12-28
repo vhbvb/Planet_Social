@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:planet_social/explore/star_style.dart';
 
 class StarrySky extends StatefulWidget {
-  const StarrySky({Key key, this.onScroll, this.stars}) : super(key: key);
+
+  StarrySky({Key key, this.onScroll, this.stars}) : super(key: key);
   final Function(Offset) onScroll;
   final List stars;
+  final controller = StarrySkyController();
+
   @override
   State<StatefulWidget> createState() => _StarrySkyState();
 }
@@ -16,6 +19,7 @@ class _StarrySkyState extends State<StarrySky> with SingleTickerProviderStateMix
   Offset _cachedOffset = Offset(0, 0);
   List _gridViews;
   AnimationController _controller;
+  Animation<Offset> _jumpAnimation;
   Animation<Offset> _animation;
   final int _animationTime = 1000;
 
@@ -29,7 +33,7 @@ class _StarrySkyState extends State<StarrySky> with SingleTickerProviderStateMix
       onPanEnd: (end) {
         double x= end.velocity.pixelsPerSecond.dx;
         double y= end.velocity.pixelsPerSecond.dy;
-        if(x == 0 && y == 0) return;
+        if(x == 0 && y == 0 && !_controller.isCompleted) return;
 
         _controller.reset();
         Animation curve = CurvedAnimation(parent: _controller,curve: Curves.easeOut);
@@ -157,6 +161,22 @@ class _StarrySkyState extends State<StarrySky> with SingleTickerProviderStateMix
   @override
   void initState() {
     _controller = AnimationController(duration: Duration(milliseconds: _animationTime),vsync: this);
+
+    widget.controller.jumpTo = (offset){
+      var x = offset.dx - _offset.dx;
+      var y = offset.dy - _offset.dy;
+
+      if(x!=0 && y!=0 && _controller.isCompleted){
+        _controller.reset();
+      Animation curve = CurvedAnimation(parent: _controller,curve: Curves.easeOut);
+      _jumpAnimation = Tween(begin: _offset,end: offset).animate(curve)..addListener((){
+
+        var dis = Offset(_jumpAnimation.value.dx - _offset.dx, _jumpAnimation.value.dy - _offset.dy);
+          _needScroll(dis);
+        });
+      }
+      _controller.forward();
+    };
     super.initState();
   }
 
@@ -170,4 +190,9 @@ class _StarrySkyState extends State<StarrySky> with SingleTickerProviderStateMix
   Widget build(BuildContext context) {
     return _background();
   }
+}
+
+class StarrySkyController {
+
+  Function(Offset) jumpTo;
 }

@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:planet_social/base/api_service.dart';
 import 'package:planet_social/base/manager.dart';
@@ -11,6 +9,8 @@ import 'package:planet_social/models/planet_model.dart';
 import 'package:planet_social/models/post_model.dart';
 import 'package:planet_social/planet/post_list.dart';
 import 'package:planet_social/route.dart';
+
+import '../base/data_center.dart';
 
 class PlanetDetail extends StatefulWidget {
   const PlanetDetail({Key key, this.planet}) : super(key: key);
@@ -25,7 +25,6 @@ class _PlanetDetailState extends State<PlanetDetail> {
   List<Post> news = [];
   List<Post> hots = [];
   bool like = false;
-
 
   _header() => GestureDetector(
     onTap: (){
@@ -72,9 +71,9 @@ class _PlanetDetailState extends State<PlanetDetail> {
 
   @override
   void initState() {
-_newPosts((){});
-_hotPost((){});
-_planetDetail();
+    _newPosts((){});
+    _hotPost((){});
+    _planetDetail();
     super.initState();
   }
 
@@ -105,7 +104,18 @@ _planetDetail();
   }
 
   _planetDetail(){
-        ApiService.shared.planetUsersCount(widget.planet, (count){
+
+    if(widget.planet.owner == null){
+      DataSource.center.getUser(widget.planet.ownerId, (user,error){
+        if(error == null){
+          setState(() {
+            widget.planet.owner = user;
+          });
+        }
+      });
+    }
+
+    ApiService.shared.planetUsersCount(widget.planet, (count){
       setState(() {
         numbers = count;
       });
