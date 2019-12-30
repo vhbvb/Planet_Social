@@ -13,19 +13,19 @@ class IMService {
   static final shared = IMService();
   final List<IMServiceObserver> observers = [];
 
-  Future<Message> sendText(String text, String uid) async {
+  Future<Message> sendText(String text, String uid,int type) async {
     var txtMessage = TextMessage()..content = text;
     return await RongcloudImPlugin.sendMessage(
-        RCConversationType.Private, uid, txtMessage);
+        type, uid, txtMessage);
   }
 
-  Future<Message> sendImage(String path, String uid) async {
+  Future<Message> sendImage(String path, String uid,int type) async {
     var imgMessage = ImageMessage()..localPath = path;
     return await RongcloudImPlugin.sendMessage(
         RCConversationType.Private, uid, imgMessage);
   }
 
-  sendVideo(String path, int duration, String uid) async {
+  sendVideo(String path, int duration, String uid, int type) async {
     SightMessage sightMessage = SightMessage.obtain(path, duration);
     return await RongcloudImPlugin.sendMessage(
         RCConversationType.Private, uid, sightMessage);
@@ -51,7 +51,7 @@ class IMService {
     FlutterAppBadger.updateBadgeCount(count);
     return await RongcloudImPlugin.getConversationList([
       RCConversationType.Private,
-      RCConversationType.Group,
+      RCConversationType.ChatRoom,
       RCConversationType.System
     ]);
   }
@@ -197,11 +197,11 @@ class IMService {
         "Signature": sign.toString()
       };
 
-      var paramsStr = params.entries.map((e) {
+      var str = params.entries.map((e) {
         return e.key + "=" + Uri.encodeFull(e.value);
       }).join("&");
 
-      response = await client.post(url, body: paramsStr, headers: header);
+      response = await client.post(url, body: str, headers: header);
     } finally {
       client.close();
     }

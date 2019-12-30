@@ -16,7 +16,7 @@ class ConversationDetail extends StatelessWidget {
       this.updateAt,
       this.unreadCount})
       : super(key: key);
-
+      
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -28,8 +28,8 @@ class ConversationDetail extends StatelessWidget {
             child: ClipOval(
                 child: Util.loadImage(
               icon,
-              height: 55.0,
-              width: 55.0,
+              height: 44.0,
+              width: 44.0,
             )),
           ),
           Expanded(
@@ -48,7 +48,8 @@ class ConversationDetail extends StatelessWidget {
                           )),
                           Text(
                             updateAt,
-                            style: TextStyle(fontSize: 14.0),
+                            style:
+                                  TextStyle(color: Colors.grey, fontSize: 14.0),
                           ),
                         ]))),
                 Expanded(

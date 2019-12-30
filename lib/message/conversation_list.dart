@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:planet_social/base/api_service.dart';
 import 'package:planet_social/base/data_center.dart';
 import 'package:planet_social/base/im_service.dart';
+import 'package:planet_social/base/manager.dart';
 import 'package:planet_social/base/utils.dart';
 import 'package:planet_social/const.dart';
-import 'package:planet_social/models/user_model.dart';
 import 'package:planet_social/route.dart';
 import 'package:rongcloud_im_plugin/rongcloud_im_plugin.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
@@ -19,8 +20,8 @@ class ConversationList extends StatefulWidget {
 }
 
 class _ConversationListState extends State<ConversationList> {
-  final List _conversations = [];
-  final List<_ConversationDetailElements> _details = [];
+   List _conversations = [];
+   List<_ConversationDetailElements> _details = [];
 
   Widget _createConversations(int index) {
     var elem = _details[index];
@@ -58,7 +59,7 @@ class _ConversationListState extends State<ConversationList> {
         // backgroundColor: Colors.green,
         body: EasyRefresh(
           onRefresh: _refresh,
-          onLoad: null,
+          onLoad: (){},
           child: ListView.builder(
             itemCount: _conversations.length,
             itemBuilder: (BuildContext context, int position) {
@@ -69,20 +70,52 @@ class _ConversationListState extends State<ConversationList> {
   }
 
   Future _refresh() async {
-    _conversations.clear();
-    _details.clear();
-    var conversations = await IMService.shared.conversationList();
 
-    for (var item in conversations) {
+    _conversations = await _loadMessages ();
+    _details = [];
+    for (var item in _conversations) {
       var c = await _ConversationDetailElements(item).requestDetail();
       _details.add(c);
     }
-
     setState(() {
-      _conversations.addAll(conversations);
+      // print("_details:$_details");
     });
+
+    return _conversations;
   }
 }
+
+Future _loadMessages ()async{
+    var conversations = await IMService.shared.conversationList();
+
+    var c = Completer();
+    ApiService.shared.planetsJoined(PSManager.shared.currentUser, (results,error){
+      if(error==null)
+      {
+        for (var planet in results) 
+        {
+          bool exist  =false;
+          for (var conv in conversations)
+          {
+            if(conv.conversationType == RCConversationType.ChatRoom && conv.targetId == planet.id){
+              exist = true;
+              break;
+            }
+          }
+
+          if(!exist){
+            Conversation conv = Conversation();
+            conv.conversationType = RCConversationType.ChatRoom;
+            conv.targetId = planet.id;
+            conversations.add(conv);
+          }
+        }
+      }
+      c.complete();
+    });
+    await c.future;
+    return conversations;
+  }
 
 class _ConversationDetailElements {
   final Conversation c;
@@ -94,11 +127,14 @@ class _ConversationDetailElements {
   String des = "";
   String timesTamp = "";
 
-  User target;
+  dynamic target;
 
   Future<_ConversationDetailElements> requestDetail() async {
     unRead = await IMService.shared.unreadCount(c.conversationType, c.targetId);
-    timesTamp = Util.timesTamp(DateTime.fromMillisecondsSinceEpoch(c.sentTime));
+    if(c.sentTime != null){
+       timesTamp = Util.timesTamp(DateTime.fromMillisecondsSinceEpoch(c.sentTime));
+    }
+   
 
 // class RCConversationType {
 //   static const int Private = 1;
@@ -107,7 +143,8 @@ class _ConversationDetailElements {
 //   static const int System = 6;
 // }
 
-    if (c.latestMessageContent is TextMessage) {
+    if  (c.latestMessageContent != null){
+          if (c.latestMessageContent is TextMessage) {
       des = (c.latestMessageContent as TextMessage).content;
     }
 
@@ -122,6 +159,10 @@ class _ConversationDetailElements {
     if (c.latestMessageContent is ImageMessage) {
       des = "[图片]";
     }
+    }else
+    {
+      des = "快来说点什么吧";
+    }
 
     var block = Completer();
     if (c.conversationType == RCConversationType.Private) {
@@ -129,6 +170,15 @@ class _ConversationDetailElements {
         target = user;
         icon = user.avatar;
         title = user.nickName;
+        block.complete();
+      });
+    }
+
+    if (c.conversationType == RCConversationType.ChatRoom) {
+      DataSource.center.getPlanet(c.targetId, (planet, error) {
+        target = planet;
+        icon = "assets/star_icon.png";
+        title = planet.title + " 交流群";
         block.complete();
       });
     }

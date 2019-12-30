@@ -56,7 +56,7 @@ class _MessageDetailState extends State<MessageDetail> {
         text: TextSpan(
             text: msg.content,
             style: TextStyle(
-                fontSize: 13.0, color: isSend ? Colors.white : Colors.black)));
+                fontSize: 15.0, color: isSend ? Colors.white : Colors.black)));
   }
 
   Widget _createImage(ImageMessage msg) {
@@ -129,7 +129,7 @@ class _MessageDetailState extends State<MessageDetail> {
           child: Container(
               decoration: _createDecoration(msg, isSend),
               padding: EdgeInsets.fromLTRB(
-                  isSend ? 15.0 : 30.0, 15.0, isSend ? 30.0 : 15.0, 10.0),
+                  isSend ? 15.0 : 30.0, 12.5, isSend ? 30.0 : 15.0, 10.0),
               child: _createDetail(msg, isSend)),
         ));
   }

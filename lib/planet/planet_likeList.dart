@@ -63,6 +63,7 @@ class _PlanetLikeListState extends State<PlanetLikeList>{
                   onTap: (){
                     PSRoute.push(context, "user_detail", users[index]);
                   },
+                  behavior: HitTestBehavior.opaque,
                   child: Row(
                 children: <Widget>[
                   ClipOval(

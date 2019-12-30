@@ -22,11 +22,14 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   var phoneController = TextEditingController();
   var verifyCodeController = TextEditingController();
+  final _secfocus = FocusNode();
+  final _phonefocus = FocusNode();
 
   @override
   void initState() {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
     super.initState();
+    // _phonefocus.requestFocus();
   }
 
   _thirdParty() => Padding(
@@ -103,6 +106,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             Expanded(
               child: TextField(
+                focusNode: _secfocus,
                 controller: verifyCodeController,
                 cursorColor: Colors.white,
                 style: TextStyle(color: Colors.white),
@@ -136,6 +140,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             Expanded(
               child: TextField(
+                focusNode: _phonefocus,
                 controller: phoneController,
                 style: TextStyle(color: Colors.white),
                 maxLength: 11,
@@ -178,7 +183,12 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SingleChildScrollView(
-      child: Container(
+      child: GestureDetector(
+        onTap: (){
+          _phonefocus.unfocus();
+          _secfocus.unfocus();
+        },
+        child: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
@@ -199,7 +209,7 @@ class _LoginPageState extends State<LoginPage> {
             _thirdParty()
           ],
         ),
-      ),
+      ),)
     ));
   }
 
@@ -268,7 +278,8 @@ class _LoginPageState extends State<LoginPage> {
           _processLogined(user, error);
         });
       } else {
-        PSAlert.show(context, "登录失败", error.toString());
+        PSProcess.dismiss(context);
+        PSAlert.show(context, "登录失败", error.userInfo.toString());
       }
     });
   }

@@ -9,9 +9,8 @@ import 'package:planet_social/models/post_model.dart';
 import 'package:planet_social/planet/post_comment.dart';
 import 'package:planet_social/route.dart';
 
-
 class PostDetail extends StatefulWidget {
-  PostDetail({Key key, this.post,this.inDetail = false}) : super(key: key);
+  PostDetail({Key key, this.post, this.inDetail = false}) : super(key: key);
   Post post;
   bool inDetail;
 
@@ -25,26 +24,37 @@ class _PostDetailState extends State<PostDetail> {
   int shares = 0;
   bool like = false;
 
-  _header() =>Row(
+  _header() => Row(
         children: <Widget>[
-          ClipOval(
-            child: Util.loadImage(
-              widget.post.owner == null
-                  ? Consts.defaultAvatar
-                  : widget.post.owner.avatar,
-              height: 44,
-              width: 44,
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 10, right: 10),
-            child: Text(
-                widget.post.owner == null ? "" : widget.post.owner.nickName,
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold)),
-          ),
+          GestureDetector(
+              onTap: _userDetail,
+              behavior: HitTestBehavior.opaque,
+              child: Container(
+                child: Row(
+                  children: <Widget>[
+                    ClipOval(
+                      child: Util.loadImage(
+                          widget.post.owner == null
+                              ? Consts.defaultAvatar
+                              : widget.post.owner.avatar,
+                          height: 44,
+                          width: 44,
+                          onTap: _userDetail),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 10, right: 10),
+                      child: Text(
+                          widget.post.owner == null
+                              ? ""
+                              : widget.post.owner.nickName,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold)),
+                    ),
+                  ],
+                ),
+              )),
           Text(
             Util.timesTamp(DateTime.parse(widget.post.createdAt)),
             style: TextStyle(color: Colors.grey, fontSize: 12),
@@ -60,27 +70,27 @@ class _PostDetailState extends State<PostDetail> {
       );
 
   _footer() {
-    _element(String icon,int counts,Function event) =>GestureDetector(
-      onTap: event,
-      child: Row(
-        children: <Widget>[
-          Image.asset(
-            icon,
-            height: 30,
-            width: 30,
+    _element(String icon, int counts, Function event) => GestureDetector(
+          onTap: event,
+          child: Row(
+            children: <Widget>[
+              Image.asset(
+                icon,
+                height: 30,
+                width: 30,
+              ),
+              Text(counts.toString(),
+                  style: TextStyle(color: Colors.grey, fontSize: 12))
+            ],
           ),
+        );
 
-          Text(counts.toString(),
-        style: TextStyle(color: Colors.grey, fontSize: 12))
-        ],
-      ),
-    );
+    var cmtPost = _element("assets/cmt.png", comments, _click);
+    var sharePost = _element("assets/share.png", shares, () {});
+    var likePost =
+        _element(like ? "assets/zan2.png" : "assets/zan.png", likes, _likePost);
 
-    var cmtPost = _element("assets/cmt.png", comments,_click);
-    var sharePost =_element("assets/share.png", shares,(){});
-    var likePost =_element(like?"assets/zan2.png":"assets/zan.png", likes,_likePost);
-
-    var childs = <Widget>[cmtPost,sharePost,likePost];
+    var childs = <Widget>[cmtPost, sharePost, likePost];
 
     if (widget.inDetail) {
       childs.removeAt(1);
@@ -133,15 +143,16 @@ class _PostDetailState extends State<PostDetail> {
       double imageH = 0.6 * imageW;
 
       Widget imageWidget = Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            children: images.map((url) {
-              return Util.loadImage(url,
-                  height: imageH, width: imageW,
-                                context: context,
-              enablePreview: true,
-              sources: widget.post.images);
-            }).toList());
+          spacing: 10,
+          runSpacing: 10,
+          children: images.map((url) {
+            return Util.loadImage(url,
+                height: imageH,
+                width: imageW,
+                context: context,
+                enablePreview: true,
+                sources: widget.post.images);
+          }).toList());
 
       widgets.insert(2, imageWidget);
     }
@@ -161,12 +172,12 @@ class _PostDetailState extends State<PostDetail> {
       onTap: _click,
       behavior: HitTestBehavior.opaque,
       child: Container(
-      color: Colors.white,
-      padding: EdgeInsets.only(left: 15, right: 15, top: 20),
-      child: Column(
-        children: _mainWidgets(),
+        color: Colors.white,
+        padding: EdgeInsets.only(left: 15, right: 15, top: 20),
+        child: Column(
+          children: _mainWidgets(),
+        ),
       ),
-    ),
     );
   }
 
@@ -181,29 +192,30 @@ class _PostDetailState extends State<PostDetail> {
       });
     }
 
-      ApiService.shared.checkIfLikePost(
-          PSManager.shared.currentUser, widget.post, (didLike, error) {
-        setState(() {
-          like = didLike;
-        });
+    ApiService.shared.checkIfLikePost(PSManager.shared.currentUser, widget.post,
+        (didLike, error) {
+      setState(() {
+        like = didLike;
       });
-      
-      ApiService.shared.postCommentsCount(widget.post, (count){
-        setState(() {
-          comments = count;
-        });
-      });
+    });
 
-      ApiService.shared.postLikesCount(widget.post, (count){
-        setState(() {
-          likes = count;
-        });
+    ApiService.shared.postCommentsCount(widget.post, (count) {
+      setState(() {
+        comments = count;
       });
+    });
+
+    ApiService.shared.postLikesCount(widget.post, (count) {
+      setState(() {
+        likes = count;
+      });
+    });
   }
 
   _click() {
     if (widget.inDetail) {
-      showDialog(context: context,builder: (_) => PostComment(post: widget.post));
+      showDialog(
+          context: context, builder: (_) => PostComment(post: widget.post));
     } else {
       PSRoute.push(context, "post_content", widget.post);
     }
@@ -212,10 +224,8 @@ class _PostDetailState extends State<PostDetail> {
   _likePost() {
     if (!widget.inDetail) return;
 
-    _alertError(dynamic error) 
-    {
-      if (error != null)
-      {
+    _alertError(dynamic error) {
+      if (error != null) {
         PSAlert.show(context, "失败", error.toString());
       }
     }
@@ -236,6 +246,12 @@ class _PostDetailState extends State<PostDetail> {
         });
         _alertError(error);
       });
+    }
+  }
+
+  _userDetail() {
+    if (widget.post.owner != null) {
+      PSRoute.push(context, "user_detail", widget.post.owner);
     }
   }
 }

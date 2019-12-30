@@ -10,7 +10,6 @@ class Planet
   String id;
   String title;
   String ownerId;
-  // String location;
   Offset position;
   Color get color => Util.randomColor(key: title);
   User owner;

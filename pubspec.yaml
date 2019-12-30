@@ -42,6 +42,7 @@ dev_dependencies:
   photo_view:
   crypto:
   flutter_app_badger:
+  emoji_picker:
 
 
 # For information on the generic Dart part of this file, see the
@@ -117,6 +118,8 @@ flutter:
      - assets/msg_send_voice_4.png
      - assets/videoPlay.png
      - assets/voicePlay.png
+     - assets/star_icon.png
+     - assets/users_list.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

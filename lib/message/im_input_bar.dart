@@ -108,7 +108,11 @@ class _FTIMChatInputState extends State<FTIMChatInput> with TickerProviderStateM
               child: GestureDetector(
                 child: Image.asset("assets/emoj.png",height:33.0,width:33.0),
                 onTap: (){
-                  control.onEmojItemChange();
+                  control.onEmojItemChange((emoji){
+                    setState(() {
+                      _textController.text = _textController.text+emoji;
+                    });
+                  });
                 },
               )
             ),
@@ -131,13 +135,15 @@ class _FTIMChatInputState extends State<FTIMChatInput> with TickerProviderStateM
 class FTIMChatInputControl {
 
   FTIMChatInputControl({this.onFocusChange,this.onEmojItemChange,this.onMediaItemChange,this.onMessageSend}) : super();
-  
+
+  // final FTIMChatInput input;
+
   bool emojSelected = false;
   bool mediaSelected = false;
 
   Function(bool) onFocusChange;
   Function resignFocus;
-  Function onEmojItemChange;
+  Function(Function(String)) onEmojItemChange;
   Function onMediaItemChange;
   Function(String) onMessageSend;
 }

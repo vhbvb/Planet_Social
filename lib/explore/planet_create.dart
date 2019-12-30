@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:planet_social/base/api_service.dart';
+import 'package:planet_social/base/im_service.dart';
 import 'package:planet_social/base/manager.dart';
 import 'package:planet_social/common/PSAlert.dart';
 import 'package:planet_social/models/planet_model.dart';
@@ -135,14 +136,25 @@ class _PlanetCreateState extends State<PlanetCreate> {
     planet.title = controller.text;
     planet.ownerId = PSManager.shared.currentUser.userId;
     planet.position = Offset(-widget.offset.dx, -widget.offset.dy);
-    ApiService.shared.createPlanet(planet, (planet,error){
+    ApiService.shared.createPlanet(planet, (res,error){
       if(error == null){
         PSRoute.explore.refresh();
+        _createChatRoom(res.id,planet.title);
         PSAlert.show(context, "成功", "星球已成功创建",confirm:(){
            PSRoute.pop(context);
         });
       }else{
         PSAlert.show(context, "创建失败", error.toString());
+      }
+    });
+  }
+
+  _createChatRoom(String id, String title){
+    IMService.shared.createChatRoom(id,title,(error){
+      if(error == null){
+        print("create chat group success!");
+      }else{
+        print("error in create chat group:$error");
       }
     });
   }

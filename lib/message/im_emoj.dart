@@ -1,15 +1,28 @@
 
 import 'package:flutter/material.dart';
+import 'package:emoji_picker/emoji_picker.dart';
 
-class FTIMEmoj extends StatelessWidget {
+class FTIMEmoj extends StatefulWidget {
 
-  StatelessWidget build(BuildContext context){
+  final Function(String) onSelected;
 
-    return new Container(
-      color: Colors.red, height: 100.0,
-      child:new Center(
-        child: new Text("待实现 ~~~",style: TextStyle(fontSize:20.0,color:Colors.white),),
-      )
+  const FTIMEmoj({Key key, this.onSelected}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _EmojState();
+}
+
+class _EmojState extends State<FTIMEmoj> {
+  @override
+  Widget build(BuildContext context) {
+    return EmojiPicker(
+      rows: 3,
+      columns: 7,
+      // recommendKeywords: ["racing", "horse"],
+      numRecommended: 10,
+      onEmojiSelected: (emoji, category) {
+        widget.onSelected(emoji.emoji);
+      },
     );
   }
 }

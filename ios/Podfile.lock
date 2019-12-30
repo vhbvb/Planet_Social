@@ -1,6 +1,8 @@
 PODS:
   - audioplayers (0.0.1):
     - Flutter
+  - device_info (0.0.1):
+    - Flutter
   - Flutter (1.0.0)
   - flutter_app_badger (0.0.1):
     - Flutter
@@ -15,9 +17,6 @@ PODS:
   - mob_sharesdk/ShareSDK (4.3.4):
     - MOBFoundation
   - mob_sharesdk/ShareSDKExtension (4.3.4):
-    - mob_sharesdk/ShareSDK
-    - MOBFoundation
-  - mob_sharesdk/ShareSDKPlatforms/Douyin (4.3.4):
     - mob_sharesdk/ShareSDK
     - MOBFoundation
   - mob_sharesdk/ShareSDKPlatforms/Facebook (4.3.4):
@@ -63,7 +62,6 @@ PODS:
     - Flutter
     - mob_sharesdk
     - mob_sharesdk/ShareSDKExtension
-    - mob_sharesdk/ShareSDKPlatforms/Douyin
     - mob_sharesdk/ShareSDKPlatforms/Facebook
     - mob_sharesdk/ShareSDKPlatforms/QQ
     - mob_sharesdk/ShareSDKPlatforms/SinaWeibo
@@ -81,6 +79,7 @@ PODS:
 
 DEPENDENCIES:
   - audioplayers (from `.symlinks/plugins/audioplayers/ios`)
+  - device_info (from `.symlinks/plugins/device_info/ios`)
   - Flutter (from `Flutter`)
   - flutter_app_badger (from `.symlinks/plugins/flutter_app_badger/ios`)
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
@@ -106,6 +105,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   audioplayers:
     :path: ".symlinks/plugins/audioplayers/ios"
+  device_info:
+    :path: ".symlinks/plugins/device_info/ios"
   Flutter:
     :path: Flutter
   flutter_app_badger:
@@ -135,6 +136,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   audioplayers: 84f968cea3f2deab00ec4f8ff53358b3c0b3992c
+  device_info: cbf09d2ec12aa7110e0b09fabe54b5bd6c8efe74
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_app_badger: 65de4d6f0c34a891df49e6cfb8a1c0496426fa68
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
@@ -149,7 +151,7 @@ SPEC CHECKSUMS:
   shared_preferences: 430726339841afefe5142b9c1f50cb6bd7793e01
   shared_preferences_macos: f3f29b71ccbb56bf40c9dd6396c9acf15e214087
   shared_preferences_web: 141cce0c3ed1a1c5bf2a0e44f52d31eeb66e5ea9
-  sharesdk_plugin: 0eb7499dac8fb7feca8ecd100d26e69249654481
+  sharesdk_plugin: 8b57f21721efb60b147d40bcf49b7114cdf71f76
   sqflite: 4001a31ff81d210346b500c55b17f4d6c7589dd0
   video_player: 69c5f029fac4ffe4fc8a85ea7f7b793709661549
   video_player_web: da8cadb8274ed4f8dbee8d7171b420dedd437ce7

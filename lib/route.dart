@@ -46,7 +46,7 @@ class PSRoute {
             case "planet_likes":
         return PlanetLikeList(planet: params,);
       case "chat_scaffold":
-      return ChatScaffold(user: params,);
+      return ChatScaffold(target: params,);
       default:
         return null;
     }

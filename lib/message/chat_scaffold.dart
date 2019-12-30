@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:planet_social/base/im_service.dart';
 import 'package:planet_social/message/message_detail.dart';
+import 'package:planet_social/models/planet_model.dart';
 import 'package:planet_social/models/user_model.dart';
+import 'package:planet_social/route.dart';
 import './im_input_bar.dart';
 import './im_emoj.dart';
 import './im_media.dart';
@@ -9,8 +12,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:rongcloud_im_plugin/rongcloud_im_plugin.dart';
 
 class ChatScaffold extends StatefulWidget {
-  ChatScaffold({Key key, this.user}) : super(key: key);
-  final User user;
+  ChatScaffold({Key key, this.target}) : super(key: key);
+  final target;
 
   @override
   State<StatefulWidget> createState() => _ChatScaffoldState();
@@ -24,9 +27,41 @@ class _ChatScaffoldState extends State<ChatScaffold>
   FTIMMediaControl _mediaControl;
   IMServiceObserver _observer;
 
+  Function(String) _emojSelected;
+
+  String get targetId {
+    if (widget.target is User){
+      return widget.target.userId;
+    }
+
+    if (widget.target is Planet){
+      return widget.target.id;
+    }
+    return null;
+  }
+
+  int get type {
+        if (widget.target is Planet){
+      return RCConversationType.ChatRoom;
+    }
+
+    return RCConversationType.Private;
+  }
+
+  String get title{
+    if (widget.target is User){
+      return widget.target.nickName;
+    }
+
+    if (widget.target is Planet){
+      return widget.target.title;
+    }
+    return null;
+  }
+
   Widget _creatExt() {
     if (_inputControl.emojSelected) {
-      return FTIMEmoj();
+      return FTIMEmoj(onSelected: _emojSelected);
     } else if (_inputControl.mediaSelected) {
       return FTIMMedia(control: _mediaControl);
     } else {
@@ -34,11 +69,31 @@ class _ChatScaffoldState extends State<ChatScaffold>
     }
   }
 
+  List<Widget> _actions(){
+    if(widget.target is Planet){
+         return <Widget>[GestureDetector(
+      onTap: (){
+        PSRoute.push(context, "planet_likes", widget.target);
+      },
+      child: Padding(
+        padding: EdgeInsets.only(right: 10),
+        child: Image.asset(
+          "assets/users_list.png",
+          height: 25,
+          width: 25,
+        ),
+      )
+    )];
+    }else{
+      return <Widget>[];
+    }
+  }
+
   @override
   void initState() {
     _setupVariables();
     _refresh();
-    IMService.shared.sendReadReceipt(widget.user.userId);
+    IMService.shared.sendReadReceipt(targetId);
     super.initState();
   }
 
@@ -55,9 +110,9 @@ class _ChatScaffoldState extends State<ChatScaffold>
               duration: const Duration(milliseconds: 333));
         }
       });
-    }, onEmojItemChange: () {
+    }, onEmojItemChange: (onSelected) {
+      _emojSelected = onSelected;
       _inputControl.resignFocus();
-
       // Future.delayed(new Duration(milliseconds:333),(){
       _inputControl.mediaSelected = false;
       _inputControl.emojSelected = !_inputControl.emojSelected;
@@ -82,7 +137,7 @@ class _ChatScaffoldState extends State<ChatScaffold>
 
     _observer = IMServiceObserver()
       ..onrev = (msg, needFresh) {
-        if (msg.senderUserId == widget.user.userId) {
+        if (msg.senderUserId == targetId) {
           if (needFresh) {
             setState(() {
               _messages.insert(0, msg);
@@ -95,7 +150,7 @@ class _ChatScaffoldState extends State<ChatScaffold>
   @override
   void dispose() {
     _observer.dispose();
-    IMService.shared.sendReadReceipt(widget.user.userId);
+    IMService.shared.sendReadReceipt(targetId,type: type);
     super.dispose();
   }
 
@@ -111,7 +166,7 @@ class _ChatScaffoldState extends State<ChatScaffold>
 
     return Scaffold(
         appBar: AppBar(
-          title: Text(widget.user.nickName,
+          title: Text(title,
               style: TextStyle(fontSize: 17.0, color: Colors.black)),
           leading: GestureDetector(
               child: Padding(
@@ -121,6 +176,7 @@ class _ChatScaffoldState extends State<ChatScaffold>
               onTap: () {
                 Navigator.pop(context);
               }),
+          actions: _actions(),
         ),
         body: GestureDetector(
           onTap: _resignAllFocus,
@@ -156,18 +212,17 @@ class _ChatScaffoldState extends State<ChatScaffold>
 
   Future _refresh({islocal = false}) async {
     _messages.clear();
-    var msg = await IMService.shared.localMessagesList(widget.user.userId);
-    
+    var msgs = await IMService.shared.localMessagesList(targetId,type: type);
     setState(() {
-      _messages.addAll(msg);
+      _messages.addAll(msgs);
     });
-    return msg;
+    return _messages;
   }
 
   void _sendImage(bool inAlbum) async {
     var image = await ImagePicker.pickImage(
         source: inAlbum ? ImageSource.gallery : ImageSource.camera);
-    var msg = await IMService.shared.sendImage(image.path, widget.user.userId);
+    var msg = await IMService.shared.sendImage(image.path, targetId,type);
     setState(() {
       _messages.insert(0, msg);
     });
@@ -176,7 +231,7 @@ class _ChatScaffoldState extends State<ChatScaffold>
 
 //发送文本消息
   _sendText(String text) {
-    IMService.shared.sendText(text, widget.user.userId).then((msg) {
+    IMService.shared.sendText(text, targetId, type).then((msg) {
       setState(() {
         _messages.insert(0, msg);
       });

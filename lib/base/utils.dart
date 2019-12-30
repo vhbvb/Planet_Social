@@ -24,12 +24,8 @@ class Util {
   static Widget loadImage(String path, {double height, double width, bool enablePreview = false, List sources, BuildContext context,Function onTap}) {
 
     Widget image;
-    if (!path.startsWith("http")){
-      image = Image.file(File(path),      fit: BoxFit.fill,
-      height: height,
-      width: width);
-    }else{
-     image = CachedNetworkImage(
+    if (path.startsWith("http")){
+      image = CachedNetworkImage(
       fit: BoxFit.fill,
       height: height,
       width: width,
@@ -51,6 +47,14 @@ class Util {
         child: Center(child: Icon(Icons.error)),
       ),
     );
+    }else if(path.startsWith("assets")){
+      image = Image.asset(path,fit: BoxFit.fill,
+      height: height,
+      width: width);
+    }else{
+                  image = Image.file(File(path),      fit: BoxFit.fill,
+      height: height,
+      width: width);
     }
 
     return GestureDetector(
@@ -78,6 +82,8 @@ class Util {
     var s = date.second;
     var now = DateTime.now();
 
+    _str(int n) => n.toString().padLeft(2,"0");
+
     if(y == now.year){
 
       if(d == now.day && m == now.month)
@@ -98,17 +104,17 @@ class Util {
             }
           }
         }else{
-          return "$h:$min:$s";
+          return [_str(h),_str(min),_str(s)].join(":");
         }
       }
       else
       {
-        return "$m-$d $h:$min";
+       return _str(m)+"-"+_str(d)+" "+_str(h)+":"+_str(min);
       }
     }
     else
     {
-      return "$y-$m-$d";
+      return [_str(y),_str(m),_str(d)].join("-");
     }
   }
 }
