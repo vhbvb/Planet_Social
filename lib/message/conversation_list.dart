@@ -59,7 +59,7 @@ class _ConversationListState extends State<ConversationList> {
         // backgroundColor: Colors.green,
         body: EasyRefresh(
           onRefresh: _refresh,
-          onLoad: (){},
+          onLoad: (){return;},
           child: ListView.builder(
             itemCount: _conversations.length,
             itemBuilder: (BuildContext context, int position) {
@@ -137,14 +137,6 @@ class _ConversationDetailElements {
        timesTamp = Util.timesTamp(DateTime.fromMillisecondsSinceEpoch(c.sentTime));
     }
    
-
-// class RCConversationType {
-//   static const int Private = 1;
-//   static const int Group = 3;
-//   static const int ChatRoom = 4;
-//   static const int System = 6;
-// }
-
     if  (c.latestMessageContent != null){
           if (c.latestMessageContent is TextMessage) {
       des = (c.latestMessageContent as TextMessage).content;

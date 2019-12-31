@@ -195,7 +195,9 @@ class _UserDetailState extends State<UserDetail>
   }
 
   List<Widget> _action() {
-    var setIcon = GestureDetector(
+    var setIcon = Padding(
+      padding: EdgeInsets.only(right: 10),
+      child: GestureDetector(
       onTap: _clickSetting,
       child: Padding(
         padding: EdgeInsets.only(left: 5, right: 5),
@@ -205,9 +207,12 @@ class _UserDetailState extends State<UserDetail>
           width: 22,
         ),
       ),
+    ),
     );
 
-    var msgIcon = GestureDetector(
+    var msgIcon = Padding(
+      padding: EdgeInsets.only(right: 10),
+      child:GestureDetector(
       onTap: _clickMessage,
       child: Padding(
         padding: EdgeInsets.only(left: 5, right: 5),
@@ -217,7 +222,7 @@ class _UserDetailState extends State<UserDetail>
           width: 33,
         ),
       ),
-    );
+    ));
 
     return [_isSelf ? setIcon : msgIcon];
   }

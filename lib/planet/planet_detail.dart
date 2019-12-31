@@ -197,6 +197,10 @@ class _PlanetDetailState extends State<PlanetDetail> {
         onPressed: () {
           ApiService.shared
               .joinPlanet(PSManager.shared.currentUser, widget.planet, (error) {
+            if (error == null) {
+              PSRoute.message.refresh();
+            }
+
             setState(() {
               like = (error == null);
             });
