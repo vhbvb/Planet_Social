@@ -183,8 +183,7 @@ class _UserInfoState extends State<UserInfo> {
 
     if (index == 0) {
       ImagePicker.pickImage(source: ImageSource.gallery).then((value) {
-        print(value.path);
-        
+        if(value == null) return;
         ApiService.shared.uploadImage(value.path, (url,error){
           if(url != null){
             setState(() {

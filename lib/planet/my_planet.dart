@@ -26,6 +26,9 @@ class _MyPlanetState extends State<MyPlanet>
   final List<Post> news = [];
 
   _loadNews(Function finised) {
+
+    if(imIn.length == 0) {finised();return;}
+    
     int i = 0;
     news.clear();
     for (var item in imIn) {
@@ -44,6 +47,7 @@ class _MyPlanetState extends State<MyPlanet>
   }
 
   _loadHots(Function finised) {
+    if(imIn.length == 0) {finised();return;}
     int i = 0;
     hots.clear();
     for (var item in imIn) {

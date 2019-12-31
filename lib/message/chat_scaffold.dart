@@ -229,11 +229,14 @@ class _ChatScaffoldState extends State<ChatScaffold>
   void _sendImage(bool inAlbum) async {
     var image = await ImagePicker.pickImage(
         source: inAlbum ? ImageSource.gallery : ImageSource.camera);
+    
+    if(image!=null){
     var msg = await IMService.shared.sendImage(image.path, targetId,type);
     setState(() {
       _messages.insert(0, msg);
     });
     _resignAllFocus();
+    }
   }
 
 //发送文本消息
