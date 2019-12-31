@@ -44,8 +44,8 @@ class _ConversationListState extends State<ConversationList> {
   @override
   void initState() {
     widget.refresh = _refresh;
-
     _refresh();
+
     super.initState();
   }
 
@@ -71,15 +71,17 @@ class _ConversationListState extends State<ConversationList> {
 
   Future _refresh() async {
 
-    _conversations = await _loadMessages ();
-    _details = [];
+    if(PSManager.shared.currentUser != null){
+      _conversations = await _loadMessages ();
+      _details = [];
     for (var item in _conversations) {
       var c = await _ConversationDetailElements(item).requestDetail();
       _details.add(c);
     }
     setState(() {
       // print("_details:$_details");
-    });
+    });  
+    }
 
     return _conversations;
   }
@@ -178,7 +180,7 @@ class _ConversationDetailElements {
       DataSource.center.getPlanet(c.targetId, (planet, error) {
         target = planet;
         icon = "assets/star_icon.png";
-        title = planet.title + " 交流群";
+        title = planet.title + " 聊天室";
         block.complete();
       });
     }

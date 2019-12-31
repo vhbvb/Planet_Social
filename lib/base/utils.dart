@@ -1,9 +1,10 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:planet_social/common/image_preview.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 
 class Util {
   static Map<String,Color> colors = {};
@@ -116,5 +117,17 @@ class Util {
     {
       return [_str(y),_str(m),_str(d)].join("-");
     }
+  }
+
+  static setStatusBarStyle(bool white){
+  //   var color = (!white ? Colors.white:Colors.black);
+  //   var bright = (!white ? Brightness.light:Brightness.dark);
+    
+  //     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+  //     statusBarColor: color, // Color for Android
+  //     statusBarBrightness: bright // Dark == white status bar -- for IOS.
+  //   ));
+
+  FlutterStatusbarcolor.setStatusBarWhiteForeground(white);
   }
 }

@@ -137,7 +137,7 @@ class _ChatScaffoldState extends State<ChatScaffold>
 
     _observer = IMServiceObserver()
       ..onrev = (msg, needFresh) {
-        if (msg.senderUserId == targetId) {
+        if (msg.targetId == targetId) {
           if (needFresh) {
             setState(() {
               _messages.insert(0, msg);
@@ -151,6 +151,9 @@ class _ChatScaffoldState extends State<ChatScaffold>
   void dispose() {
     _observer.dispose();
     IMService.shared.sendReadReceipt(targetId,type: type);
+    // if(widget.target is Planet){
+    //   IMService.shared.quitChatRoom(widget.target.id);
+    // }
     super.dispose();
   }
 
@@ -212,6 +215,10 @@ class _ChatScaffoldState extends State<ChatScaffold>
 
   Future _refresh({islocal = false}) async {
     _messages.clear();
+    if(widget.target is Planet){
+      var res = await IMService.shared.joinChatRoom(widget.target.id);
+      print("joinChatRoom：" + (res?"success":"fail"));
+    }
     var msgs = await IMService.shared.localMessagesList(targetId,type: type);
     setState(() {
       _messages.addAll(msgs);

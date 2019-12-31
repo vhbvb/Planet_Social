@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:planet_social/const.dart';
 import 'home.dart';
@@ -12,7 +11,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: Consts.name,
-      color: Colors.white,
+      // color: Colors.white,
       showPerformanceOverlay: false,
       theme: ThemeData(
         appBarTheme: AppBarTheme(color: Colors.white),

@@ -43,7 +43,7 @@ dev_dependencies:
   crypto:
   flutter_app_badger:
   emoji_picker:
-
+  flutter_statusbarcolor:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

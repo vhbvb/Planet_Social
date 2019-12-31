@@ -307,6 +307,7 @@ class _UserDetailState extends State<UserDetail>
 
   @override
   Widget build(BuildContext context) {
+    Util.setStatusBarStyle(_offset<220.0);
     super.build(context);
     return Scaffold(
       body: EasyRefresh(

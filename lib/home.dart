@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:planet_social/base/bar_item.dart';
 import 'package:planet_social/base/manager.dart';
+import 'package:planet_social/base/utils.dart';
 import 'package:planet_social/route.dart';
 
 class PlanetSocial extends StatefulWidget {
@@ -63,6 +64,7 @@ class _PlanetSocialState extends State<PlanetSocial> {
           type: BottomNavigationBarType.fixed,
           onTap: (int index) {
             setState(() {
+              Util.setStatusBarStyle(index == 0 || index == 4);
               _selectedIndex = index;
             });
           },

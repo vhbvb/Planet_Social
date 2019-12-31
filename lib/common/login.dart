@@ -1,7 +1,5 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import "package:mobsms/mobsms.dart";
 import 'package:planet_social/base/api_service.dart';
 import 'package:planet_social/base/manager.dart';
@@ -27,11 +25,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
     super.initState();
-    // _phonefocus.requestFocus();
   }
-
   _thirdParty() => Padding(
         padding: EdgeInsets.only(top: 133, left: 100, right: 100),
         child: Row(
@@ -180,8 +175,15 @@ class _LoginPageState extends State<LoginPage> {
       );
 
   @override
+  void dispose() {
+    // Util.setStatusBarStyle(true);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
         body: SingleChildScrollView(
       child: GestureDetector(
         onTap: (){

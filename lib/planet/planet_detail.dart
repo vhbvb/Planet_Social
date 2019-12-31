@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:planet_social/base/api_service.dart';
-import 'package:planet_social/base/im_service.dart';
 import 'package:planet_social/base/manager.dart';
 import 'package:planet_social/base/utils.dart';
 import 'package:planet_social/common/PSAlert.dart';
@@ -198,9 +197,6 @@ class _PlanetDetailState extends State<PlanetDetail> {
         onPressed: () {
           ApiService.shared
               .joinPlanet(PSManager.shared.currentUser, widget.planet, (error) {
-                if(error == null){
-                  _joinChatRoom();
-                }
             setState(() {
               like = (error == null);
             });
@@ -213,12 +209,5 @@ class _PlanetDetailState extends State<PlanetDetail> {
         // 红色
       );
     }
-  }
-
-  _joinChatRoom(){
-
-    IMService.shared.joinChatRoom(widget.planet.id).then((success){
-      print("joinChatRoom：" + (success?"success":"fail"));
-    });
   }
 }

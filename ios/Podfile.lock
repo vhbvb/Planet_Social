@@ -6,6 +6,8 @@ PODS:
   - Flutter (1.0.0)
   - flutter_app_badger (0.0.1):
     - Flutter
+  - flutter_statusbarcolor (0.0.1):
+    - Flutter
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
@@ -82,6 +84,7 @@ DEPENDENCIES:
   - device_info (from `.symlinks/plugins/device_info/ios`)
   - Flutter (from `Flutter`)
   - flutter_app_badger (from `.symlinks/plugins/flutter_app_badger/ios`)
+  - flutter_statusbarcolor (from `.symlinks/plugins/flutter_statusbarcolor/ios`)
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
   - mobsms (from `.symlinks/plugins/mobsms/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
@@ -111,6 +114,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_app_badger:
     :path: ".symlinks/plugins/flutter_app_badger/ios"
+  flutter_statusbarcolor:
+    :path: ".symlinks/plugins/flutter_statusbarcolor/ios"
   image_picker:
     :path: ".symlinks/plugins/image_picker/ios"
   mobsms:
@@ -139,6 +144,7 @@ SPEC CHECKSUMS:
   device_info: cbf09d2ec12aa7110e0b09fabe54b5bd6c8efe74
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_app_badger: 65de4d6f0c34a891df49e6cfb8a1c0496426fa68
+  flutter_statusbarcolor: 8afb1071ed8c58be929f1e32b36c629771fd2259
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   image_picker: e3eacd46b94694dde7cf2705955cece853aa1a8f
   mob_sharesdk: ecee6e8ba42f76a252a40d2da7a1f7301b9831d6

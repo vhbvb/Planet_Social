@@ -11,7 +11,6 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
 import 'package:async/async.dart';
 
-
 enum RequestType {
   post,
   get,
@@ -23,21 +22,20 @@ class ApiService {
   static ApiService shared = ApiService();
 
   void updateUserInfo(
-      User user, Function(User,Map<String, dynamic> error) callback) {
+      User user, Function(User, Map<String, dynamic> error) callback) {
     Map<String, dynamic> params = user.jsonMap();
     _send("users/" + user.userId, params, RequestType.put).then((response) {
       if (response.statusCode ~/ 100 == 2) {
-        callback(user,null);
+        callback(user, null);
       } else {
         if (callback != null) {
-          callback(null,jsonDecode(response.body));
+          callback(null, jsonDecode(response.body));
         }
       }
     });
   }
 
-  void login(User user,
-      Function(User, Map<String, dynamic> error) callback) {
+  void login(User user, Function(User, Map<String, dynamic> error) callback) {
     Map<String, dynamic> params = user.jsonMap();
 
     _send("users", params, RequestType.post).then((response) {
@@ -45,7 +43,7 @@ class ApiService {
         //2xx
         if (callback != null) {
           var user = User.withJson(jsonDecode(response.body));
-          callback(user,null);
+          callback(user, null);
           // loginIM(user, (token,error){
           //   if(error == null){
           //     user.imToken = token;
@@ -62,7 +60,6 @@ class ApiService {
       }
     });
   }
-
 
   void getUser(
       String userid, Function(User, Map<String, dynamic> error) callback) {
@@ -290,9 +287,10 @@ class ApiService {
     });
   }
 
-    void createComment(
+  void createComment(
       Comment comment, Function(Comment, Map<String, dynamic> error) callback) {
-    _send("classes/comment", comment.jsonMap(), RequestType.post).then((response) {
+    _send("classes/comment", comment.jsonMap(), RequestType.post)
+        .then((response) {
       if (response.statusCode ~/ 100 == 2) {
         //2xx
         if (callback != null) {
@@ -306,9 +304,13 @@ class ApiService {
     });
   }
 
-void getCommentsOfPost(
-      Post post, Function(List<Comment>, Map<String, dynamic> error) callback) { 
-    _send("classes/comment?where=" + jsonEncode((Comment()..postId = post.id).jsonMap()), null, RequestType.get)
+  void getCommentsOfPost(
+      Post post, Function(List<Comment>, Map<String, dynamic> error) callback) {
+    _send(
+            "classes/comment?where=" +
+                jsonEncode((Comment()..postId = post.id).jsonMap()),
+            null,
+            RequestType.get)
         .then((response) {
       if (response.statusCode ~/ 100 == 2) {
         //2xx
@@ -337,9 +339,14 @@ void getCommentsOfPost(
     });
   }
 
-  void joinPlanet(
-      User current, Planet planet, Function(Map<String, dynamic> error) callback) {
-    _send("classes/join_planet", {"userId": current.userId, "planetId": planet.id,},
+  void joinPlanet(User current, Planet planet,
+      Function(Map<String, dynamic> error) callback) {
+    _send(
+            "classes/join_planet",
+            {
+              "userId": current.userId,
+              "planetId": planet.id,
+            },
             RequestType.post)
         .then((response) {
       if (response.statusCode ~/ 100 == 2) {
@@ -350,44 +357,45 @@ void getCommentsOfPost(
     });
   }
 
-void planetsJoined(
-      User current, Function(List<Planet>,Map<String, dynamic> error) callback) {
-        var query  = {"userId": current.userId};
-    _send("classes/join_planet?where="+jsonEncode(query), null,
+  void planetsJoined(User current,
+      Function(List<Planet>, Map<String, dynamic> error) callback) {
+    var query = {"userId": current.userId};
+    _send("classes/join_planet?where=" + jsonEncode(query), null,
             RequestType.get)
         .then((response) {
       if (response.statusCode ~/ 100 == 2) {
         List items = jsonDecode(response.body)["results"];
 
-        List planetIds = items.map((map)=>map["planetId"]).toList();
+        List planetIds = items.map((map) => map["planetId"]).toList();
         List<Planet> results = [];
 
         int i = 0;
-        for (String item in planetIds) 
-        {
-          DataSource.center.getPlanet(item, (planet,error){
-            i = i+1;
-            if(error == null && planet != null){
+        if (i == planetIds.length) {
+          callback(results, null);
+        }
+        for (String item in planetIds) {
+          DataSource.center.getPlanet(item, (planet, error) {
+            i = i + 1;
+            if (error == null && planet != null) {
               results.add(planet);
-            }else{
-              print("ERROR:"+error.toString());
+            } else {
+              print("ERROR:" + error.toString());
             }
 
-            if(i == planetIds.length){
-              callback(results,null);
+            if (i == planetIds.length) {
+              callback(results, null);
             }
           });
         }
         // callback();
       } else {
-        callback(null,jsonDecode(response.body));
+        callback(null, jsonDecode(response.body));
       }
     });
   }
 
-
-    void planetUsersCount(Planet planet,Function(int count) callback){
-        var query = {"planetId": planet.id};
+  void planetUsersCount(Planet planet, Function(int count) callback) {
+    var query = {"planetId": planet.id};
     _send("classes/join_planet?where=" + jsonEncode(query) + "&count=1", null,
             RequestType.get)
         .then((response) {
@@ -395,51 +403,51 @@ void planetsJoined(
         callback(jsonDecode(response.body)["count"]);
       } else {
         callback(0);
-        print("ERROR:"+response.body);
+        print("ERROR:" + response.body);
       }
     });
   }
 
-      void planetUsers(Planet planet,Function(List<User>,Map<String, dynamic> error) callback){
-        var query = {"planetId": planet.id};
+  void planetUsers(Planet planet,
+      Function(List<User>, Map<String, dynamic> error) callback) {
+    var query = {"planetId": planet.id};
     _send("classes/join_planet?where=" + jsonEncode(query), null,
             RequestType.get)
         .then((response) {
       if (response.statusCode ~/ 100 == 2) {
         List items = jsonDecode(response.body)["results"];
 
-        List userIds = items.map((map)=>map["userId"]).toList();
+        List userIds = items.map((map) => map["userId"]).toList();
         List<User> results = [];
 
         int i = 0;
-        for (String item in userIds) 
-        {
-          this.getUser(item, (user,error){
-            i = i+1;
-            if(error == null && user != null){
+        for (String item in userIds) {
+          this.getUser(item, (user, error) {
+            i = i + 1;
+            if (error == null && user != null) {
               results.add(user);
-            }else{
-              print("ERROR:"+error.toString());
+            } else {
+              print("ERROR:" + error.toString());
             }
 
-            if(i == userIds.length){
-              callback(results,null);
+            if (i == userIds.length) {
+              callback(results, null);
             }
           });
         }
 
         // callback();
       } else {
-        callback(null,jsonDecode(response.body));
+        callback(null, jsonDecode(response.body));
       }
     });
   }
-  
-  
 
   void likePost(
       User current, Post post, Function(Map<String, dynamic> error) callback) {
-    _send("classes/post_like", {"userId": current.userId, "postId": post.id,"tId":post.ownerId},
+    _send(
+            "classes/post_like",
+            {"userId": current.userId, "postId": post.id, "tId": post.ownerId},
             RequestType.post)
         .then((response) {
       if (response.statusCode ~/ 100 == 2) {
@@ -453,12 +461,13 @@ void planetsJoined(
   void dislikePost(
       User current, Post post, Function(Map<String, dynamic> error) callback) {
     _send(
-            "classes/post_like/"+current.userId+"?where=" +
+            "classes/post_like/" +
+                current.userId +
+                "?where=" +
                 jsonEncode({"userId": current.userId, "postId": post.id}),
             null,
             RequestType.delete)
         .then((response) {
-
       if (response.statusCode ~/ 100 == 2) {
         callback(null);
       } else {
@@ -467,8 +476,8 @@ void planetsJoined(
     });
   }
 
-  void userLikesCount(User user,Function(int count) callback){
-        var query = {"tId": user.userId};
+  void userLikesCount(User user, Function(int count) callback) {
+    var query = {"tId": user.userId};
     _send("classes/post_like?where=" + jsonEncode(query) + "&count=1", null,
             RequestType.get)
         .then((response) {
@@ -476,13 +485,13 @@ void planetsJoined(
         callback(jsonDecode(response.body)["count"]);
       } else {
         callback(0);
-        print("ERROR:"+response.body);
+        print("ERROR:" + response.body);
       }
     });
   }
 
-    void userFansCount(User user,Function(int count) callback){
-        var query = {"tId": user.userId};
+  void userFansCount(User user, Function(int count) callback) {
+    var query = {"tId": user.userId};
     _send("classes/user_like?where=" + jsonEncode(query) + "&count=1", null,
             RequestType.get)
         .then((response) {
@@ -490,14 +499,13 @@ void planetsJoined(
         callback(jsonDecode(response.body)["count"]);
       } else {
         callback(0);
-        print("ERROR:"+response.body);
+        print("ERROR:" + response.body);
       }
     });
   }
 
   void checkIfLikePost(User current, Post post,
       Function(bool like, Map<String, dynamic> error) callback) {
-
     var query = {"userId": current.userId, "postId": post.id};
     _send("classes/post_like?where=" + jsonEncode(query) + "&count=1", null,
             RequestType.get)
@@ -510,7 +518,7 @@ void planetsJoined(
     });
   }
 
-  void postCommentsCount(Post post,Function(int) callback){
+  void postCommentsCount(Post post, Function(int) callback) {
     var query = (Comment()..postId = post.id).jsonMap();
     _send("classes/comment?where=" + jsonEncode(query) + "&count=1", null,
             RequestType.get)
@@ -519,13 +527,13 @@ void planetsJoined(
         callback(jsonDecode(response.body)["count"]);
       } else {
         callback(0);
-        print("ERROR:"+response.body);
+        print("ERROR:" + response.body);
       }
     });
   }
 
-  void postLikesCount(Post post,Function(int) callback){
-    var query = {"postId":post.id};
+  void postLikesCount(Post post, Function(int) callback) {
+    var query = {"postId": post.id};
     _send("classes/post_like?where=" + jsonEncode(query) + "&count=1", null,
             RequestType.get)
         .then((response) {
@@ -533,7 +541,7 @@ void planetsJoined(
         callback(jsonDecode(response.body)["count"]);
       } else {
         callback(0);
-        print("ERROR:"+response.body);
+        print("ERROR:" + response.body);
       }
     });
   }
@@ -558,8 +566,8 @@ void planetsJoined(
 
     var query = {"sId": sid, "tId": tid};
 
-    _send("classes/user_like/"+ current.userId +"?where=" + jsonEncode(query), null,
-            RequestType.delete)
+    _send("classes/user_like/" + current.userId + "?where=" + jsonEncode(query),
+            null, RequestType.delete)
         .then((response) {
       if (response.statusCode ~/ 100 == 2) {
         callback(null);
@@ -596,18 +604,18 @@ void planetsJoined(
   //   });
   // }
 
-    void islikePlanet(User current, Planet planet,
-      Function(bool,Map<String, dynamic> error) callback) {
-        var query = {"userId": current.userId, "planetId": planet.id};
+  void islikePlanet(User current, Planet planet,
+      Function(bool, Map<String, dynamic> error) callback) {
+    var query = {"userId": current.userId, "planetId": planet.id};
 
-    _send("classes/join_planet?where="+jsonEncode(query)+ "&count=1",null, RequestType.get)
+    _send("classes/join_planet?where=" + jsonEncode(query) + "&count=1", null,
+            RequestType.get)
         .then((response) {
-          
-    if (response.statusCode ~/ 100 == 2) {
-            callback(jsonDecode(response.body)["count"] > 0, null);
-          } else {
-            callback(false, jsonDecode(response.body));
-          }
+      if (response.statusCode ~/ 100 == 2) {
+        callback(jsonDecode(response.body)["count"] > 0, null);
+      } else {
+        callback(false, jsonDecode(response.body));
+      }
     });
   }
 
@@ -666,11 +674,11 @@ void planetsJoined(
 
   Future<http.Response> _send(
       String path, Map<String, dynamic> params, RequestType reqType) async {
-    var client =  http.Client();
+    var client = http.Client();
     String url = Consts.baseUrl + Uri.encodeFull(path);
     // String url = Consts.baseUrl + path;
-    print("reqUrl:"+url);
-    print("params:"+params.toString());
+    print("reqUrl:" + url);
+    print("params:" + params.toString());
     http.Response response;
 
     try {

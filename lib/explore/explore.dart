@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:planet_social/base/data_center.dart';
+import 'package:planet_social/base/utils.dart';
 import 'package:planet_social/common/PSAlert.dart';
 import 'package:planet_social/explore/starry_sky.dart';
 import 'package:planet_social/explore/statistics.dart';
@@ -69,7 +70,6 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin{
 
   @override
   void initState() {
-
     widget.refresh = _refresh;
     _refresh();
     super.initState();
@@ -79,6 +79,7 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin{
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
+      
       body: Stack(
         children: <Widget>[
           StarrySky(
@@ -111,8 +112,8 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin{
       if (item is Planet) {
         double x = item.position.dx - _offset.dx;
         double y = item.position.dy - _offset.dy;
-        double distance = sqrt(x * x + y * y);
-        if (distance < 80.0) {
+        double dis = sqrt(x*x+y*y);
+        if (dis < 120) {
           PSAlert.show(context, "提示", "创建的地方离其他星球太近了哦,请重新选择地方创建您的星球。");
           return;
         }

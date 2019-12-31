@@ -92,6 +92,7 @@ class _MyPlanetState extends State<MyPlanet>
     super.build(context);
     return Scaffold(
       appBar: AppBar(
+        brightness: Brightness.dark,
         title: Text(
           "星球",
           style: TextStyle(color: Colors.black, fontSize: 17),

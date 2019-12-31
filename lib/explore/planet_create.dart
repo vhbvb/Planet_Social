@@ -139,6 +139,7 @@ class _PlanetCreateState extends State<PlanetCreate> {
     ApiService.shared.createPlanet(planet, (res,error){
       if(error == null){
         PSRoute.explore.refresh();
+        PSRoute.message.refresh();
         _createChatRoom(res.id,planet.title);
         PSAlert.show(context, "成功", "星球已成功创建",confirm:(){
            PSRoute.pop(context);

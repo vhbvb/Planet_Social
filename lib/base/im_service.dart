@@ -22,7 +22,7 @@ class IMService {
   Future<Message> sendImage(String path, String uid,int type) async {
     var imgMessage = ImageMessage()..localPath = path;
     return await RongcloudImPlugin.sendMessage(
-        RCConversationType.Private, uid, imgMessage);
+        type, uid, imgMessage);
   }
 
   sendVideo(String path, int duration, String uid, int type) async {
