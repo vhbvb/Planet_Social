@@ -9,7 +9,7 @@ import 'package:planet_social/models/post_model.dart';
 import 'package:planet_social/models/user_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
-import 'package:async/async.dart';
+import 'package:dio/dio.dart';
 
 enum RequestType {
   post,
@@ -328,14 +328,13 @@ class ApiService {
 
   void uploadImage(
       String path, Function(String, Map<String, dynamic> error) callback) {
+
     _upload(File(path)).then((response) {
-      response.stream.transform(utf8.decoder).listen((value) {
         if (response.statusCode ~/ 100 == 2) {
-          callback(jsonDecode(value)["url"], null);
+          callback(response.data["url"], null);
         } else {
-          callback(null, jsonDecode(value));
+          callback(null, response.data);
         }
-      });
     });
   }
 
@@ -637,46 +636,46 @@ class ApiService {
     });
   }
 
-  Future<http.StreamedResponse> _upload(File file) async {
-    // var uri = Uri.parse("http://pub.dartlang.org/packages/create");
-    // var request = new http.MultipartRequest("POST", uri);
-    // request.fields['user'] = 'nweiz@google.com';
-    // request.files.add(new http.MultipartFile.fromPath(
-    //     'package',
-    //     'build/package.tar.gz',
-    //     contentType: new MediaType('application', 'x-tar'));
-    // var response = await request.send();
-    // if (response.statusCode == 200) print('Uploaded!');
+  Future<Response> _upload(File file) async {
+    // var stream = http.ByteStream(DelegatingStream.typed(file.openRead()));
+    // var length = await file.length();
+    // var uri = Uri.parse(Consts.baseUrl + "files/" +basename(file.path));
 
-    // open a bytestream
-    var stream = http.ByteStream(DelegatingStream.typed(file.openRead()));
-    // get file length
-    var length = await file.length();
-    // string to uri
-    var uri = Uri.parse(Consts.baseUrl + "files/avartar.png");
+    // var multipartFile = http.MultipartFile('image', stream, length,
+    //     filename: basename(file.path),contentType: MediaType("image","jpeg") );
 
-    // create multipart request
-    var request = http.MultipartRequest("POST", uri);
+    // var request = http.MultipartRequest("POST", uri);
+    // request.files.add(multipartFile);
+    // request.headers["X-LC-Id"] = Consts.appID;
+    // request.headers["X-LC-Key"] = Consts.appKey;
+    // request.headers["X-LC-Session"] = PSManager.shared.currentUser.sessionToken;
+    // request.headers["Content-Type"] = "image/jpeg";
+    // var resp = await request.send();
+    // return resp;
+    var dio = Dio();
+    var url = Consts.baseUrl + "files/" +basename(file.path);
+    var option = Options(
+      headers: {
+        Headers.contentLengthHeader: file.lengthSync(), 
+        "X-LC-Id":Consts.appID,
+        "X-LC-Key":Consts.appKey,
+        "X-LC-Session":PSManager.shared.currentUser.sessionToken,
+        "Content-Type":"image/jpeg"
+      }
+    );
 
-    // multipart that takes file
-    var multipartFile = http.MultipartFile('file', stream, length,
-        filename: basename(file.path));
+    var formData = FormData.fromMap({
+    "file": await MultipartFile.fromFile(file.path,filename: basename(file.path))
+    });
 
-    // add file to multipart
-    request.files.add(multipartFile);
-    request.headers["X-LC-Id"] = Consts.appID;
-    request.headers["X-LC-Key"] = Consts.appKey;
-    request.headers["X-LC-Session"] = PSManager.shared.currentUser.sessionToken;
-
-    // send
-    return await request.send();
+    var res = await dio.post(url,data: formData,options: option);
+    return res;
   }
 
   Future<http.Response> _send(
       String path, Map<String, dynamic> params, RequestType reqType) async {
     var client = http.Client();
     String url = Consts.baseUrl + Uri.encodeFull(path);
-    // String url = Consts.baseUrl + path;
     print("reqUrl:" + url);
     print("params:" + params.toString());
     http.Response response;
