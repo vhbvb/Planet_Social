@@ -89,6 +89,9 @@ class _ConversationListState extends State<ConversationList> {
 
 Future _loadMessages ()async{
     var conversations = await IMService.shared.conversationList();
+    if(conversations == null){
+      conversations = [];
+    }
 
     var c = Completer();
     ApiService.shared.planetsJoined(PSManager.shared.currentUser, (results,error){

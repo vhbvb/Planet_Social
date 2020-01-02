@@ -132,10 +132,14 @@ class _UserInfoState extends State<UserInfo> {
         return _rowDetail(
             index,
             "标签",
-            Row(
-              children: _tags(),
-              mainAxisAlignment: MainAxisAlignment.end,
-            ));
+            SizedBox(
+              height: 30,
+              child:             ListView(
+              scrollDirection: Axis.horizontal,
+              children:  _tags(),
+            ),
+            )
+            );
         break;
       default:
     }
@@ -156,6 +160,7 @@ class _UserInfoState extends State<UserInfo> {
             Text(title, style: TextStyle(color: Colors.black, fontSize: 14)),
             Expanded(
               child: Container(
+                padding: EdgeInsets.only(left: 12),
                 child: body,
                 alignment: Alignment.centerRight,
               ),
@@ -256,9 +261,6 @@ class _UserInfoState extends State<UserInfo> {
         );
 
     List<String> arr = widget.user.tags;
-    if (arr.length >3) {
-      arr = arr.sublist(0,3);
-    }
     return arr.map(_build).toList();
   }
 

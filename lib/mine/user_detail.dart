@@ -76,7 +76,11 @@ class _UserDetailState extends State<UserDetail>
           ),
         );
 
-    return widget.user.tags.map(_build).toList();
+    var arr = widget.user.tags;
+
+    arr = arr.length>3?arr.sublist(0,3):arr;
+
+    return arr.map(_build).toList();
   }
 
 // header 用户信息模块

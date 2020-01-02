@@ -199,6 +199,7 @@ class _PlanetDetailState extends State<PlanetDetail> {
               .joinPlanet(PSManager.shared.currentUser, widget.planet, (error) {
             if (error == null) {
               PSRoute.message.refresh();
+              PSRoute.myPlanet.refresh();
             }
 
             setState(() {

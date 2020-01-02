@@ -36,7 +36,7 @@ class _CommentDetailState extends State<CommentDetail> {
                     fontWeight: FontWeight.bold)),
           ),
           Text(
-            widget.comment.createdAt,
+            Util.timesTamp(DateTime.parse(widget.comment.createdAt)),
             style: TextStyle(color: Colors.grey, fontSize: 12),
           )
         ],

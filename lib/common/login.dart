@@ -8,9 +8,9 @@ import 'package:planet_social/common/PSProcess.dart';
 import 'package:planet_social/models/user_model.dart';
 import 'package:planet_social/route.dart';
 import 'package:sharesdk_plugin/sharesdk_plugin.dart';
+import 'dart:io';
 
 class LoginPage extends StatefulWidget {
-
   final Function result;
   const LoginPage({Key key, this.result}) : super(key: key);
   @override
@@ -27,6 +27,7 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
   }
+
   _thirdParty() => Padding(
         padding: EdgeInsets.only(top: 133, left: 100, right: 100),
         child: Row(
@@ -183,36 +184,36 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+        backgroundColor: Colors.white,
         body: SingleChildScrollView(
-      child: GestureDetector(
-        onTap: (){
-          _phonefocus.unfocus();
-          _secfocus.unfocus();
-        },
-        child: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: ExactAssetImage("assets/star/star.jpeg"),
-                fit: BoxFit.fill)),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Padding(padding: EdgeInsets.only(bottom: 30)),
-            _header(),
-            Padding(padding: EdgeInsets.only(bottom: 30)),
-            _phoneNumberTextField(),
-            Padding(padding: EdgeInsets.only(bottom: 20)),
-            _verifyCodeTextField(),
-            Padding(padding: EdgeInsets.only(bottom: 46)),
-            _loginButton(),
-            _thirdParty()
-          ],
-        ),
-      ),)
-    ));
+            child: GestureDetector(
+          onTap: () {
+            _phonefocus.unfocus();
+            _secfocus.unfocus();
+          },
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: ExactAssetImage("assets/star/star.jpeg"),
+                    fit: BoxFit.fill)),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(padding: EdgeInsets.only(bottom: 30)),
+                _header(),
+                Padding(padding: EdgeInsets.only(bottom: 30)),
+                _phoneNumberTextField(),
+                Padding(padding: EdgeInsets.only(bottom: 20)),
+                _verifyCodeTextField(),
+                Padding(padding: EdgeInsets.only(bottom: 46)),
+                _loginButton(),
+                _thirdParty()
+              ],
+            ),
+          ),
+        )));
   }
 
   _getVerifyCode() {
@@ -262,20 +263,34 @@ class _LoginPageState extends State<LoginPage> {
 
   _thirdPartyLogin(ShareSDKPlatform platform) {
     PSProcess.show(context);
-    SharesdkPlugin.auth(platform, null, (state, resp, error) {
-      if (state == SSDKResponseState.Success) {
+    SharesdkPlugin.getUserInfo(platform, (state, resp, error) {
+      if (state == SSDKResponseState.Success && resp != null) {
         print("-------->" + jsonEncode(resp));
         User third = User();
-        third.avatar = resp["icon"];
-        third.nickName = resp["nickname"];
-        third.authData = {
-          platform.name: {
-            "openid": resp["uid"],
-            "access_token": resp["credential"]["token"],
-            "expires_in": resp["credential"]["expired"].toString()
-          }
-        };
-        
+
+        if (Platform.isIOS) {
+          third.avatar = resp["icon"];
+          third.nickName = resp["nickname"];
+          third.authData = {
+            platform.name: {
+              "openid": resp["uid"],
+              "access_token": resp["credential"]["token"],
+              "expires_in": resp["credential"]["expired"].toString()
+            }
+          };
+        } else {
+          Map info = jsonDecode(resp["dbInfo"]);
+          third.avatar = info["icon"];
+          third.nickName = info["nickname"];
+          third.authData = {
+            platform.name: {
+              "openid": info["userID"],
+              "access_token": info["token"],
+              "expires_in": info["expiresIn"].toString()
+            }
+          };
+        }
+
         ApiService.shared.login(third, (user, error) {
           _processLogined(user, error);
         });
@@ -295,20 +310,19 @@ class _LoginPageState extends State<LoginPage> {
     //     PSProcess.dismiss(context);
     //     PSAlert.show(context, "验证码验证失败", error.toString());
     //   } else {
-        User third = User();
-        third.phone = phoneController.text;
-        String uid = phoneController.text;
-        String token = phoneController.text +
-            DateTime.now().millisecondsSinceEpoch.toString();
+    User third = User();
+    third.phone = phoneController.text;
+    String uid = phoneController.text;
+    String token =
+        phoneController.text + DateTime.now().millisecondsSinceEpoch.toString();
 
-        third.authData = {
-          "phone": {"openid": uid, "access_token": token, "expires_in": "36000"}
-        };
+    third.authData = {
+      "phone": {"openid": uid, "access_token": token, "expires_in": "36000"}
+    };
 
-        ApiService.shared.login(third,
-            (User user, Map<String, dynamic> error) {
-          _processLogined(user, error);
-        });
+    ApiService.shared.login(third, (User user, Map<String, dynamic> error) {
+      _processLogined(user, error);
+    });
     //   }
     // });
   }
