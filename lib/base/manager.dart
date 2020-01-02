@@ -38,11 +38,19 @@ class PSManager {
     }
   }
 
+  logout() async{
+    currentUser = null;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    RongcloudImPlugin.disconnect(false);
+    this.login();
+  }
+
   login() async {
     if (currentUser == null) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String userJsonStr = prefs.getString(Consts.kUser);
-      if (userJsonStr != null) {
+      if (userJsonStr != "null" && userJsonStr != null) {
         currentUser = User.withJson(jsonDecode(userJsonStr));
       }
     }

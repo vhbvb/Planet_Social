@@ -274,6 +274,10 @@ class _UserDetailState extends State<UserDetail>
       _isSelf = true;
     }
 
+    if(widget.user != null&&_isSelf){
+      widget.user = PSManager.shared.currentUser;
+    }
+
     if (widget.user != null) {
 //获取帖子
         ApiService.shared.getPostOfUser(widget.user, (results, error) {

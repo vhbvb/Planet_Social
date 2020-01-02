@@ -62,7 +62,9 @@ class _UserInfoState extends State<UserInfo> {
           )
         ],
       ),
-      body: ListView.separated(
+      body: Stack(
+        children: <Widget>[
+          ListView.separated(
         itemBuilder: (context, index) {
           return _create(index);
         },
@@ -74,7 +76,37 @@ class _UserInfoState extends State<UserInfo> {
           );
         },
       ),
+
+      Align(
+        alignment: Alignment.bottomCenter,
+        child: Padding(
+      padding: EdgeInsets.only(bottom: 37),
+      child: GestureDetector(
+        onTap: _logout,
+        child: Container(
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(23)),
+                      color: Color(0xffFF8367)),
+                  height: 36,
+                  width: MediaQuery.of(context).size.width * 0.4,
+                  child: Text(
+                    "退出登录",
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  ),
+                ),
+      ),
+              
+    ),
+      )
+        ],
+      )
     );
+  }
+
+  _logout(){
+    PSRoute.pop(context);
+    PSManager.shared.logout();
   }
 
   _create(int index) {
