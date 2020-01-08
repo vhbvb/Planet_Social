@@ -30,7 +30,6 @@ class _PlanetSocialState extends State<PlanetSocial> {
 
   @override
   void initState() {
-
     PSManager.shared.mainContext = context;
     PSManager.shared.login();
     PSManager.shared.registThirdParty();
@@ -42,7 +41,6 @@ class _PlanetSocialState extends State<PlanetSocial> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: IndexedStack(
-          
           children: <Widget>[
             PSRoute.explore,
             PSRoute.myPlanet,

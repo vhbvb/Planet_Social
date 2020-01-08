@@ -6,12 +6,12 @@ class FTIMChatInput extends StatefulWidget {
   final FTIMChatInputControl control;
 
   @override
-  State<StatefulWidget> createState() => new _FTIMChatInputState(
-    control: control
-  );
+  State<StatefulWidget> createState() =>
+      new _FTIMChatInputState(control: control);
 }
 
-class _FTIMChatInputState extends State<FTIMChatInput> with TickerProviderStateMixin{
+class _FTIMChatInputState extends State<FTIMChatInput>
+    with TickerProviderStateMixin {
   _FTIMChatInputState({this.control}) : super();
 
   FTIMChatInputControl control;
@@ -19,122 +19,102 @@ class _FTIMChatInputState extends State<FTIMChatInput> with TickerProviderStateM
   final TextEditingController _textController = new TextEditingController();
 
   @override
-    void initState() {
-
-      _focus.addListener((){
-        control.onFocusChange(_focus.hasFocus);
-      });
-      control.resignFocus = (){
-        if (_focus.hasFocus)
-        {
-          _focus.unfocus();
-        }
-      };
-      super.initState();
-    }
-
-  @override
-    void dispose() {
-        super.dispose();
+  void initState() {
+    _focus.addListener(() {
+      control.onFocusChange(_focus.hasFocus);
+    });
+    control.resignFocus = () {
+      if (_focus.hasFocus) {
+        _focus.unfocus();
       }
+    };
+    super.initState();
+  }
 
   @override
-    Widget build(BuildContext context) {
+  void dispose() {
+    super.dispose();
+  }
 
-      return  Container(
-        decoration: BoxDecoration(
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
           border: Border(
-            top: BorderSide(
-              color:Color.fromARGB(255, 229, 225, 218)
-            )
-          )
-        ),
-        constraints:  BoxConstraints(
-          maxHeight:120.0
-        ),
-        // alignment: Alignment.topCenter,
-        child:  Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-
-             Padding(
-              padding: EdgeInsets.only(left:10.0,top:7.0),
+              top: BorderSide(color: Color.fromARGB(255, 229, 225, 218)))),
+      constraints: BoxConstraints(maxHeight: 120.0),
+      // alignment: Alignment.topCenter,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Padding(
+              padding: EdgeInsets.only(left: 10.0, top: 7.0),
               child: GestureDetector(
-                child: Image.asset("assets/keyboard.png",height:33.0,width:33.0),
-                onTap: (){
+                child: Image.asset("assets/keyboard.png",
+                    height: 33.0, width: 33.0),
+                onTap: () {
                   // _animationController.forward();
-                  if (_focus.hasFocus)
-                  {
+                  if (_focus.hasFocus) {
                     _focus.unfocus();
-                  }
-                  else
-                  {
+                  } else {
                     FocusScope.of(context).requestFocus(_focus);
                   }
                 },
-              )
-            ),
-
-             Expanded(
+              )),
+          Expanded(
               child: Padding(
-                padding: EdgeInsets.only(left:12.0),
-                child:  TextField(
-                  onSubmitted: (String text){
-                    _textController.text = "";
-                    control.onMessageSend(text);
-                  },
-                  decoration: InputDecoration(
-                    hintText: "请输入消息...",
-                    border: InputBorder.none
-                  ),
-                  style:  TextStyle(
-                    fontSize:17.0,
-                    color: Colors.black
-                  ),
-                  controller: _textController,
-                  textInputAction: TextInputAction.send,
-                  maxLines: null,
-                  focusNode: _focus,
-                  onChanged: (String text){
-
-                    // _textController.lin;
-                  },
-                )
-              )
-            ),
-             Padding(
-              padding: EdgeInsets.only(left:11.0,top: 7.0),
+                  padding: EdgeInsets.only(left: 12.0),
+                  child: TextField(
+                    onSubmitted: (String text) {
+                      _textController.text = "";
+                      control.onMessageSend(text);
+                    },
+                    decoration: InputDecoration(
+                        hintText: "请输入消息...", border: InputBorder.none),
+                    style: TextStyle(fontSize: 17.0, color: Colors.black),
+                    controller: _textController,
+                    textInputAction: TextInputAction.send,
+                    maxLines: null,
+                    focusNode: _focus,
+                    onChanged: (String text) {
+                      // _textController.lin;
+                    },
+                  ))),
+          Padding(
+              padding: EdgeInsets.only(left: 11.0, top: 7.0),
               child: GestureDetector(
-                child: Image.asset("assets/emoj.png",height:33.0,width:33.0),
-                onTap: (){
-                  control.onEmojItemChange((emoji){
+                child:
+                    Image.asset("assets/emoj.png", height: 33.0, width: 33.0),
+                onTap: () {
+                  control.onEmojItemChange((emoji) {
                     setState(() {
-                      _textController.text = _textController.text+emoji;
+                      _textController.text = _textController.text + emoji;
                     });
                   });
                 },
-              )
-            ),
-
-             Padding(
-              padding: EdgeInsets.only(left:19.0,right: 12.0,top: 7.0),
+              )),
+          Padding(
+              padding: EdgeInsets.only(left: 19.0, right: 12.0, top: 7.0),
               child: GestureDetector(
-                child: Image.asset("assets/add.png",height:33.0,width:33.0),
-                onTap: (){
+                child: Image.asset("assets/add.png", height: 33.0, width: 33.0),
+                onTap: () {
                   control.onMediaItemChange();
                 },
-              )
-            ),
-          ],
-        ),
-      );
-    }
+              )),
+        ],
+      ),
+    );
+  }
 }
 
 class FTIMChatInputControl {
-
-  FTIMChatInputControl({this.onFocusChange,this.onEmojItemChange,this.onMediaItemChange,this.onMessageSend}) : super();
+  FTIMChatInputControl(
+      {this.onFocusChange,
+      this.onEmojItemChange,
+      this.onMediaItemChange,
+      this.onMessageSend})
+      : super();
 
   // final FTIMChatInput input;
 

@@ -22,22 +22,22 @@ class FTIMMedia extends StatelessWidget {
   }
 
   GestureDetector _creatItem(String image, String name) {
-    return  GestureDetector(
+    return GestureDetector(
         onTap: () {
           _itemClickHandler(name);
         },
-        child:  Container(
+        child: Container(
             // alignment: Alignment.topLeft,
             width: 66.0,
             // color: Colors.red,
-            child:  Column(
+            child: Column(
               children: <Widget>[
-                 Image.asset(
+                Image.asset(
                   image,
                   height: 50.0,
                   width: 50.0,
                 ),
-                 Text(
+                Text(
                   name,
                   style: TextStyle(fontSize: 12.0),
                 )
@@ -59,31 +59,28 @@ class FTIMMedia extends StatelessWidget {
   }
 
   StatelessWidget build(BuildContext context) {
-    return  Container(
+    return Container(
         padding: EdgeInsets.only(top: 15.0),
         // color: Colors.green,
         height: 175.0,
-        child:  PageView.builder(
+        child: PageView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: 1,
             itemBuilder: (context, i) {
-              return  Padding(
+              return Padding(
                   padding: EdgeInsets.only(left: 30.0),
-                  child:  Wrap(
+                  child: Wrap(
                       alignment: WrapAlignment.start,
                       spacing: 30.0,
                       runSpacing: 15.0,
-                      children: _creatItems(pageItems,pageItemNames)));
-                      }
-          
-          )
-          );
+                      children: _creatItems(pageItems, pageItemNames)));
+            }));
   }
 }
 
 class FTIMMediaControl {
-
-  FTIMMediaControl({this.onAlbumClick,this.onShootClick,this.testFunc}):super();
+  FTIMMediaControl({this.onAlbumClick, this.onShootClick, this.testFunc})
+      : super();
 
   Function onAlbumClick;
   Function onShootClick;

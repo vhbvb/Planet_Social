@@ -10,7 +10,7 @@ class FTIMVideoControl {
   Function presentFullScreen;
 }
 
-class FIIMVideoPlayerSimple extends StatefulWidget{
+class FIIMVideoPlayerSimple extends StatefulWidget {
   FIIMVideoPlayerSimple({this.control}) : super();
   final control;
   @override
@@ -19,7 +19,8 @@ class FIIMVideoPlayerSimple extends StatefulWidget{
 }
 
 // 保活
-class _FIIMVideoPlayerSimpleState extends State<FIIMVideoPlayerSimple> with AutomaticKeepAliveClientMixin {
+class _FIIMVideoPlayerSimpleState extends State<FIIMVideoPlayerSimple>
+    with AutomaticKeepAliveClientMixin {
   _FIIMVideoPlayerSimpleState({this.control}) : super();
 
   final FTIMVideoControl control;
@@ -34,14 +35,14 @@ class _FIIMVideoPlayerSimpleState extends State<FIIMVideoPlayerSimple> with Auto
     // TODO: implement initState
     print("----------initState");
 
-    if (vp == null){
+    if (vp == null) {
       if (control.url.startsWith("http")) {
         vp = VideoPlayerController.network(control.url)..addListener(() {});
       } else {
         vp = VideoPlayerController.asset(control.url)..addListener(() {});
       }
 
-          // vp.play();
+      // vp.play();
       vp.setLooping(true);
       vp.initialize().then((_) {
         // print("initialize finish=====================");
@@ -59,12 +60,12 @@ class _FIIMVideoPlayerSimpleState extends State<FIIMVideoPlayerSimple> with Auto
   }
 
   @override
-    void deactivate() {
-      // TODO: implement deactivate
-      // vp.dispose();
-      print("----------deactivate");
-      super.deactivate();
-    }
+  void deactivate() {
+    // TODO: implement deactivate
+    // vp.dispose();
+    print("----------deactivate");
+    super.deactivate();
+  }
 
   @override
   Widget build(BuildContext context) {

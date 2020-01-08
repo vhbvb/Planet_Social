@@ -37,7 +37,8 @@ class _StarrySkyState extends State<StarrySky> with TickerProviderStateMixin {
             _controller.dispose();
           }
           _controller = AnimationController(
-              duration: Duration(milliseconds: _animationTime~/2), vsync: this);
+              duration: Duration(milliseconds: _animationTime ~/ 2),
+              vsync: this);
           double x = end.velocity.pixelsPerSecond.dx;
           double y = end.velocity.pixelsPerSecond.dy;
           if (x == 0 && y == 0) return;
@@ -46,8 +47,8 @@ class _StarrySkyState extends State<StarrySky> with TickerProviderStateMixin {
           _animation =
               Tween(begin: Offset(x, y), end: Offset(0, 0)).animate(curve)
                 ..addListener(() {
-                  _needScroll(Offset(_animation.value.dx * 0.01,
-                      _animation.value.dy * 0.01));
+                  _needScroll(Offset(
+                      _animation.value.dx * 0.01, _animation.value.dy * 0.01));
                 })
                 ..addStatusListener((status) {
                   if (AnimationStatus.completed == status) {

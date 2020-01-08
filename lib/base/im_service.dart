@@ -13,16 +13,14 @@ class IMService {
   static final shared = IMService();
   final List<IMServiceObserver> observers = [];
 
-  Future<Message> sendText(String text, String uid,int type) async {
+  Future<Message> sendText(String text, String uid, int type) async {
     var txtMessage = TextMessage()..content = text;
-    return await RongcloudImPlugin.sendMessage(
-        type, uid, txtMessage);
+    return await RongcloudImPlugin.sendMessage(type, uid, txtMessage);
   }
 
-  Future<Message> sendImage(String path, String uid,int type) async {
+  Future<Message> sendImage(String path, String uid, int type) async {
     var imgMessage = ImageMessage()..localPath = path;
-    return await RongcloudImPlugin.sendMessage(
-        type, uid, imgMessage);
+    return await RongcloudImPlugin.sendMessage(type, uid, imgMessage);
   }
 
   sendVideo(String path, int duration, String uid, int type) async {

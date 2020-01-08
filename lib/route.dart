@@ -22,7 +22,9 @@ class PSRoute {
   static Widget _page(String url, dynamic params) {
     switch (url) {
       case "login":
-        return LoginPage(result:params,);
+        return LoginPage(
+          result: params,
+        );
       case "user_detail":
         return UserDetail(
           user: params,
@@ -38,15 +40,23 @@ class PSRoute {
       case "planet_detail":
         return PlanetDetail(planet: params);
       case "post_post":
-        return PostPost(planet: params,);
+        return PostPost(
+          planet: params,
+        );
       case "post_content":
         return PostContent(post: params);
       case "planet_create":
-        return PlanetCreate(offset: params,);
-            case "planet_likes":
-        return PlanetLikeList(planet: params,);
+        return PlanetCreate(
+          offset: params,
+        );
+      case "planet_likes":
+        return PlanetLikeList(
+          planet: params,
+        );
       case "chat_scaffold":
-      return ChatScaffold(target: params,);
+        return ChatScaffold(
+          target: params,
+        );
       default:
         return null;
     }

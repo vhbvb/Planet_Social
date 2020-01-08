@@ -13,7 +13,6 @@ class CommentDetail extends StatefulWidget {
 }
 
 class _CommentDetailState extends State<CommentDetail> {
-
   _header() => Row(
         // mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
@@ -29,7 +28,9 @@ class _CommentDetailState extends State<CommentDetail> {
           Padding(
             padding: EdgeInsets.only(left: 10, right: 10),
             child: Text(
-                widget.comment.owner == null ? "" : widget.comment.owner.nickName,
+                widget.comment.owner == null
+                    ? ""
+                    : widget.comment.owner.nickName,
                 style: TextStyle(
                     color: Colors.black,
                     fontSize: 13,
@@ -43,12 +44,12 @@ class _CommentDetailState extends State<CommentDetail> {
       );
 
   _content() => GestureDetector(
-      onTap: (){},
+      onTap: () {},
       child: Container(
         width: double.infinity,
         padding: EdgeInsets.only(top: 10, bottom: 10),
-        child:
-            Text(widget.comment.content, style: TextStyle(color: Colors.black54)),
+        child: Text(widget.comment.content,
+            style: TextStyle(color: Colors.black54)),
       ));
 
   // _breakLine() => Padding(

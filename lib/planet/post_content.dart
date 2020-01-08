@@ -15,20 +15,18 @@ class PostContent extends StatefulWidget {
 }
 
 class _PostContentState extends State<PostContent> {
-
   List<Comment> comments = [];
   bool like = false;
 
   @override
   void initState() {
-
-    ApiService.shared.getCommentsOfPost(widget.post, (results,error){
-      if(error == null){
-              setState(() {
-        comments.addAll(results);
-      });
-      }else{
-        PSAlert.show(context, "评论加载失败",error.toString());
+    ApiService.shared.getCommentsOfPost(widget.post, (results, error) {
+      if (error == null) {
+        setState(() {
+          comments.addAll(results);
+        });
+      } else {
+        PSAlert.show(context, "评论加载失败", error.toString());
       }
     });
 
@@ -67,9 +65,12 @@ class _PostContentState extends State<PostContent> {
             itemCount: 1 + comments.length,
             itemBuilder: (_, index) {
               if (index == 0) {
-                return PostDetail(post: widget.post,inDetail: true,);
+                return PostDetail(
+                  post: widget.post,
+                  inDetail: true,
+                );
               } else {
-                return CommentDetail(comment: comments[index-1]);
+                return CommentDetail(comment: comments[index - 1]);
               }
             },
             separatorBuilder: (_, index) {
@@ -80,7 +81,10 @@ class _PostContentState extends State<PostContent> {
                   height: 47,
                   child: Text(
                     "评论",
-                    style: TextStyle(color: Colors.black, fontSize: 14,fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold),
                   ),
                 );
               } else {
@@ -93,10 +97,10 @@ class _PostContentState extends State<PostContent> {
     );
   }
 
-    _share(){
-     var params = SSDKMap()..setGeneral(widget.post.starTitle, widget.post.content, null, null, null, null, null, null, null, null, SSDKContentTypes.text);
-     SharesdkPlugin.showMenu(null, params, (state,p,m1,m2,error){
-
-     });
+  _share() {
+    var params = SSDKMap()
+      ..setGeneral(widget.post.starTitle, widget.post.content, null, null, null,
+          null, null, null, null, null, SSDKContentTypes.text);
+    SharesdkPlugin.showMenu(null, params, (state, p, m1, m2, error) {});
   }
 }

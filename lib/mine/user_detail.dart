@@ -78,7 +78,7 @@ class _UserDetailState extends State<UserDetail>
 
     var arr = widget.user.tags;
 
-    arr = arr.length>3?arr.sublist(0,3):arr;
+    arr = arr.length > 3 ? arr.sublist(0, 3) : arr;
 
     return arr.map(_build).toList();
   }
@@ -202,31 +202,31 @@ class _UserDetailState extends State<UserDetail>
     var setIcon = Padding(
       padding: EdgeInsets.only(right: 10),
       child: GestureDetector(
-      onTap: _clickSetting,
-      child: Padding(
-        padding: EdgeInsets.only(left: 5, right: 5),
-        child: Image.asset(
-          _offset < 220.0 ? "assets/set2.png" : "assets/set.png",
-          height: 22,
-          width: 22,
+        onTap: _clickSetting,
+        child: Padding(
+          padding: EdgeInsets.only(left: 5, right: 5),
+          child: Image.asset(
+            _offset < 220.0 ? "assets/set2.png" : "assets/set.png",
+            height: 22,
+            width: 22,
+          ),
         ),
       ),
-    ),
     );
 
     var msgIcon = Padding(
-      padding: EdgeInsets.only(right: 10),
-      child:GestureDetector(
-      onTap: _clickMessage,
-      child: Padding(
-        padding: EdgeInsets.only(left: 5, right: 5),
-        child: Image.asset(
-          _offset < 220.0 ? "assets/msg_push2.png" : "assets/msg_push.png",
-          height: 33,
-          width: 33,
-        ),
-      ),
-    ));
+        padding: EdgeInsets.only(right: 10),
+        child: GestureDetector(
+          onTap: _clickMessage,
+          child: Padding(
+            padding: EdgeInsets.only(left: 5, right: 5),
+            child: Image.asset(
+              _offset < 220.0 ? "assets/msg_push2.png" : "assets/msg_push.png",
+              height: 33,
+              width: 33,
+            ),
+          ),
+        ));
 
     return [_isSelf ? setIcon : msgIcon];
   }
@@ -250,7 +250,7 @@ class _UserDetailState extends State<UserDetail>
   void initState() {
     widget.refresh = () {
       setState(() {
-        _fresh((){});
+        _fresh(() {});
       });
     };
 
@@ -274,23 +274,23 @@ class _UserDetailState extends State<UserDetail>
       _isSelf = true;
     }
 
-    if(widget.user != null&&_isSelf){
+    if (widget.user != null && _isSelf) {
       widget.user = PSManager.shared.currentUser;
     }
 
     if (widget.user != null) {
 //获取帖子
-        ApiService.shared.getPostOfUser(widget.user, (results, error) {
-          res();
-          if (error == null) {
-            setState(() {
-              posts.clear();
-              posts.addAll(results.reversed);
-            });
-          } else {
-            PSAlert.show(context, "帖子获取失败", error.toString());
-          }
-        });
+      ApiService.shared.getPostOfUser(widget.user, (results, error) {
+        res();
+        if (error == null) {
+          setState(() {
+            posts.clear();
+            posts.addAll(results.reversed);
+          });
+        } else {
+          PSAlert.show(context, "帖子获取失败", error.toString());
+        }
+      });
 
       //检查是否关注
       if (!_isSelf) {
@@ -313,23 +313,23 @@ class _UserDetailState extends State<UserDetail>
           fans = count;
         });
       });
-    }else{
+    } else {
       res();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    Util.setStatusBarStyle(_offset<220.0);
+    Util.setStatusBarStyle(_offset < 220.0);
     super.build(context);
     return Scaffold(
       body: EasyRefresh(
           onRefresh: () {
-                    var c = Completer();
-        _fresh(() {
-          c.complete();
-        });
-        return c.future;
+            var c = Completer();
+            _fresh(() {
+              c.complete();
+            });
+            return c.future;
           },
           child: CustomScrollView(
             controller: _controller,

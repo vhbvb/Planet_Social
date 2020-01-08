@@ -2,7 +2,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class User {
-
   User();
 
   int fans;
@@ -13,19 +12,20 @@ class User {
   String userName;
   List<String> tags;
   int sex;
-  Offset position = Offset(Random().nextDouble()*2000-1000,Random().nextDouble()*2000-1000);
+  Offset position = Offset(
+      Random().nextDouble() * 2000 - 1000, Random().nextDouble() * 2000 - 1000);
   String phone;
   String userId;
   String sessionToken;
   Map authData;
   String imToken;
 
-  Map<String,dynamic> jsonMap(){
-    Map<String,dynamic> map = Map();
+  Map<String, dynamic> jsonMap() {
+    Map<String, dynamic> map = Map();
     map["avatar"] = avatar;
     map["username"] = userName;
     map["nickname"] = nickName;
-    if(tags != null){
+    if (tags != null) {
       map["tags"] = tags.join(",");
     }
     map["fans"] = fans;
@@ -35,7 +35,7 @@ class User {
     map["objectId"] = userId;
     map["sessionToken"] = sessionToken;
     // map["plannetId"] = plannetId;
-    map.removeWhere((key, value){
+    map.removeWhere((key, value) {
       return value == null;
     });
     map["authData"] = authData;
@@ -46,12 +46,12 @@ class User {
     return map;
   }
 
-  factory User.withJson(Map<String,dynamic> rawData){
+  factory User.withJson(Map<String, dynamic> rawData) {
     User user = User();
     user.avatar = rawData["avatar"];
     user.nickName = rawData["nickname"];
     user.userName = rawData["username"];
-    if(rawData["tags"] != null){
+    if (rawData["tags"] != null) {
       user.tags = (rawData["tags"] as String).split(",");
     }
     user.fans = rawData["fans"];
@@ -67,4 +67,3 @@ class User {
     return user;
   }
 }
-

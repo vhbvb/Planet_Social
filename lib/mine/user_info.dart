@@ -16,21 +16,19 @@ class UserInfo extends StatefulWidget {
 }
 
 class _UserInfoState extends State<UserInfo> {
-
   bool first = false;
   @override
   void initState() {
-
-    if(widget.user.sex == null){
+    if (widget.user.sex == null) {
       first = true;
       widget.user.sex = 0;
     }
-    
-    if(widget.user.avatar == null){
+
+    if (widget.user.avatar == null) {
       widget.user.avatar = Consts.defaultAvatar;
     }
 
-    if(widget.user.tags == null){
+    if (widget.user.tags == null) {
       widget.user.tags = [];
     }
     super.initState();
@@ -39,72 +37,74 @@ class _UserInfoState extends State<UserInfo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "设置",
-          style: TextStyle(color: Colors.black, fontSize: 17),
-        ),
-        leading: first?null:GestureDetector(
-          onTap: () {
-            _pop();
-          },
-          child: Padding(
-            child: Image.asset(
-              "assets/back.png",
-            ),
-            padding: EdgeInsets.all(11),
+        appBar: AppBar(
+          title: Text(
+            "设置",
+            style: TextStyle(color: Colors.black, fontSize: 17),
           ),
-        ),
-        actions: <Widget>[
-          MaterialButton(
-            onPressed: _save,
-            child: Text("保存",style: TextStyle(color: Colors.black ,fontSize: 16),),
-          )
-        ],
-      ),
-      body: Stack(
-        children: <Widget>[
-          ListView.separated(
-        itemBuilder: (context, index) {
-          return _create(index);
-        },
-        itemCount: 4,
-        separatorBuilder: (context, index) {
-          return Padding(
-            padding: EdgeInsets.only(left: 10, right: 10),
-            child: Container(height: 1, color: Colors.grey[100]),
-          );
-        },
-      ),
-
-      Align(
-        alignment: Alignment.bottomCenter,
-        child: Padding(
-      padding: EdgeInsets.only(bottom: 37),
-      child: GestureDetector(
-        onTap: _logout,
-        child: Container(
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(23)),
-                      color: Color(0xffFF8367)),
-                  height: 36,
-                  width: MediaQuery.of(context).size.width * 0.4,
-                  child: Text(
-                    "退出登录",
-                    style: TextStyle(fontSize: 16, color: Colors.white),
+          leading: first
+              ? null
+              : GestureDetector(
+                  onTap: () {
+                    _pop();
+                  },
+                  child: Padding(
+                    child: Image.asset(
+                      "assets/back.png",
+                    ),
+                    padding: EdgeInsets.all(11),
                   ),
                 ),
-      ),
-              
-    ),
-      )
-        ],
-      )
-    );
+          actions: <Widget>[
+            MaterialButton(
+              onPressed: _save,
+              child: Text(
+                "保存",
+                style: TextStyle(color: Colors.black, fontSize: 16),
+              ),
+            )
+          ],
+        ),
+        body: Stack(
+          children: <Widget>[
+            ListView.separated(
+              itemBuilder: (context, index) {
+                return _create(index);
+              },
+              itemCount: 4,
+              separatorBuilder: (context, index) {
+                return Padding(
+                  padding: EdgeInsets.only(left: 10, right: 10),
+                  child: Container(height: 1, color: Colors.grey[100]),
+                );
+              },
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: EdgeInsets.only(bottom: 37),
+                child: GestureDetector(
+                  onTap: _logout,
+                  child: Container(
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(23)),
+                        color: Color(0xffFF8367)),
+                    height: 36,
+                    width: MediaQuery.of(context).size.width * 0.4,
+                    child: Text(
+                      "退出登录",
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+            )
+          ],
+        ));
   }
 
-  _logout(){
+  _logout() {
     PSRoute.pop(context);
     PSManager.shared.logout();
   }
@@ -117,7 +117,6 @@ class _UserInfoState extends State<UserInfo> {
             "头像",
             ClipOval(
               child: Util.loadImage(
-                
                 widget.user.avatar,
                 height: 44,
                 width: 44,
@@ -128,7 +127,7 @@ class _UserInfoState extends State<UserInfo> {
         return _rowDetail(
           index,
           "昵称",
-          Text(widget.user.nickName==null?"":widget.user.nickName,
+          Text(widget.user.nickName == null ? "" : widget.user.nickName,
               style: TextStyle(color: Colors.black, fontSize: 14)),
         );
 
@@ -137,7 +136,7 @@ class _UserInfoState extends State<UserInfo> {
             index,
             "性别",
             PopupMenuButton(
-              onSelected: (name){
+              onSelected: (name) {
                 setState(() {
                   widget.user.sex = ["未知", "男", "女"].indexOf(name);
                 });
@@ -154,10 +153,9 @@ class _UserInfoState extends State<UserInfo> {
                 alignment: Alignment.centerRight,
                 width: double.infinity,
                 child: Text(["未知", "男", "女"][widget.user.sex],
-                  style: TextStyle(color: Colors.black, fontSize: 14)),
+                    style: TextStyle(color: Colors.black, fontSize: 14)),
               ),
-            )
-            );
+            ));
         break;
 
       case 3:
@@ -166,12 +164,11 @@ class _UserInfoState extends State<UserInfo> {
             "标签",
             SizedBox(
               height: 30,
-              child:             ListView(
-              scrollDirection: Axis.horizontal,
-              children:  _tags(),
-            ),
-            )
-            );
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: _tags(),
+              ),
+            ));
         break;
       default:
     }
@@ -220,13 +217,13 @@ class _UserInfoState extends State<UserInfo> {
 
     if (index == 0) {
       ImagePicker.pickImage(source: ImageSource.gallery).then((value) {
-        if(value == null) return;
-        ApiService.shared.uploadImage(value.path, (url,error){
-          if(url != null){
+        if (value == null) return;
+        ApiService.shared.uploadImage(value.path, (url, error) {
+          if (url != null) {
             setState(() {
               widget.user.avatar = url;
             });
-          }else{
+          } else {
             PSAlert.show(context, "头像上传失败", error.toString());
           }
         });
@@ -271,7 +268,7 @@ class _UserInfoState extends State<UserInfo> {
           });
     }
 
-    if(index == 3){
+    if (index == 3) {
       PSRoute.push(context, "user_tags", widget.user);
     }
   }
@@ -296,13 +293,13 @@ class _UserInfoState extends State<UserInfo> {
     return arr.map(_build).toList();
   }
 
-  _save(){
-    ApiService.shared.updateUserInfo(widget.user, (user,error){
-      if(error != null){
+  _save() {
+    ApiService.shared.updateUserInfo(widget.user, (user, error) {
+      if (error != null) {
         PSAlert.show(context, "用户更新失败", error.toString());
-      }else{
+      } else {
         PSManager.shared.setUser(user);
-        PSAlert.show(context, "成功", "信息已更新",confirm: (){
+        PSAlert.show(context, "成功", "信息已更新", confirm: () {
           PSRoute.pop(context);
           PSManager.shared.refreshUserinfo();
         });

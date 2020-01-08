@@ -13,10 +13,9 @@ class MyApp extends StatelessWidget {
       title: Consts.name,
       showPerformanceOverlay: false,
       theme: ThemeData(
-        appBarTheme: AppBarTheme(color: Colors.white),
-        primarySwatch: Colors.blue,
-        fontFamily: Platform.isIOS ? 'PingFang SC' : null
-      ),
+          appBarTheme: AppBarTheme(color: Colors.white),
+          primarySwatch: Colors.blue,
+          fontFamily: Platform.isIOS ? 'PingFang SC' : null),
       home: PlanetSocial(),
     );
   }

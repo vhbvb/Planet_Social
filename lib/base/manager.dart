@@ -38,7 +38,7 @@ class PSManager {
     }
   }
 
-  logout() async{
+  logout() async {
     currentUser = null;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.clear();
@@ -78,7 +78,7 @@ class PSManager {
   void _registShare() {
     ShareSDKRegister register = ShareSDKRegister();
     register.setupWechat("wx617c77c82218ea2c",
-        "c7253e5289986cf4c4c74d1ccc185fb1", "https://www.sandslee.com/");
+        "c7253e5289986cf4c4c74d1ccc185fb1", "https://ybpre.share2dlink.com/");
     register.setupSinaWeibo("568898243", "38a4f8204cc784f81f9f0daaf31e02e3",
         "http://www.sharesdk.cn");
     register.setupQQ("100371282", "aed9b0303e3ed1e27bae87c33761161d");

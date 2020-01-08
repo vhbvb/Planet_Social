@@ -8,7 +8,7 @@ class Comment {
   String ownerId;
   String content;
   String createdAt;
-  
+
   Map<String, dynamic> jsonMap() {
     Map<String, dynamic> map = Map();
     map["objectId"] = id;

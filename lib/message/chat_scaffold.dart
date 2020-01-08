@@ -30,30 +30,30 @@ class _ChatScaffoldState extends State<ChatScaffold>
   Function(String) _emojSelected;
 
   String get targetId {
-    if (widget.target is User){
+    if (widget.target is User) {
       return widget.target.userId;
     }
 
-    if (widget.target is Planet){
+    if (widget.target is Planet) {
       return widget.target.id;
     }
     return null;
   }
 
   int get type {
-        if (widget.target is Planet){
+    if (widget.target is Planet) {
       return RCConversationType.ChatRoom;
     }
 
     return RCConversationType.Private;
   }
 
-  String get title{
-    if (widget.target is User){
+  String get title {
+    if (widget.target is User) {
       return widget.target.nickName;
     }
 
-    if (widget.target is Planet){
+    if (widget.target is Planet) {
       return widget.target.title;
     }
     return null;
@@ -69,22 +69,23 @@ class _ChatScaffoldState extends State<ChatScaffold>
     }
   }
 
-  List<Widget> _actions(){
-    if(widget.target is Planet){
-         return <Widget>[GestureDetector(
-      onTap: (){
-        PSRoute.push(context, "planet_likes", widget.target);
-      },
-      child: Padding(
-        padding: EdgeInsets.only(right: 10),
-        child: Image.asset(
-          "assets/users_list.png",
-          height: 25,
-          width: 25,
-        ),
-      )
-    )];
-    }else{
+  List<Widget> _actions() {
+    if (widget.target is Planet) {
+      return <Widget>[
+        GestureDetector(
+            onTap: () {
+              PSRoute.push(context, "planet_likes", widget.target);
+            },
+            child: Padding(
+              padding: EdgeInsets.only(right: 10),
+              child: Image.asset(
+                "assets/users_list.png",
+                height: 25,
+                width: 25,
+              ),
+            ))
+      ];
+    } else {
       return <Widget>[];
     }
   }
@@ -150,7 +151,7 @@ class _ChatScaffoldState extends State<ChatScaffold>
   @override
   void dispose() {
     _observer.dispose();
-    IMService.shared.sendReadReceipt(targetId,type: type);
+    IMService.shared.sendReadReceipt(targetId, type: type);
     // if(widget.target is Planet){
     //   IMService.shared.quitChatRoom(widget.target.id);
     // }
@@ -215,11 +216,11 @@ class _ChatScaffoldState extends State<ChatScaffold>
 
   Future _refresh({islocal = false}) async {
     _messages.clear();
-    if(widget.target is Planet){
+    if (widget.target is Planet) {
       var res = await IMService.shared.joinChatRoom(widget.target.id);
-      print("joinChatRoom：" + (res?"success":"fail"));
+      print("joinChatRoom：" + (res ? "success" : "fail"));
     }
-    var msgs = await IMService.shared.localMessagesList(targetId,type: type);
+    var msgs = await IMService.shared.localMessagesList(targetId, type: type);
     setState(() {
       _messages.addAll(msgs);
     });
@@ -229,13 +230,13 @@ class _ChatScaffoldState extends State<ChatScaffold>
   void _sendImage(bool inAlbum) async {
     var image = await ImagePicker.pickImage(
         source: inAlbum ? ImageSource.gallery : ImageSource.camera);
-    
-    if(image!=null){
-    var msg = await IMService.shared.sendImage(image.path, targetId,type);
-    setState(() {
-      _messages.insert(0, msg);
-    });
-    _resignAllFocus();
+
+    if (image != null) {
+      var msg = await IMService.shared.sendImage(image.path, targetId, type);
+      setState(() {
+        _messages.insert(0, msg);
+      });
+      _resignAllFocus();
     }
   }
 

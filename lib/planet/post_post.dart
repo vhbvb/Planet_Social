@@ -151,35 +151,33 @@ class _PostPostState extends State<PostPost> {
   }
 
   _post() {
-
-    if (controller.text.length >0){
+    if (controller.text.length > 0) {
       PSProcess.show(context);
-    var post = Post();
-    post.ownerId = PSManager.shared.currentUser.userId;
-    post.content = controller.text;
-    post.starId = widget.planet.id;
-    post.starTitle = widget.planet.title;
-    _uploadImages((paths, error) {
-      if (error == null) {
-        post.images = paths;
+      var post = Post();
+      post.ownerId = PSManager.shared.currentUser.userId;
+      post.content = controller.text;
+      post.starId = widget.planet.id;
+      post.starTitle = widget.planet.title;
+      _uploadImages((paths, error) {
+        if (error == null) {
+          post.images = paths;
 
-        ApiService.shared.createPost(post, (_, error) {
+          ApiService.shared.createPost(post, (_, error) {
+            PSProcess.dismiss(context);
+            if (error == null) {
+              PSAlert.show(context, "成功", "帖子发布成功", confirm: () {
+                PSRoute.pop(context);
+              });
+            } else {
+              PSAlert.show(context, "发布失败", error.toString());
+            }
+          });
+        } else {
           PSProcess.dismiss(context);
-          if (error == null) {
-            PSAlert.show(context, "成功", "帖子发布成功", confirm: () {
-              PSRoute.pop(context);
-            });
-          } else {
-            PSAlert.show(context, "发布失败", error.toString());
-          }
-        });
-      } else {
-        PSProcess.dismiss(context);
-        PSAlert.show(context, "图片上传失败", error.toString());
-      }
-    });
-    }else
-    {
+          PSAlert.show(context, "图片上传失败", error.toString());
+        }
+      });
+    } else {
       PSAlert.show(context, "错误", "请输入帖子内容");
     }
   }
@@ -189,7 +187,7 @@ class _PostPostState extends State<PostPost> {
     List<String> paths = [];
     int i = images.length - 1;
 
-    if(i<0){
+    if (i < 0) {
       callback(paths, null);
       return;
     }

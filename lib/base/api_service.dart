@@ -328,13 +328,12 @@ class ApiService {
 
   void uploadImage(
       String path, Function(String, Map<String, dynamic> error) callback) {
-
     _upload(File(path)).then((response) {
-        if (response.statusCode ~/ 100 == 2) {
-          callback(response.data["url"], null);
-        } else {
-          callback(null, response.data);
-        }
+      if (response.statusCode ~/ 100 == 2) {
+        callback(response.data["url"], null);
+      } else {
+        callback(null, response.data);
+      }
     });
   }
 
@@ -653,22 +652,21 @@ class ApiService {
     // var resp = await request.send();
     // return resp;
     var dio = Dio();
-    var url = Consts.baseUrl + "files/" +basename(file.path);
-    var option = Options(
-      headers: {
-        Headers.contentLengthHeader: file.lengthSync(), 
-        "X-LC-Id":Consts.appID,
-        "X-LC-Key":Consts.appKey,
-        "X-LC-Session":PSManager.shared.currentUser.sessionToken,
-        "Content-Type":"image/jpeg"
-      }
-    );
-
-    var formData = FormData.fromMap({
-    "file": await MultipartFile.fromFile(file.path,filename: basename(file.path))
+    var url = Consts.baseUrl + "files/" + basename(file.path);
+    var option = Options(headers: {
+      Headers.contentLengthHeader: file.lengthSync(),
+      "X-LC-Id": Consts.appID,
+      "X-LC-Key": Consts.appKey,
+      "X-LC-Session": PSManager.shared.currentUser.sessionToken,
+      "Content-Type": "image/jpeg"
     });
 
-    var res = await dio.post(url,data: formData,options: option);
+    var formData = FormData.fromMap({
+      "file":
+          await MultipartFile.fromFile(file.path, filename: basename(file.path))
+    });
+
+    var res = await dio.post(url, data: formData, options: option);
     return res;
   }
 

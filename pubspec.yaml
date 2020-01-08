@@ -32,6 +32,10 @@ dev_dependencies:
   test:
   path:
   sharesdk_plugin:
+      git:
+        url: https://github.com/leon2017/ShareSDK-For-Flutter.git  # 换为自己fork的仓库，因为目前升级了flutter无法打包
+        ref: master
+        path: sharesdk_plugin
   mobsms:
   video_player:
   audioplayers:

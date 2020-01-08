@@ -103,12 +103,12 @@ class _PostCommentState extends State<PostComment> {
     comment.ownerId = PSManager.shared.currentUser.userId;
     comment.content = controller.text;
     comment.postId = widget.post.id;
-    ApiService.shared.createComment(comment, (_,error){
-      if(error == null){
-        PSAlert.show(context, "成功","评论已发布",confirm: (){
+    ApiService.shared.createComment(comment, (_, error) {
+      if (error == null) {
+        PSAlert.show(context, "成功", "评论已发布", confirm: () {
           PSRoute.pop(context);
         });
-      }else{
+      } else {
         PSAlert.show(context, "发布失败", error.toString());
       }
     });

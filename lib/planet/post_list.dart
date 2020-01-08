@@ -4,13 +4,13 @@ import 'package:planet_social/models/post_model.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 
 class PostList extends StatefulWidget {
-  
   final List<Post> news;
   final List<Post> hots;
   final Function(int) onRefresh;
   final Function(int) onLoad;
 
-  const PostList({Key key, this.news, this.hots, this.onRefresh, this.onLoad}) : super(key: key);
+  const PostList({Key key, this.news, this.hots, this.onRefresh, this.onLoad})
+      : super(key: key);
   @override
   State<StatefulWidget> createState() => _PostListState();
 }
@@ -48,33 +48,29 @@ class _PostListState extends State<PostList>
         ),
       );
 
-  _posts (int pos) {
+  _posts(int pos) {
+    List posts = pos == 0 ? widget.news : widget.hots;
 
-    List posts = pos== 0 ? widget.news:widget.hots;
-
-   return EasyRefresh(
-              onRefresh: (){
-               return widget.onRefresh(pos);
-              },
-              onLoad: (){
-               return widget.onLoad(pos);
-              },
-              child: ListView.builder(
-              itemCount: posts.length,
-              itemBuilder: (context, index) => PostDetail(
-                post: posts[index],
-              ),
-            ),
-            );
+    return EasyRefresh(
+      onRefresh: () {
+        return widget.onRefresh(pos);
+      },
+      onLoad: () {
+        return widget.onLoad(pos);
+      },
+      child: ListView.builder(
+        itemCount: posts.length,
+        itemBuilder: (context, index) => PostDetail(
+          post: posts[index],
+        ),
+      ),
+    );
   }
-  
+
   _postsTabView() => Expanded(
         child: TabBarView(
           controller: _tapController,
-          children: <Widget>[
-            _posts(0),
-            _posts(1)
-          ],
+          children: <Widget>[_posts(0), _posts(1)],
         ),
       );
 

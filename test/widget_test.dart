@@ -9,6 +9,4 @@ import 'package:planet_social/base/api_service.dart';
 import 'package:planet_social/models/user_model.dart';
 import 'package:test/test.dart';
 
-void main() {
-  
-}
+void main() {}

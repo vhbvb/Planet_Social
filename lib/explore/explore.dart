@@ -14,11 +14,10 @@ class Explore extends StatefulWidget {
   State<StatefulWidget> createState() => _ExploreState();
 }
 
-class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin{
-
+class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
-  
+
   int get planetsNumber => DataSource.center.planets.length;
   int get usersNumber => DataSource.center.users.length;
 
@@ -35,7 +34,10 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin{
               padding: EdgeInsets.only(top: 58, bottom: 13),
               child: Text(
                 "探索",
-                style: TextStyle(fontSize: 17, color: Colors.white,fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    fontSize: 17,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold),
               )),
           Statistics(
             users: usersNumber,
@@ -55,18 +57,15 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin{
         ),
       ));
 
-    _refresh(){
-    
+  _refresh() {
     DataSource.center.updateExplore((error) {
       if (error != null) {
         PSAlert.show(context, "星星获取失败", error.toString());
       } else {
-        setState(() {
-
-        });
+        setState(() {});
       }
     });
-    }
+  }
 
   @override
   void initState() {
@@ -79,7 +78,6 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin{
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      
       body: Stack(
         children: <Widget>[
           StarrySky(
@@ -112,7 +110,7 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin{
       if (item is Planet) {
         double x = item.position.dx - _offset.dx;
         double y = item.position.dy - _offset.dy;
-        double dis = sqrt(x*x+y*y);
+        double dis = sqrt(x * x + y * y);
         if (dis < 120) {
           PSAlert.show(context, "提示", "创建的地方离其他星球太近了哦,请重新选择地方创建您的星球。");
           return;

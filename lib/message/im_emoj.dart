@@ -1,9 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:emoji_picker/emoji_picker.dart';
 
 class FTIMEmoj extends StatefulWidget {
-
   final Function(String) onSelected;
 
   const FTIMEmoj({Key key, this.onSelected}) : super(key: key);

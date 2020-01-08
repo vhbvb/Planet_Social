@@ -16,7 +16,7 @@ class ConversationDetail extends StatelessWidget {
       this.updateAt,
       this.unreadCount})
       : super(key: key);
-      
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -49,7 +49,7 @@ class ConversationDetail extends StatelessWidget {
                           Text(
                             updateAt,
                             style:
-                                  TextStyle(color: Colors.grey, fontSize: 14.0),
+                                TextStyle(color: Colors.grey, fontSize: 14.0),
                           ),
                         ]))),
                 Expanded(

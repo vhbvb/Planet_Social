@@ -4,8 +4,7 @@ import 'package:planet_social/common/PSAlert.dart';
 import 'package:planet_social/models/user_model.dart';
 
 class UserTags extends StatefulWidget {
-
-  final User user ;
+  final User user;
   const UserTags({Key key, this.user}) : super(key: key);
 
   @override
@@ -41,7 +40,7 @@ class UserTagsState extends State<UserTags> {
             children: <Widget>[
               Container(
                 color: Colors.white,
-                padding: EdgeInsets.only(left: 10, right: 5,top: 5),
+                padding: EdgeInsets.only(left: 10, right: 5, top: 5),
                 child: Row(
                   children: <Widget>[
                     Expanded(
@@ -73,23 +72,24 @@ class UserTagsState extends State<UserTags> {
                     runSpacing: 10,
                     children: widget.user.tags.map((tag) {
                       return GestureDetector(
-                        onTap: (){
-                          PSAlert.showConfirm(context, "确定删除此标签？", (){
+                        onTap: () {
+                          PSAlert.showConfirm(context, "确定删除此标签？", () {
                             setState(() {
                               widget.user.tags.remove(tag);
                             });
                           });
                         },
                         child: Container(
-                        padding: EdgeInsets.only(left: 12, right: 12,top: 5,bottom: 5),
-                        decoration: BoxDecoration(
-                          color: Util.randomColor(key: tag),
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                          padding: EdgeInsets.only(
+                              left: 12, right: 12, top: 5, bottom: 5),
+                          decoration: BoxDecoration(
+                            color: Util.randomColor(key: tag),
+                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                          ),
+                          child: Text(tag,
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 12)),
                         ),
-                        child: Text(tag,
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 12)),
-                      ),
                       );
                     }).toList(),
                   ))
