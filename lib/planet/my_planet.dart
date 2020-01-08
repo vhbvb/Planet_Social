@@ -25,46 +25,76 @@ class _MyPlanetState extends State<MyPlanet>
   final List<Post> hots = [];
   final List<Post> news = [];
 
-  _loadNews(Function finised) {
+  _loadNews(Function finised,{bool refresh = true}) {
     if (imIn.length == 0) {
       finised();
       return;
     }
 
     int i = 0;
-    news.clear();
+    if(refresh){
+      news.clear();
+    }
     for (var item in imIn) {
-      ApiService.shared.getNewPostOfPlanet(item, (results, error) {
+      int skip = 0;
+      for (var p in news) {
+        if(item.id == p.starId){
+          skip = skip+1;
+        }
+      }
+      ApiService.shared.getNewPostOfPlanet(item,skip, (results, error) {
         i = i + 1;
         if (i == imIn.length) {
           finised();
         }
         if (error == null) {
+          news.addAll(results);
+          if (i == imIn.length) {
           setState(() {
-            news.addAll(results.reversed);
+            news.sort(
+              (a,b){
+                return DateTime.parse(a.createdAt).compareTo(DateTime.parse(a.createdAt));
+              }
+            );
           });
+          }
         }
       });
     }
   }
 
-  _loadHots(Function finised) {
+  _loadHots(Function finised,{bool refresh = true}) {
     if (imIn.length == 0) {
       finised();
       return;
     }
     int i = 0;
-    hots.clear();
+    if(refresh){
+      hots.clear();
+    }
     for (var item in imIn) {
-      ApiService.shared.getHotPostOfPlanet(item, (results, error) {
+            int skip = 0;
+      for (var p in hots) {
+        if(item.id == p.starId){
+          skip = skip+1;
+        }
+      }
+      ApiService.shared.getHotPostOfPlanet(item,skip, (results, error) {
         i = i + 1;
         if (i == imIn.length) {
           finised();
         }
         if (error == null) {
+          hots.addAll(results);
+          if (i == imIn.length) {
           setState(() {
-            hots.addAll(results);
+             hots.sort(
+              (a,b){
+                return b.click.compareTo(a.click);
+              }
+            );
           });
+          }
         }
       });
     }
@@ -145,7 +175,24 @@ class _MyPlanetState extends State<MyPlanet>
                   return completer.future;
                 }
               },
-              onLoad: (pos) {},
+              onLoad: (pos) {
+
+                if (pos == 0) {
+                  var completer = Completer();
+                  _loadNews(() {
+                    completer.complete();
+                  },refresh: false);
+
+                  return completer.future;
+                } else {
+                  var completer = Completer();
+                  _loadHots(() {
+                    completer.complete();
+                  },refresh: false);
+
+                  return completer.future;
+                }
+              },
             )
           ],
         ),

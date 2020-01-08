@@ -251,27 +251,39 @@ class ApiService {
     });
   }
 
-  void getNewPostOfPlanet(Planet planet,
+  void clickPost(Post post){
+        _send("classes/post/" + post.id,{
+        "upvotes":{"__op":"Increment","amount":1}
+      }, RequestType.put).then((response) {
+      if (response.statusCode ~/ 100 == 2) {
+        print("post upvotes increased");
+      }
+    });
+  }
+  void getNewPostOfPlanet(Planet planet,int skip,
       Function(List<Post>, Map<String, dynamic> error) callback) {
-    String query = jsonEncode((Post()..starId = planet.id).jsonMap());
+        var params = (Post()..starId = planet.id).jsonMap();
+        String query = "where="+jsonEncode(params)+"&order=-createdAt&limit=10&skip=$skip";
     _getPosts(query, callback);
   }
 
-  void getHotPostOfPlanet(Planet planet,
+  void getHotPostOfPlanet(Planet planet,int skip,
       Function(List<Post>, Map<String, dynamic> error) callback) {
-    String query = jsonEncode((Post()..starId = planet.id).jsonMap());
+            var params = (Post()..starId = planet.id).jsonMap();
+        String query = "where="+jsonEncode(params)+"&order=-upvotes&limit=10&skip=$skip";
     _getPosts(query, callback);
   }
 
   void getPostOfUser(
-      User user, Function(List<Post>, Map<String, dynamic> error) callback) {
-    String query = jsonEncode((Post()..ownerId = user.userId).jsonMap());
+      User user,int skip, Function(List<Post>, Map<String, dynamic> error) callback) {
+        var params = (Post()..ownerId = user.userId).jsonMap();
+    String query = "where="+jsonEncode(params)+"&order=-createdAt&limit=10&skip=$skip";
     _getPosts(query, callback);
   }
 
   void _getPosts(
       String query, Function(List<Post>, Map<String, dynamic> error) callback) {
-    _send("classes/post?where=" + query, null, RequestType.get)
+    _send("classes/post?" + query, null, RequestType.get)
         .then((response) {
       if (response.statusCode ~/ 100 == 2) {
         //2xx
@@ -588,19 +600,6 @@ class ApiService {
       }
     });
   }
-
-  // void likePlanet(User current, Planet planet,
-  //     Function(Map<String, dynamic> error) callback) {
-  //   _send("classes/join_planet",
-  //           {"userId": current.userId, "planetId": planet.id}, RequestType.post)
-  //       .then((response) {
-  //     if (response.statusCode ~/ 100 == 2) {
-  //       callback(null);
-  //     } else {
-  //       callback(jsonDecode(response.body));
-  //     }
-  //   });
-  // }
 
   void islikePlanet(User current, Planet planet,
       Function(bool, Map<String, dynamic> error) callback) {

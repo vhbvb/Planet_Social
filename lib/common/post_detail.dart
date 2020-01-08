@@ -217,6 +217,7 @@ class _PostDetailState extends State<PostDetail> {
       showDialog(
           context: context, builder: (_) => PostComment(post: widget.post));
     } else {
+      ApiService.shared.clickPost(widget.post);
       PSRoute.push(context, "post_content", widget.post);
     }
   }

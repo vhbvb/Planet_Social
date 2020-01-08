@@ -30,47 +30,58 @@ class _LoginPageState extends State<LoginPage> {
     _checkThird();
   }
 
-  _checkThird() async{
+  _checkThird() async {
     thirds.clear();
     var qq = await SharesdkPlugin.isClientInstalled(ShareSDKPlatforms.qq);
-    var wexin = await SharesdkPlugin.isClientInstalled(ShareSDKPlatforms.wechatSession);
+    var wexin =
+        await SharesdkPlugin.isClientInstalled(ShareSDKPlatforms.wechatSession);
     var weibo = await SharesdkPlugin.isClientInstalled(ShareSDKPlatforms.sina);
 
-    if(wexin){
+    if (wexin) {
       thirds.add("wexin");
     }
-    if(qq){
+    if (qq) {
       thirds.add("QQ");
     }
-    if(weibo){
+    if (weibo) {
       thirds.add("weibo");
     }
 
-    setState(() {
-      
-    });
+    setState(() {});
   }
 
-  _thirdParty(){
+  _thirdParty() {
     return Padding(
-        padding: EdgeInsets.only(top: 133, left: 100, right: 100),
-        child: Row(
-          children: thirds.map((name){
-            return             Expanded(
-              child: GestureDetector(
-                onTap: _wechat,
-                child: ClipOval(
-                  child: Image.asset(
-                    "assets/$name.png",
-                    height: 36,
-                    width: 36,
-                  ),
-                ),
+      padding: EdgeInsets.only(top: 133, left: 100, right: 100),
+      child: Row(
+          children: thirds.map((name) {
+        return Expanded(
+          child: GestureDetector(
+            onTap: () {
+              switch (name) {
+                case "wexin":
+                  _wechat();
+                  break;
+                case "QQ":
+                  _qq();
+                  break;
+                case "weibo":
+                  _weibo();
+                  break;
+                default:
+              }
+            },
+            child: ClipOval(
+              child: Image.asset(
+                "assets/$name.png",
+                height: 36,
+                width: 36,
               ),
-            );
-          }).toList()
-        ),
-      );
+            ),
+          ),
+        );
+      }).toList()),
+    );
   }
 
   _loginButton() => GestureDetector(
@@ -313,19 +324,19 @@ class _LoginPageState extends State<LoginPage> {
         PSProcess.dismiss(context);
         PSAlert.show(context, "验证码验证失败", error.toString());
       } else {
-    User third = User();
-    third.phone = phoneController.text;
-    String uid = phoneController.text;
-    String token =
-        phoneController.text + DateTime.now().millisecondsSinceEpoch.toString();
+        User third = User();
+        third.phone = phoneController.text;
+        String uid = phoneController.text;
+        String token = phoneController.text +
+            DateTime.now().millisecondsSinceEpoch.toString();
 
-    third.authData = {
-      "phone": {"openid": uid, "access_token": token, "expires_in": "36000"}
-    };
+        third.authData = {
+          "phone": {"openid": uid, "access_token": token, "expires_in": "36000"}
+        };
 
-    ApiService.shared.login(third, (User user, Map<String, dynamic> error) {
-      _processLogined(user, error);
-    });
+        ApiService.shared.login(third, (User user, Map<String, dynamic> error) {
+          _processLogined(user, error);
+        });
       }
     });
   }

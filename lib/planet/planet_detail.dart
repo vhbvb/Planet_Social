@@ -80,7 +80,7 @@ class _PlanetDetailState extends State<PlanetDetail> {
   }
 
   _newPosts(Function res) {
-    ApiService.shared.getNewPostOfPlanet(widget.planet, (posts, error) {
+    ApiService.shared.getNewPostOfPlanet(widget.planet,news.length, (posts, error) {
       res();
       if (error == null) {
         setState(() {
@@ -93,7 +93,7 @@ class _PlanetDetailState extends State<PlanetDetail> {
   }
 
   _hotPost(Function res) {
-    ApiService.shared.getHotPostOfPlanet(widget.planet, (posts, error) {
+    ApiService.shared.getHotPostOfPlanet(widget.planet,hots.length, (posts, error) {
       res();
       if (error == null) {
         setState(() {
@@ -174,7 +174,22 @@ class _PlanetDetailState extends State<PlanetDetail> {
                     }
 
                     return c.future;
-                  })
+                  },
+                  onLoad: (index){
+                    var c = Completer();
+                    if (index == 0) {
+                      _newPosts(() {
+                        c.complete();
+                      });
+                    } else {
+                      _hotPost(() {
+                        c.complete();
+                      });
+                    }
+
+                    return c.future;
+                  },
+                  )
             ],
           ),
         ));

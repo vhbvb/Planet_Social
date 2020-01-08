@@ -13,6 +13,7 @@ class Post {
   String starTitle;
   String starId;
   String createdAt;
+  int click;
 
   // int comments = 212121;
 
@@ -46,6 +47,7 @@ class Post {
     post.starTitle = rawData["starTitle"];
     post.starId = rawData["starId"];
     post.createdAt = rawData["createdAt"];
+    post.click = rawData["upvotes"] == null ? 0:rawData["upvotes"];
     return post;
   }
 }

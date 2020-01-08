@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:planet_social/base/data_center.dart';
 import 'package:planet_social/base/utils.dart';
 import 'package:planet_social/const.dart';
 import 'package:planet_social/models/planet_model.dart';
@@ -41,8 +40,8 @@ class _StarStyleState extends State<StarStyle> {
                           borderRadius: BorderRadius.all(Radius.circular(30))),
                     )),
                 Positioned(
-                  // right: -10,
-                  child: ClipRRect(
+                    // right: -10,
+                    child: ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(15)),
                     child: Util.loadImage(
                       widget.model.owner == null
@@ -51,8 +50,7 @@ class _StarStyleState extends State<StarStyle> {
                       height: 30,
                       width: 30,
                     ),
-                  ),
-                )
+                ))
               ],
             ),
             Padding(
@@ -103,17 +101,17 @@ class _StarStyleState extends State<StarStyle> {
     );
   }
 
-  _getModelDetail() {
-    if (widget.model is Planet) {
-      if (widget.model.owner == null) {
-        DataSource.center.getUser(widget.model.ownerId, (user, error) {
-          if (error == null) {
-            setState(() {
-              widget.model.owner = user;
-            });
-          }
-        });
-      }
-    }
-  }
+  // _getModelDetail() {
+  //   if (widget.model is Planet) {
+  //     if (widget.model.owner == null) {
+  //       DataSource.center.getUser(widget.model.ownerId, (user, error) {
+  //         if (error == null) {
+  //           setState(() {
+  //             widget.model.owner = user;
+  //           });
+  //         }
+  //       });
+  //     }
+  //   }
+  // }
 }

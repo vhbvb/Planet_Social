@@ -279,18 +279,8 @@ class _UserDetailState extends State<UserDetail>
     }
 
     if (widget.user != null) {
-//获取帖子
-      ApiService.shared.getPostOfUser(widget.user, (results, error) {
-        res();
-        if (error == null) {
-          setState(() {
-            posts.clear();
-            posts.addAll(results.reversed);
-          });
-        } else {
-          PSAlert.show(context, "帖子获取失败", error.toString());
-        }
-      });
+      posts.clear();
+      _loadPost(res);
 
       //检查是否关注
       if (!_isSelf) {
@@ -318,6 +308,20 @@ class _UserDetailState extends State<UserDetail>
     }
   }
 
+  _loadPost(Function res){
+    //获取帖子
+      ApiService.shared.getPostOfUser(widget.user,posts.length, (results, error) {
+        res();
+        if (error == null) {
+          setState(() {
+            posts.addAll(results.reversed);
+          });
+        } else {
+          PSAlert.show(context, "帖子获取失败", error.toString());
+        }
+      });
+  }
+
   @override
   Widget build(BuildContext context) {
     Util.setStatusBarStyle(_offset < 220.0);
@@ -327,6 +331,13 @@ class _UserDetailState extends State<UserDetail>
           onRefresh: () {
             var c = Completer();
             _fresh(() {
+              c.complete();
+            });
+            return c.future;
+          },
+          onLoad: (){
+            var c = Completer();
+            _loadPost(() {
               c.complete();
             });
             return c.future;
