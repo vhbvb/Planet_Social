@@ -3,7 +3,6 @@ import 'package:planet_social/base/data_center.dart';
 import 'package:planet_social/base/utils.dart';
 import 'package:planet_social/const.dart';
 import 'package:planet_social/models/planet_model.dart';
-import 'package:planet_social/models/user_model.dart';
 import 'package:planet_social/route.dart';
 
 class StarStyle extends StatefulWidget {
@@ -58,7 +57,7 @@ class _StarStyleState extends State<StarStyle> {
             ),
             Padding(
               padding: EdgeInsets.only(top: 5),
-              child: Text((widget.model as Planet).title,
+              child: Text(widget.model.title != null ? widget.model.title : "",
                   style: TextStyle(
                       color: Colors.white.withAlpha(200), fontSize: 13)),
             )
@@ -77,14 +76,15 @@ class _StarStyleState extends State<StarStyle> {
             ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(10)),
               child: Util.loadImage(
-                (widget.model as User).avatar,
+                widget.model.avatar,
                 height: 20,
                 width: 20,
               ),
             ),
             Padding(
               padding: EdgeInsets.only(top: 5),
-              child: Text((widget.model as User).nickName,
+              child: Text(
+                  widget.model.nickName != null ? widget.model.nickName : "",
                   style: TextStyle(
                       color: Colors.white.withAlpha(200), fontSize: 13)),
             )

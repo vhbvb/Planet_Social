@@ -52,6 +52,7 @@ class UserTagsState extends State<UserTags> {
                     ),
                     MaterialButton(
                       onPressed: () {
+                        if(controller.text.isEmpty) return;
                         setState(() {
                           widget.user.tags.add(controller.text);
                           controller.text = "";

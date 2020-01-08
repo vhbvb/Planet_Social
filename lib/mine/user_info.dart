@@ -165,6 +165,7 @@ class _UserInfoState extends State<UserInfo> {
             SizedBox(
               height: 30,
               child: ListView(
+                reverse: true,
                 scrollDirection: Axis.horizontal,
                 children: _tags(),
               ),

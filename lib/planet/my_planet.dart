@@ -76,6 +76,7 @@ class _MyPlanetState extends State<MyPlanet>
           (results, error) {
         if (error == null) {
           setState(() {
+            imIn.clear();
             imIn.addAll(results);
             _loadHots(() {});
             _loadNews(() {});

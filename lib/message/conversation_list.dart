@@ -113,12 +113,14 @@ Future _loadMessages() async {
           conv.conversationType = RCConversationType.ChatRoom;
           conv.targetId = planet.id;
           conversations.add(conv);
+          IMService.shared.joinChatRoom(conv.targetId);
         }
       }
     }
     c.complete();
   });
   await c.future;
+  
   return conversations;
 }
 
