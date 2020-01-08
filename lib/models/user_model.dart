@@ -51,7 +51,7 @@ class User {
     user.avatar = rawData["avatar"];
     user.nickName = rawData["nickname"];
     user.userName = rawData["username"];
-    if (rawData["tags"] != null) {
+    if (rawData["tags"] != null && rawData["tags"].length > 1) {
       user.tags = (rawData["tags"] as String).split(",");
     }
     user.fans = rawData["fans"];

@@ -41,7 +41,7 @@ class _PlanetDetailState extends State<PlanetDetail> {
                 padding: EdgeInsets.only(left: 10, right: 15),
                 child: ClipOval(
                     child: Util.loadImage(
-                  Consts.defaultAvatar,
+                  widget.planet.owner == null?Consts.defaultAvatar:widget.planet.owner.avatar,
                   height: 40,
                   width: 40,
                 )),

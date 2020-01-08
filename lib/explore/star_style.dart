@@ -41,15 +41,15 @@ class _StarStyleState extends State<StarStyle> {
                     )),
                 Positioned(
                     // right: -10,
-                    child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
-                    child: Util.loadImage(
+                    child: ClipOval(
+                  child: Util.loadImage(
                       widget.model.owner == null
                           ? Consts.defaultAvatar
                           : widget.model.owner.avatar,
                       height: 30,
-                      width: 30,
-                    ),
+                      width: 30, onTap: () {
+                    PSRoute.push(context, "planet_detail", widget.model);
+                  }),
                 ))
               ],
             ),
@@ -73,11 +73,10 @@ class _StarStyleState extends State<StarStyle> {
           children: <Widget>[
             ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(10)),
-              child: Util.loadImage(
-                widget.model.avatar,
-                height: 20,
-                width: 20,
-              ),
+              child: Util.loadImage(widget.model.avatar, height: 20, width: 20,
+                  onTap: () {
+                PSRoute.push(context, "user_detail", widget.model);
+              }),
             ),
             Padding(
               padding: EdgeInsets.only(top: 5),
