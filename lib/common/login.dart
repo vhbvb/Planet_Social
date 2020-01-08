@@ -22,53 +22,56 @@ class _LoginPageState extends State<LoginPage> {
   var verifyCodeController = TextEditingController();
   final _secfocus = FocusNode();
   final _phonefocus = FocusNode();
+  final thirds = [];
 
   @override
   void initState() {
     super.initState();
+    _checkThird();
   }
 
-  _thirdParty() => Padding(
+  _checkThird() async{
+    thirds.clear();
+    var qq = await SharesdkPlugin.isClientInstalled(ShareSDKPlatforms.qq);
+    var wexin = await SharesdkPlugin.isClientInstalled(ShareSDKPlatforms.wechatSession);
+    var weibo = await SharesdkPlugin.isClientInstalled(ShareSDKPlatforms.sina);
+
+    if(wexin){
+      thirds.add("wexin");
+    }
+    if(qq){
+      thirds.add("QQ");
+    }
+    if(weibo){
+      thirds.add("weibo");
+    }
+
+    setState(() {
+      
+    });
+  }
+
+  _thirdParty(){
+    return Padding(
         padding: EdgeInsets.only(top: 133, left: 100, right: 100),
         child: Row(
-          children: <Widget>[
-            Expanded(
+          children: thirds.map((name){
+            return             Expanded(
               child: GestureDetector(
                 onTap: _wechat,
                 child: ClipOval(
                   child: Image.asset(
-                    "assets/wexin.png",
+                    "assets/$name.png",
                     height: 36,
                     width: 36,
                   ),
                 ),
               ),
-            ),
-            Expanded(
-                child: GestureDetector(
-              onTap: _qq,
-              child: ClipOval(
-                child: Image.asset(
-                  "assets/QQ.png",
-                  height: 36,
-                  width: 36,
-                ),
-              ),
-            )),
-            Expanded(
-                child: GestureDetector(
-              onTap: _weibo,
-              child: ClipOval(
-                child: Image.asset(
-                  "assets/weibo.png",
-                  height: 36,
-                  width: 36,
-                ),
-              ),
-            )),
-          ],
+            );
+          }).toList()
         ),
       );
+  }
 
   _loginButton() => GestureDetector(
         onTap: _phone,
@@ -304,12 +307,12 @@ class _LoginPageState extends State<LoginPage> {
   _phone() {
     PSProcess.show(context);
 
-    // Smssdk.commitCode(phoneController.text, "86", verifyCodeController.text,
-    //     (ret, error) {
-    //   if (error != null) {
-    //     PSProcess.dismiss(context);
-    //     PSAlert.show(context, "验证码验证失败", error.toString());
-    //   } else {
+    Smssdk.commitCode(phoneController.text, "86", verifyCodeController.text,
+        (ret, error) {
+      if (error != null) {
+        PSProcess.dismiss(context);
+        PSAlert.show(context, "验证码验证失败", error.toString());
+      } else {
     User third = User();
     third.phone = phoneController.text;
     String uid = phoneController.text;
@@ -323,8 +326,8 @@ class _LoginPageState extends State<LoginPage> {
     ApiService.shared.login(third, (User user, Map<String, dynamic> error) {
       _processLogined(user, error);
     });
-    //   }
-    // });
+      }
+    });
   }
 
   _processLogined(User user, Map<String, dynamic> error) {
