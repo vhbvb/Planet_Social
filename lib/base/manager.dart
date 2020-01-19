@@ -103,7 +103,6 @@ class PSManager {
         _connectIM();
       }
     });
-    // _connectIM();
   }
 
   void _connectIM() {
