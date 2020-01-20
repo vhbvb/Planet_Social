@@ -99,8 +99,9 @@ class _PostContentState extends State<PostContent> {
 
   _share() {
     var params = SSDKMap()
-      ..setGeneral(widget.post.starTitle, widget.post.content, null, null, null,
-          null, null, null, null, null, SSDKContentTypes.text);
-    SharesdkPlugin.showMenu(null, params, (state, p, m1, m2, error) {});
+      ..setGeneral(widget.post.starTitle, widget.post.content, widget.post.images, widget.post.images.first, null,
+          null, null, null, null, null, SSDKContentTypes.auto);
+
+    SharesdkPlugin.showMenu([ShareSDKPlatforms.wechatSeries,ShareSDKPlatforms.sina,ShareSDKPlatforms.qqSeries,ShareSDKPlatforms.twitter,ShareSDKPlatforms.facebook], params, (state, p, m1, m2, error) {});
   }
 }

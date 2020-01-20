@@ -13,7 +13,7 @@ class User {
   List<String> tags;
   int sex;
   Offset position = Offset(
-      Random().nextDouble() * 2000 - 1000, Random().nextDouble() * 2000 - 1000);
+      Random().nextDouble() * 5000 - 1000, Random().nextDouble() * 5000 - 1000);
   String phone;
   String userId;
   String sessionToken;

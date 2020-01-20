@@ -217,9 +217,7 @@ class _PlanetDetailState extends State<PlanetDetail> {
               PSRoute.myPlanet.refresh();
             }
 
-            setState(() {
-              like = (error == null);
-            });
+            _planetDetail();
           });
         },
         child: Icon(Icons.favorite),

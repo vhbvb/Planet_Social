@@ -62,13 +62,29 @@ class _ConversationListState extends State<ConversationList> {
           onLoad: () {
             return;
           },
-          child: ListView.builder(
+          child: _contentView()
+        ));
+  }
+
+  _contentView(){
+
+    if(_details.length != 0){
+    return ListView.builder(
             itemCount: _conversations.length,
             itemBuilder: (BuildContext context, int position) {
               return _createConversations(position);
             },
-          ),
-        ));
+          );
+    }else{
+      return SingleChildScrollView(
+        child: Container(
+          alignment: Alignment.center,
+          height: MediaQuery.of(context).size.height,
+          padding: EdgeInsets.only(bottom: 125),
+          child: Text("暂无消息哦，赶快去加入感兴趣的星球吧",style: TextStyle(color: Colors.blueGrey,fontSize: 15),),
+        )
+      );
+    }
   }
 
   Future _refresh() async {

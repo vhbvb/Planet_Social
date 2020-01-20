@@ -130,24 +130,27 @@ class _PostDetailState extends State<PostDetail> {
 
     List images = widget.post.images;
     if (images != null && images.length > 0) {
-      double w = MediaQuery.of(context).size.width - 80;
+      double w = MediaQuery.of(context).size.width - 50;
       double imageW = w;
-      if (images.length == 2) {
-        imageW = w / 2;
+      if (images.length >= 2) {
+        imageW = w / 2-10;
       }
 
-      if (images.length >= 3) {
-        imageW = w / 3;
-      }
+      // if (images.length >= 3) {
+      //   imageW = w / 3;
+      // }
 
-      double imageH = 0.6 * imageW;
+      // double imageH = 0.6 * imageW;
+      // if (images.length == 1) {
+      //   imageH = null;
+      // }
 
       Widget imageWidget = Wrap(
           spacing: 10,
           runSpacing: 10,
           children: images.map((url) {
             return Util.loadImage(url,
-                height: imageH,
+                height: null,
                 width: imageW,
                 context: context,
                 enablePreview: true,
