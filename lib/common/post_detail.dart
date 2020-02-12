@@ -58,13 +58,17 @@ class _PostDetailState extends State<PostDetail> {
           Text(
             Util.timesTamp(DateTime.parse(widget.post.createdAt)),
             style: TextStyle(color: Colors.grey, fontSize: 12),
-          )
+          ),
+          Expanded(child: Align(alignment: Alignment.centerRight,child: 
+          IconButton(padding: EdgeInsets.only(left:25),icon: Icon(Icons.more_vert),color: Colors.grey, onPressed: (){
+            _showDialog();
+          }),))
         ],
       );
 
   _content() => Container(
         width: double.infinity,
-        padding: EdgeInsets.only(top: 10, bottom: 10),
+        padding: EdgeInsets.only(top: 10, bottom: 10,left: 5,right: 5),
         child:
             Text(widget.post.content, style: TextStyle(color: Colors.black54)),
       );
@@ -132,25 +136,18 @@ class _PostDetailState extends State<PostDetail> {
     if (images != null && images.length > 0) {
       double w = MediaQuery.of(context).size.width - 50;
       double imageW = w;
+      double imageH;
       if (images.length >= 2) {
-        imageW = w / 2-10;
+        imageW = w / 2 - 10;
+        imageH = 1.5 * imageW;
       }
-
-      // if (images.length >= 3) {
-      //   imageW = w / 3;
-      // }
-
-      // double imageH = 0.6 * imageW;
-      // if (images.length == 1) {
-      //   imageH = null;
-      // }
 
       Widget imageWidget = Wrap(
           spacing: 10,
           runSpacing: 10,
           children: images.map((url) {
             return Util.loadImage(url,
-                height: null,
+                height: imageH,
                 width: imageW,
                 context: context,
                 enablePreview: true,
@@ -176,7 +173,7 @@ class _PostDetailState extends State<PostDetail> {
       behavior: HitTestBehavior.opaque,
       child: Container(
         color: Colors.white,
-        padding: EdgeInsets.only(left: 15, right: 15, top: 20),
+        padding: EdgeInsets.only(left: 10, right: 10, top: 20),
         child: Column(
           children: _mainWidgets(),
         ),
@@ -257,5 +254,41 @@ class _PostDetailState extends State<PostDetail> {
     if (widget.post.owner != null) {
       PSRoute.push(context, "user_detail", widget.post.owner);
     }
+  }
+
+  _showDialog(){
+    showModalBottomSheet(context: context, 
+    builder: (BuildContext context) {
+      return Container(
+        height: 100 + MediaQuery.of(context).padding.bottom,
+        child: ListView.separated(
+        itemBuilder: (context, index) {
+          var names = ["不看此用户","投诉","取消"];
+
+          Function block = (){
+            PSRoute.pop(context);
+          };
+          Function report = (){
+            //举报界面
+          };
+          Function cancel = (){
+            PSRoute.pop(context);
+          };
+
+          var funs = [block,report,cancel];
+
+          return GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              child: Padding(padding: EdgeInsets.all(5),child: Center(child:Text(names[index])),),
+              onTap: funs[index]
+            );
+
+        }, 
+        separatorBuilder: (_,index){
+          return Container(color: Colors.grey[200],height: index==1?3:0.5,);
+        }, 
+        itemCount: 3),
+      );
+    });
   }
 }

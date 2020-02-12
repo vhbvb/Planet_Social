@@ -52,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
 
   _thirdParty() {
     return Padding(
-      padding: EdgeInsets.only(top: 133, left: 100, right: 100),
+      padding: EdgeInsets.only(top: 125, left: 100, right: 100),
       child: Row(
           children: thirds.map((name) {
         return Expanded(
@@ -171,7 +171,11 @@ class _LoginPageState extends State<LoginPage> {
         children: <Widget>[
           ClipRRect(
             borderRadius: BorderRadius.all(Radius.circular(20)),
-            child: Image.asset("assets/main_icon.png",height: 86,width: 86,),
+            child: Image.asset(
+              "assets/main_icon.png",
+              height: 86,
+              width: 86,
+            ),
           ),
           Padding(padding: EdgeInsets.only(bottom: 13)),
           Text(
@@ -188,7 +192,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
-    // Util.setStatusBarStyle(true);
     super.dispose();
   }
 
@@ -203,27 +206,46 @@ class _LoginPageState extends State<LoginPage> {
             _secfocus.unfocus();
           },
           child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: ExactAssetImage("assets/star/star.jpeg"),
-                    fit: BoxFit.fill)),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Padding(padding: EdgeInsets.only(bottom: 30)),
-                _header(),
-                Padding(padding: EdgeInsets.only(bottom: 50)),
-                _phoneNumberTextField(),
-                Padding(padding: EdgeInsets.only(bottom: 20)),
-                _verifyCodeTextField(),
-                Padding(padding: EdgeInsets.only(bottom: 46)),
-                _loginButton(),
-                _thirdParty()
-              ],
-            ),
-          ),
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: ExactAssetImage("assets/star/star.jpeg"),
+                      fit: BoxFit.fill)),
+              child: Stack(
+                children: <Widget>[
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(padding: EdgeInsets.only(bottom: 30)),
+                      _header(),
+                      Padding(padding: EdgeInsets.only(bottom: 50)),
+                      _phoneNumberTextField(),
+                      Padding(padding: EdgeInsets.only(bottom: 20)),
+                      _verifyCodeTextField(),
+                      Padding(padding: EdgeInsets.only(bottom: 46)),
+                      _loginButton(),
+                      _thirdParty(),
+                    ],
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(padding: EdgeInsets.only(bottom: 10+MediaQuery.of(context).padding.bottom),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text("登陆/注册表示同意：",style: TextStyle(color:Colors.white)),
+                        GestureDetector(
+                          child: Text("用户协议",style: TextStyle(color:Color(0xffFF8367),decoration:TextDecoration.underline)),
+                          onTap: (){
+                            PSRoute.push(context, "user_agreement", null);
+                          },
+                        )
+                      ],
+                    ),)
+                  )
+                ],
+              )),
         )));
   }
 
@@ -315,7 +337,8 @@ class _LoginPageState extends State<LoginPage> {
   _phone() {
     PSProcess.show(context);
 
-    bool isTest = (phoneController.text == "38183663123" || phoneController.text == "34352466556");
+    bool isTest = (phoneController.text == "38183663123" ||
+        phoneController.text == "34352466556");
 
     Smssdk.commitCode(phoneController.text, "86", verifyCodeController.text,
         (ret, error) {

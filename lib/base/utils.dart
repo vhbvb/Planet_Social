@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:planet_social/common/image_preview.dart';
-import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
+// import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 
 class Util {
   static Map<String, Color> colors = {};
@@ -115,6 +115,6 @@ class Util {
   }
 
   static setStatusBarStyle(bool white) {
-    FlutterStatusbarcolor.setStatusBarWhiteForeground(white);
+    // FlutterStatusbarcolor.setNavigationBarWhiteForeground(white);
   }
 }

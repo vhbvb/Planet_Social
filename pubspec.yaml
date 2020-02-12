@@ -47,8 +47,9 @@ dev_dependencies:
   crypto:
   flutter_app_badger:
   emoji_picker:
-  flutter_statusbarcolor:
+  # flutter_statusbarcolor:
   dio:
+  webview_flutter:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -126,6 +127,7 @@ flutter:
      - assets/star_icon.png
      - assets/users_list.png
      - assets/main_icon.png
+     - assets/agreement.html
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

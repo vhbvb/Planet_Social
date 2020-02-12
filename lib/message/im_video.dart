@@ -32,9 +32,6 @@ class _FIIMVideoPlayerSimpleState extends State<FIIMVideoPlayerSimple>
 
   @override
   void initState() {
-    // TODO: implement initState
-    print("----------initState");
-
     if (vp == null) {
       if (control.url.startsWith("http")) {
         vp = VideoPlayerController.network(control.url)..addListener(() {});

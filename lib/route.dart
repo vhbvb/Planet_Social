@@ -4,6 +4,7 @@ import 'package:planet_social/explore/explore.dart';
 import 'package:planet_social/explore/planet_create.dart';
 import 'package:planet_social/message/chat_scaffold.dart';
 import 'package:planet_social/message/conversation_list.dart';
+import 'package:planet_social/mine/user_agreement.dart';
 import 'package:planet_social/mine/user_detail.dart';
 import 'package:planet_social/mine/user_info.dart';
 import 'package:planet_social/mine/user_tags.dart';
@@ -57,6 +58,8 @@ class PSRoute {
         return ChatScaffold(
           target: params,
         );
+      case "user_agreement":
+        return AgreementPage();
       default:
         return null;
     }

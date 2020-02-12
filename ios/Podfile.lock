@@ -1,53 +1,53 @@
 PODS:
   - audioplayers (0.0.1):
     - Flutter
-  - device_info (0.0.1):
+  - emoji_picker (0.0.3):
     - Flutter
   - Flutter (1.0.0)
   - flutter_app_badger (0.0.1):
     - Flutter
-  - flutter_statusbarcolor (0.0.1):
+  - flutter_plugin_android_lifecycle (0.0.1):
     - Flutter
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
   - image_picker (0.0.1):
     - Flutter
-  - mob_sharesdk (4.3.4):
-    - mob_sharesdk/ShareSDK (= 4.3.4)
+  - mob_sharesdk (4.3.5):
+    - mob_sharesdk/ShareSDK (= 4.3.5)
     - MOBFoundation
-  - mob_sharesdk/ShareSDK (4.3.4):
+  - mob_sharesdk/ShareSDK (4.3.5):
     - MOBFoundation
-  - mob_sharesdk/ShareSDKExtension (4.3.4):
+  - mob_sharesdk/ShareSDKExtension (4.3.5):
     - mob_sharesdk/ShareSDK
     - MOBFoundation
-  - mob_sharesdk/ShareSDKPlatforms/Douyin (4.3.4):
+  - mob_sharesdk/ShareSDKPlatforms/Douyin (4.3.5):
     - mob_sharesdk/ShareSDK
     - MOBFoundation
-  - mob_sharesdk/ShareSDKPlatforms/Facebook (4.3.4):
+  - mob_sharesdk/ShareSDKPlatforms/Facebook (4.3.5):
     - mob_sharesdk/ShareSDK
     - MOBFoundation
-  - mob_sharesdk/ShareSDKPlatforms/QQ (4.3.4):
+  - mob_sharesdk/ShareSDKPlatforms/QQ (4.3.5):
     - mob_sharesdk/ShareSDK
     - MOBFoundation
-  - mob_sharesdk/ShareSDKPlatforms/SinaWeibo (4.3.4):
+  - mob_sharesdk/ShareSDKPlatforms/SinaWeibo (4.3.5):
     - mob_sharesdk/ShareSDK
     - MOBFoundation
-  - mob_sharesdk/ShareSDKPlatforms/Twitter (4.3.4):
+  - mob_sharesdk/ShareSDKPlatforms/Twitter (4.3.5):
     - mob_sharesdk/ShareSDK
     - MOBFoundation
-  - mob_sharesdk/ShareSDKPlatforms/WeChat (4.3.4):
+  - mob_sharesdk/ShareSDKPlatforms/WeChat (4.3.5):
     - mob_sharesdk/ShareSDK
     - MOBFoundation
-  - mob_sharesdk/ShareSDKRestoreScene (4.3.4):
+  - mob_sharesdk/ShareSDKRestoreScene (4.3.5):
     - mob_sharesdk/ShareSDKExtension
     - MOBFoundation
-  - mob_sharesdk/ShareSDKUI (4.3.4):
+  - mob_sharesdk/ShareSDKUI (4.3.5):
     - mob_sharesdk/ShareSDK
     - MOBFoundation
-  - mob_smssdk (3.2.3):
+  - mob_smssdk (3.2.5):
     - MOBFoundation
-  - MOBFoundation (3.2.6)
+  - MOBFoundation (3.2.8)
   - mobsms (0.0.1):
     - Flutter
     - mob_smssdk
@@ -56,7 +56,7 @@ PODS:
   - rongcloud_im_plugin (0.0.1):
     - Flutter
     - RongCloudIM/IMLib
-  - RongCloudIM/IMLib (2.10.1)
+  - RongCloudIM/IMLib (2.10.3)
   - shared_preferences (0.0.1):
     - Flutter
   - shared_preferences_macos (0.0.1):
@@ -82,13 +82,15 @@ PODS:
     - Flutter
   - video_player_web (0.0.1):
     - Flutter
+  - webview_flutter (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
   - audioplayers (from `.symlinks/plugins/audioplayers/ios`)
-  - device_info (from `.symlinks/plugins/device_info/ios`)
+  - emoji_picker (from `.symlinks/plugins/emoji_picker/ios`)
   - Flutter (from `Flutter`)
   - flutter_app_badger (from `.symlinks/plugins/flutter_app_badger/ios`)
-  - flutter_statusbarcolor (from `.symlinks/plugins/flutter_statusbarcolor/ios`)
+  - flutter_plugin_android_lifecycle (from `.symlinks/plugins/flutter_plugin_android_lifecycle/ios`)
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
   - mobsms (from `.symlinks/plugins/mobsms/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
@@ -100,6 +102,7 @@ DEPENDENCIES:
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
   - video_player (from `.symlinks/plugins/video_player/ios`)
   - video_player_web (from `.symlinks/plugins/video_player_web/ios`)
+  - webview_flutter (from `.symlinks/plugins/webview_flutter/ios`)
 
 SPEC REPOS:
   trunk:
@@ -112,14 +115,14 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   audioplayers:
     :path: ".symlinks/plugins/audioplayers/ios"
-  device_info:
-    :path: ".symlinks/plugins/device_info/ios"
+  emoji_picker:
+    :path: ".symlinks/plugins/emoji_picker/ios"
   Flutter:
     :path: Flutter
   flutter_app_badger:
     :path: ".symlinks/plugins/flutter_app_badger/ios"
-  flutter_statusbarcolor:
-    :path: ".symlinks/plugins/flutter_statusbarcolor/ios"
+  flutter_plugin_android_lifecycle:
+    :path: ".symlinks/plugins/flutter_plugin_android_lifecycle/ios"
   image_picker:
     :path: ".symlinks/plugins/image_picker/ios"
   mobsms:
@@ -142,22 +145,24 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/video_player/ios"
   video_player_web:
     :path: ".symlinks/plugins/video_player_web/ios"
+  webview_flutter:
+    :path: ".symlinks/plugins/webview_flutter/ios"
 
 SPEC CHECKSUMS:
   audioplayers: 84f968cea3f2deab00ec4f8ff53358b3c0b3992c
-  device_info: cbf09d2ec12aa7110e0b09fabe54b5bd6c8efe74
+  emoji_picker: 0e868059aa18f9473d234f3d0701fbd4d5fd310c
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_app_badger: 65de4d6f0c34a891df49e6cfb8a1c0496426fa68
-  flutter_statusbarcolor: 8afb1071ed8c58be929f1e32b36c629771fd2259
+  flutter_plugin_android_lifecycle: 47de533a02850f070f5696a623995e93eddcdb9b
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   image_picker: e3eacd46b94694dde7cf2705955cece853aa1a8f
-  mob_sharesdk: ecee6e8ba42f76a252a40d2da7a1f7301b9831d6
-  mob_smssdk: cdb6a31d4fd4667ed928e2eca03f21ad89ebc05c
-  MOBFoundation: 08c456357888e4c984fba23bbf04cfd2f4fc1e02
+  mob_sharesdk: bed4cfebc5e164ee8ee4caedb0ce08f6d094cd78
+  mob_smssdk: a5a1659dcbe3a4be9b0011450a7132fcd79bcfae
+  MOBFoundation: 2dc0a63371eccccabef13b1df3fe57564003bc85
   mobsms: 141956ad151a39a69a47a2ddf2e186405346c4ef
   path_provider: fb74bd0465e96b594bb3b5088ee4a4e7bb1f2a9d
   rongcloud_im_plugin: 2e9076465c27d5970f4219058ae4745703470201
-  RongCloudIM: c1ef5fd24a32ab4f591b3df2ef1e0e01b58ff1b7
+  RongCloudIM: ba780b70304ccef99efd324489a4c0574c65cd6f
   shared_preferences: 430726339841afefe5142b9c1f50cb6bd7793e01
   shared_preferences_macos: f3f29b71ccbb56bf40c9dd6396c9acf15e214087
   shared_preferences_web: 141cce0c3ed1a1c5bf2a0e44f52d31eeb66e5ea9
@@ -165,6 +170,7 @@ SPEC CHECKSUMS:
   sqflite: 4001a31ff81d210346b500c55b17f4d6c7589dd0
   video_player: 69c5f029fac4ffe4fc8a85ea7f7b793709661549
   video_player_web: da8cadb8274ed4f8dbee8d7171b420dedd437ce7
+  webview_flutter: bec7599de6bfbe8008a739aa3ebd7b364ea9d0cd
 
 PODFILE CHECKSUM: 1b66dae606f75376c5f2135a8290850eeb09ae83
 
