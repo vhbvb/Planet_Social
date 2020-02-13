@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:planet_social/common/complaint.dart';
 import 'package:planet_social/common/login.dart';
 import 'package:planet_social/explore/explore.dart';
 import 'package:planet_social/explore/planet_create.dart';
@@ -60,6 +61,8 @@ class PSRoute {
         );
       case "user_agreement":
         return AgreementPage();
+      case "complaint":
+        return Complaint(post: params);
       default:
         return null;
     }

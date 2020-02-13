@@ -144,7 +144,7 @@ class _MyPlanetState extends State<MyPlanet>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.only(top: 10, bottom: 20),
+              padding: EdgeInsets.only(top: 10, bottom: 20,left: 10),
               child: Text(
                 "我加入的星球",
                 style: TextStyle(
@@ -153,8 +153,8 @@ class _MyPlanetState extends State<MyPlanet>
                     fontWeight: FontWeight.bold),
               ),
             ),
-            SizedBox(
-                height: 35, width: double.infinity, child: _planetsIamIn()),
+            Padding(padding: EdgeInsets.only(left:10),child: SizedBox(
+                height: 35, width: double.infinity, child: _planetsIamIn())),
             PostList(
               news: news,
               hots: hots,

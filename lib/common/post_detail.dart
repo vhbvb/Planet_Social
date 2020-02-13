@@ -263,13 +263,14 @@ class _PostDetailState extends State<PostDetail> {
         height: 100 + MediaQuery.of(context).padding.bottom,
         child: ListView.separated(
         itemBuilder: (context, index) {
-          var names = ["不看此用户","投诉","取消"];
+          var names = ["屏蔽此用户","投诉","取消"];
 
           Function block = (){
+            //屏蔽
             PSRoute.pop(context);
           };
           Function report = (){
-            //举报界面
+            PSRoute.push(context, "complaint", widget.post,replace: true);
           };
           Function cancel = (){
             PSRoute.pop(context);
