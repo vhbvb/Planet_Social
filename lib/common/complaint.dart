@@ -83,14 +83,14 @@ class _ComplaintState extends State<Complaint> {
   }
 
   _report(){
-
     if(selected == null){
       PSAlert.show(context, "提示", "请选择你想要的投诉类型");
     }else{
-      
-      ApiService.shared.complaint(PSManager.shared.currentUser, widget.post, (error){
+      ApiService.shared.complaint(PSManager.shared.currentUser, widget.post, selected, (error){
         if(error == null){
-          PSAlert.show(context, "投诉已提交", "平台已收到您的投诉，将会在24小时内进行处理");
+          PSAlert.show(context, "投诉已提交", "平台已收到您的投诉，将会在24小时内进行处理",confirm: (){
+            PSRoute.pop(context);
+          });
         }else{
           PSAlert.show(context, "提交失败", error.toString());
         }

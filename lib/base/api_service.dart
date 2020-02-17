@@ -635,11 +635,11 @@ class ApiService {
     });
   }
 
-  void complaint(User current,Post post,Function(Map<String, dynamic> error) callback){
+  void complaint(User current,Post post,String reason,Function(Map<String, dynamic> error) callback){
     String uid = current.userId;
     String pid = post.id;
 
-    _send("classes/complaint", {"user": uid, "post": pid}, RequestType.post).then((response){
+    _send("classes/complaint", {"user": uid, "post": pid, "reason":reason}, RequestType.post).then((response){
             if (response.statusCode ~/ 100 == 2) {
         callback(null);
       } else {
