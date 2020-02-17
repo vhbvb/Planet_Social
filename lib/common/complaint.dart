@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:planet_social/base/api_service.dart';
+import 'package:planet_social/base/manager.dart';
 import 'package:planet_social/common/PSAlert.dart';
 import 'package:planet_social/models/post_model.dart';
 import 'package:planet_social/route.dart';
@@ -85,7 +87,14 @@ class _ComplaintState extends State<Complaint> {
     if(selected == null){
       PSAlert.show(context, "提示", "请选择你想要的投诉类型");
     }else{
-      PSAlert.show(context, "投诉已提交", "平台已收到您的投诉，将会在24小时内进行处理");
+      
+      ApiService.shared.complaint(PSManager.shared.currentUser, widget.post, (error){
+        if(error == null){
+          PSAlert.show(context, "投诉已提交", "平台已收到您的投诉，将会在24小时内进行处理");
+        }else{
+          PSAlert.show(context, "提交失败", error.toString());
+        }
+      });
     }
   }
 }

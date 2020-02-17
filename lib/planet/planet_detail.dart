@@ -106,6 +106,7 @@ class _PlanetDetailState extends State<PlanetDetail> {
   }
 
   _planetDetail() {
+    
     if (widget.planet.owner == null) {
       DataSource.center.getUser(widget.planet.ownerId, (user, error) {
         if (error == null) {

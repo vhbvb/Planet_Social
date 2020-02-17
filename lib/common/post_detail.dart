@@ -7,12 +7,14 @@ import 'package:planet_social/common/PSAlert.dart';
 import 'package:planet_social/const.dart';
 import 'package:planet_social/models/post_model.dart';
 import 'package:planet_social/planet/post_comment.dart';
+import 'package:planet_social/planet/post_list.dart';
 import 'package:planet_social/route.dart';
 
 class PostDetail extends StatefulWidget {
-  PostDetail({Key key, this.post, this.inDetail = false}) : super(key: key);
+  PostDetail({Key key, this.post, this.postList, this.inDetail = false}) : super(key: key);
   Post post;
   bool inDetail;
+  PostList postList;
 
   @override
   State<StatefulWidget> createState() => _PostDetailState();
@@ -59,7 +61,7 @@ class _PostDetailState extends State<PostDetail> {
             Util.timesTamp(DateTime.parse(widget.post.createdAt)),
             style: TextStyle(color: Colors.grey, fontSize: 12),
           ),
-          Expanded(child: Align(alignment: Alignment.centerRight,child: 
+          widget.post.ownerId == PSManager.shared.currentUser.userId?null:Expanded(child: Align(alignment: Alignment.centerRight,child: 
           IconButton(padding: EdgeInsets.only(left:25),icon: Icon(Icons.more_vert),color: Colors.grey, onPressed: (){
             _showDialog();
           }),))
@@ -267,6 +269,12 @@ class _PostDetailState extends State<PostDetail> {
 
           Function block = (){
             //屏蔽
+            ApiService.shared.block(PSManager.shared.currentUser, widget.post.owner, (error){
+              PSManager.shared.blocks.add(widget.post.owner);
+              PSRoute.myPlanet.refresh();
+              widget.postList?.refresh();
+            });
+
             PSRoute.pop(context);
           };
           Function report = (){

@@ -18,6 +18,7 @@ class PSManager {
 
   int seconds = 60;
   Timer smsTimer;
+  List<User> blocks = [];
 
   startSmsTimer(Function(int) callback) {
     seconds = 60;
@@ -95,6 +96,7 @@ class PSManager {
   }
 
   void _didLogined() {
+
     PSRoute.me.refresh();
     PSRoute.myPlanet.refresh();
     IMService.shared.loginIM(currentUser, (token, error) {
@@ -103,6 +105,10 @@ class PSManager {
         _connectIM();
       }
     });
+  }
+
+  void _addBlock(){
+    
   }
 
   void _connectIM() {

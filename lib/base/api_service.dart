@@ -634,6 +634,38 @@ class ApiService {
     });
   }
 
+  void complaint(User current,Post post,Function(Map<String, dynamic> error) callback){
+    String uid = current.userId;
+    String pid = post.id;
+
+    _send("classes/complaint", {"user": uid, "post": pid}, RequestType.post).then((response){
+            if (response.statusCode ~/ 100 == 2) {
+        callback(null);
+      } else {
+        callback(jsonDecode(response.body));
+      }
+    });
+  }
+
+  void block(User current,User blocked,Function(Map<String, dynamic> error) callback)
+  {
+    _send("classes/block", {"user": current.userId, "blocked": blocked.userId}, RequestType.post).then((response){
+            if (response.statusCode ~/ 100 == 2) {
+        callback(null);
+      } else {
+        callback(jsonDecode(response.body));
+      }
+    });
+  }
+
+  void getBlock(User current,Function(List<String>,Map<String, dynamic> error) callback)
+  {
+    var query = {"user": current.userId};
+    _send("classes/block?where="+jsonEncode(query), null, RequestType.get).then((response){
+      
+    });
+  }
+
   Future<Response> _upload(File file) async {
     // var stream = http.ByteStream(DelegatingStream.typed(file.openRead()));
     // var length = await file.length();

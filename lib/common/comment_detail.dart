@@ -52,15 +52,6 @@ class _CommentDetailState extends State<CommentDetail> {
             style: TextStyle(color: Colors.black54)),
       ));
 
-  // _breakLine() => Padding(
-  //       padding: EdgeInsets.only(top: 10, bottom: 5),
-  //       child: Container(
-  //         height: 1,
-  //         width: double.infinity,
-  //         color: Colors.grey.withAlpha(44),
-  //       ),
-  //     );
-
   _mainWidgets() {
     List<Widget> widgets = [
       _header(),
