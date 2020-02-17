@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:planet_social/base/api_service.dart';
 import 'package:planet_social/base/im_service.dart';
 import 'package:planet_social/const.dart';
 import 'package:planet_social/route.dart';
@@ -18,7 +19,7 @@ class PSManager {
 
   int seconds = 60;
   Timer smsTimer;
-  List<User> blocks = [];
+  List<dynamic> blocks = [];
 
   startSmsTimer(Function(int) callback) {
     seconds = 60;
@@ -96,9 +97,10 @@ class PSManager {
   }
 
   void _didLogined() {
-
+    _addBlock(() {
+      PSRoute.myPlanet.refresh();
+    });
     PSRoute.me.refresh();
-    PSRoute.myPlanet.refresh();
     IMService.shared.loginIM(currentUser, (token, error) {
       if (error == null) {
         currentUser.imToken = token;
@@ -107,8 +109,14 @@ class PSManager {
     });
   }
 
-  void _addBlock(){
-    
+  void _addBlock(Function result) {
+    ApiService.shared.blockedUsers(currentUser, (users, error) {
+      if (users != null && users.length > 0)
+      {
+        blocks.addAll(users);
+      }
+      result();
+    });
   }
 
   void _connectIM() {

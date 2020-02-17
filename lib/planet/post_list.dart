@@ -54,11 +54,11 @@ class _PostListState extends State<PostList>
     List posts = pos == 0 ? widget.news : widget.hots;
     List filter = List.from(posts);
 
-    for (var user in PSManager.shared.blocks) 
+    for (var uid in PSManager.shared.blocks) 
     {
       for (Post post in posts) 
       {
-        if(post.ownerId == user.userId)
+        if(post.ownerId == uid)
         {
           filter.remove(post);
         }

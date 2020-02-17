@@ -371,7 +371,7 @@ class _LoginPageState extends State<LoginPage> {
         // 第一次注册
         widget.result();
         if (user.sex == null) {
-          PSRoute.push(context, "user_settings", user, replace: true);
+          PSRoute.push(context, "user_agreement", true,replace: true);
         } else {
           PSRoute.pop(context);
         }

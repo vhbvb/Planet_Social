@@ -60,7 +60,13 @@ class PSRoute {
           target: params,
         );
       case "user_agreement":
-        return AgreementPage();
+        if(params == null){
+          return AgreementPage();
+        }else{
+          return AgreementPage(isReg: params,);
+        }
+        break;
+
       case "complaint":
         return Complaint(post: params);
       default:

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 import 'package:planet_social/base/data_center.dart';
 import 'package:planet_social/base/manager.dart';
@@ -663,6 +664,21 @@ class ApiService {
     var query = {"user": current.userId};
     _send("classes/block?where="+jsonEncode(query), null, RequestType.get).then((response){
       
+    });
+  }
+
+  void blockedUsers(User current,
+      Function(List<dynamic>, Map<String, dynamic> error) callback) {
+    var query = {"user": current.userId};
+    _send("classes/block?where=" + jsonEncode(query), null,
+            RequestType.get)
+        .then((response) {
+      if (response.statusCode ~/ 100 == 2) {
+        List items = jsonDecode(response.body)["results"];
+        callback(items.map((map) => map["blocked"]).toList(),null);
+      } else {
+        callback(null, jsonDecode(response.body));
+      }
     });
   }
 

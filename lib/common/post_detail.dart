@@ -11,7 +11,8 @@ import 'package:planet_social/planet/post_list.dart';
 import 'package:planet_social/route.dart';
 
 class PostDetail extends StatefulWidget {
-  PostDetail({Key key, this.post, this.postList, this.inDetail = false}) : super(key: key);
+  PostDetail({Key key, this.post, this.postList, this.inDetail = false})
+      : super(key: key);
   Post post;
   bool inDetail;
   PostList postList;
@@ -26,51 +27,64 @@ class _PostDetailState extends State<PostDetail> {
   int shares = 0;
   bool like = false;
 
-  _header() => Row(
-        children: <Widget>[
-          GestureDetector(
-              onTap: _userDetail,
-              behavior: HitTestBehavior.opaque,
-              child: Container(
-                child: Row(
-                  children: <Widget>[
-                    ClipOval(
-                      child: Util.loadImage(
-                          widget.post.owner == null
-                              ? Consts.defaultAvatar
-                              : widget.post.owner.avatar,
-                          height: 44,
-                          width: 44,
-                          onTap: _userDetail),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10, right: 10),
-                      child: Text(
-                          widget.post.owner == null
-                              ? ""
-                              : widget.post.owner.nickName,
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold)),
-                    ),
-                  ],
+  _header() {
+    var childs = <Widget>[
+      GestureDetector(
+          onTap: _userDetail,
+          behavior: HitTestBehavior.opaque,
+          child: Container(
+            child: Row(
+              children: <Widget>[
+                ClipOval(
+                  child: Util.loadImage(
+                      widget.post.owner == null
+                          ? Consts.defaultAvatar
+                          : widget.post.owner.avatar,
+                      height: 44,
+                      width: 44,
+                      onTap: _userDetail),
                 ),
-              )),
-          Text(
-            Util.timesTamp(DateTime.parse(widget.post.createdAt)),
-            style: TextStyle(color: Colors.grey, fontSize: 12),
-          ),
-          widget.post.ownerId == PSManager.shared.currentUser.userId?null:Expanded(child: Align(alignment: Alignment.centerRight,child: 
-          IconButton(padding: EdgeInsets.only(left:25),icon: Icon(Icons.more_vert),color: Colors.grey, onPressed: (){
-            _showDialog();
-          }),))
-        ],
-      );
+                Padding(
+                  padding: EdgeInsets.only(left: 10, right: 10),
+                  child: Text(
+                      widget.post.owner == null
+                          ? ""
+                          : widget.post.owner.nickName,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold)),
+                ),
+              ],
+            ),
+          )),
+      Text(
+        Util.timesTamp(DateTime.parse(widget.post.createdAt)),
+        style: TextStyle(color: Colors.grey, fontSize: 12),
+      ),
+    ];
+
+    if (widget.post.ownerId != PSManager.shared.currentUser?.userId) {
+      childs.add(Expanded(
+          child: Align(
+        alignment: Alignment.centerRight,
+        child: IconButton(
+            padding: EdgeInsets.only(left: 25),
+            icon: Icon(Icons.more_vert),
+            color: Colors.grey,
+            onPressed: () {
+              _showDialog();
+            }),
+      )));
+    }
+    return Row(
+      children: childs,
+    );
+  }
 
   _content() => Container(
         width: double.infinity,
-        padding: EdgeInsets.only(top: 10, bottom: 10,left: 5,right: 5),
+        padding: EdgeInsets.only(top: 10, bottom: 10, left: 5, right: 5),
         child:
             Text(widget.post.content, style: TextStyle(color: Colors.black54)),
       );
@@ -258,46 +272,54 @@ class _PostDetailState extends State<PostDetail> {
     }
   }
 
-  _showDialog(){
-    showModalBottomSheet(context: context, 
-    builder: (BuildContext context) {
-      return Container(
-        height: 100 + MediaQuery.of(context).padding.bottom,
-        child: ListView.separated(
-        itemBuilder: (context, index) {
-          var names = ["屏蔽此用户","投诉","取消"];
+  _showDialog() {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            height: 100 + MediaQuery.of(context).padding.bottom,
+            child: ListView.separated(
+                itemBuilder: (context, index) {
+                  var names = ["屏蔽此用户", "投诉", "取消"];
 
-          Function block = (){
-            //屏蔽
-            ApiService.shared.block(PSManager.shared.currentUser, widget.post.owner, (error){
-              PSManager.shared.blocks.add(widget.post.owner);
-              PSRoute.myPlanet.refresh();
-              widget.postList?.refresh();
-            });
+                  Function block = () {
+                    //屏蔽
+                    ApiService.shared
+                        .block(PSManager.shared.currentUser, widget.post.owner,
+                            (error) {
+                      PSManager.shared.blocks.add(widget.post.owner.userId);
+                      PSRoute.myPlanet.refresh();
+                      widget.postList?.refresh();
+                    });
 
-            PSRoute.pop(context);
-          };
-          Function report = (){
-            PSRoute.push(context, "complaint", widget.post,replace: true);
-          };
-          Function cancel = (){
-            PSRoute.pop(context);
-          };
+                    PSRoute.pop(context);
+                  };
+                  Function report = () {
+                    PSRoute.push(context, "complaint", widget.post,
+                        replace: true);
+                  };
+                  Function cancel = () {
+                    PSRoute.pop(context);
+                  };
 
-          var funs = [block,report,cancel];
+                  var funs = [block, report, cancel];
 
-          return GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              child: Padding(padding: EdgeInsets.all(5),child: Center(child:Text(names[index])),),
-              onTap: funs[index]
-            );
-
-        }, 
-        separatorBuilder: (_,index){
-          return Container(color: Colors.grey[200],height: index==1?3:0.5,);
-        }, 
-        itemCount: 3),
-      );
-    });
+                  return GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      child: Padding(
+                        padding: EdgeInsets.all(5),
+                        child: Center(child: Text(names[index])),
+                      ),
+                      onTap: funs[index]);
+                },
+                separatorBuilder: (_, index) {
+                  return Container(
+                    color: Colors.grey[200],
+                    height: index == 1 ? 3 : 0.5,
+                  );
+                },
+                itemCount: 3),
+          );
+        });
   }
 }

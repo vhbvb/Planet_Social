@@ -108,7 +108,7 @@ class _UserInfoState extends State<UserInfo> {
     PSRoute.pop(context);
     PSManager.shared.logout();
   }
-
+  
   _create(int index) {
     switch (index) {
       case 0:

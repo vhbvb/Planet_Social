@@ -97,7 +97,10 @@ class IMService {
       if (targetId == rid) {
         res = status;
       }
-      c.complete();
+
+      if(!c.isCompleted){
+        c.complete();
+      }
     };
     await c.future;
     return res == RCOperationStatus.Success;

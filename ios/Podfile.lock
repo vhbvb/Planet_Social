@@ -13,36 +13,36 @@ PODS:
   - FMDB/standard (2.7.5)
   - image_picker (0.0.1):
     - Flutter
-  - mob_sharesdk (4.3.5):
-    - mob_sharesdk/ShareSDK (= 4.3.5)
+  - mob_sharesdk (4.3.4):
+    - mob_sharesdk/ShareSDK (= 4.3.4)
     - MOBFoundation
-  - mob_sharesdk/ShareSDK (4.3.5):
+  - mob_sharesdk/ShareSDK (4.3.4):
     - MOBFoundation
-  - mob_sharesdk/ShareSDKExtension (4.3.5):
+  - mob_sharesdk/ShareSDKExtension (4.3.4):
     - mob_sharesdk/ShareSDK
     - MOBFoundation
-  - mob_sharesdk/ShareSDKPlatforms/Douyin (4.3.5):
+  - mob_sharesdk/ShareSDKPlatforms/Douyin (4.3.4):
     - mob_sharesdk/ShareSDK
     - MOBFoundation
-  - mob_sharesdk/ShareSDKPlatforms/Facebook (4.3.5):
+  - mob_sharesdk/ShareSDKPlatforms/Facebook (4.3.4):
     - mob_sharesdk/ShareSDK
     - MOBFoundation
-  - mob_sharesdk/ShareSDKPlatforms/QQ (4.3.5):
+  - mob_sharesdk/ShareSDKPlatforms/QQ (4.3.4):
     - mob_sharesdk/ShareSDK
     - MOBFoundation
-  - mob_sharesdk/ShareSDKPlatforms/SinaWeibo (4.3.5):
+  - mob_sharesdk/ShareSDKPlatforms/SinaWeibo (4.3.4):
     - mob_sharesdk/ShareSDK
     - MOBFoundation
-  - mob_sharesdk/ShareSDKPlatforms/Twitter (4.3.5):
+  - mob_sharesdk/ShareSDKPlatforms/Twitter (4.3.4):
     - mob_sharesdk/ShareSDK
     - MOBFoundation
-  - mob_sharesdk/ShareSDKPlatforms/WeChat (4.3.5):
+  - mob_sharesdk/ShareSDKPlatforms/WeChat (4.3.4):
     - mob_sharesdk/ShareSDK
     - MOBFoundation
-  - mob_sharesdk/ShareSDKRestoreScene (4.3.5):
+  - mob_sharesdk/ShareSDKRestoreScene (4.3.4):
     - mob_sharesdk/ShareSDKExtension
     - MOBFoundation
-  - mob_sharesdk/ShareSDKUI (4.3.5):
+  - mob_sharesdk/ShareSDKUI (4.3.4):
     - mob_sharesdk/ShareSDK
     - MOBFoundation
   - mob_smssdk (3.2.5):
@@ -56,7 +56,7 @@ PODS:
   - rongcloud_im_plugin (0.0.1):
     - Flutter
     - RongCloudIM/IMLib
-  - RongCloudIM/IMLib (2.10.3)
+  - RongCloudIM/IMLib (2.10.2)
   - shared_preferences (0.0.1):
     - Flutter
   - shared_preferences_macos (0.0.1):
@@ -156,13 +156,13 @@ SPEC CHECKSUMS:
   flutter_plugin_android_lifecycle: 47de533a02850f070f5696a623995e93eddcdb9b
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   image_picker: e3eacd46b94694dde7cf2705955cece853aa1a8f
-  mob_sharesdk: bed4cfebc5e164ee8ee4caedb0ce08f6d094cd78
+  mob_sharesdk: ecee6e8ba42f76a252a40d2da7a1f7301b9831d6
   mob_smssdk: a5a1659dcbe3a4be9b0011450a7132fcd79bcfae
   MOBFoundation: 2dc0a63371eccccabef13b1df3fe57564003bc85
   mobsms: 141956ad151a39a69a47a2ddf2e186405346c4ef
   path_provider: fb74bd0465e96b594bb3b5088ee4a4e7bb1f2a9d
   rongcloud_im_plugin: 2e9076465c27d5970f4219058ae4745703470201
-  RongCloudIM: ba780b70304ccef99efd324489a4c0574c65cd6f
+  RongCloudIM: 16ba57bdec34c8ea6a91b9d6c7e3ee05e37ef7ba
   shared_preferences: 430726339841afefe5142b9c1f50cb6bd7793e01
   shared_preferences_macos: f3f29b71ccbb56bf40c9dd6396c9acf15e214087
   shared_preferences_web: 141cce0c3ed1a1c5bf2a0e44f52d31eeb66e5ea9
