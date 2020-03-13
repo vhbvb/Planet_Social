@@ -6,9 +6,12 @@
 
 # 部分截图
 
-![](https://raw.githubusercontent.com/vhbvb/image_cloud/master/generalSimulator%20Screen%20Shot%20-%20iPhone%2011%20Pro%20Max%20-%202020-01-20%20at%2015.48.43.png 33%)
+<img src="https://raw.githubusercontent.com/vhbvb/image_cloud/master/generalSimulator%20Screen%20Shot%20-%20iPhone%2011%20Pro%20Max%20-%202020-01-20%20at%2015.48.43.png" width="30%">
+<br/>
 
-![](https://raw.githubusercontent.com/vhbvb/image_cloud/master/generalSimulator%20Screen%20Shot%20-%20iPhone%2011%20Pro%20Max%20-%202020-01-20%20at%2015.48.46.png 33%)
+<img src="https://raw.githubusercontent.com/vhbvb/image_cloud/master/generalSimulator%20Screen%20Shot%20-%20iPhone%2011%20Pro%20Max%20-%202020-01-20%20at%2015.48.46.png" width="30%">
+<br/>
 
-![](https://raw.githubusercontent.com/vhbvb/image_cloud/master/generalSimulator%20Screen%20Shot%20-%20iPhone%2011%20Pro%20Max%20-%202020-01-20%20at%2015.49.08.png 33%)
+<img src="https://raw.githubusercontent.com/vhbvb/image_cloud/master/generalSimulator%20Screen%20Shot%20-%20iPhone%2011%20Pro%20Max%20-%202020-01-20%20at%2015.49.08.png" width="30%">
+<br/>
 
