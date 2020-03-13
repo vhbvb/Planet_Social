@@ -1,16 +1,14 @@
 # planet_social
 
-A new Flutter project.
+由Flutter构建的App
 
-## Getting Started
+# 下载地址 ： https://apps.apple.com/cn/app/星球社交-寻找你身边的兴趣群体/id1495617693
 
-This project is a starting point for a Flutter application.
+# 部分截图
 
-A few resources to get you started if this is your first Flutter project:
+![](https://raw.githubusercontent.com/vhbvb/image_cloud/master/generalSimulator%20Screen%20Shot%20-%20iPhone%2011%20Pro%20Max%20-%202020-01-20%20at%2015.48.43.png)
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+![](https://raw.githubusercontent.com/vhbvb/image_cloud/master/generalSimulator%20Screen%20Shot%20-%20iPhone%2011%20Pro%20Max%20-%202020-01-20%20at%2015.48.46.png)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![](https://raw.githubusercontent.com/vhbvb/image_cloud/master/generalSimulator%20Screen%20Shot%20-%20iPhone%2011%20Pro%20Max%20-%202020-01-20%20at%2015.49.08.png)
+
